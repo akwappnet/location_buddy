@@ -1,41 +1,41 @@
 {
   "project_info": {
-    "project_number": "256926195561",
-    "project_id": "locationbuddy-c9251",
-    "storage_bucket": "locationbuddy-c9251.appspot.com"
+    "project_number": "331364670782",
+    "project_id": "locationbuddy-bf395",
+    "storage_bucket": "locationbuddy-bf395.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:256926195561:android:31538c3fdc9c99bdb7a7f8",
+        "mobilesdk_app_id": "1:331364670782:android:a898c25ee55f458294606f",
         "android_client_info": {
           "package_name": "com.example.location_buddy"
         }
       },
       "oauth_client": [
         {
-          "client_id": "256926195561-5aqfj4bfd5nq77rulqsmss2rnpb5fj7f.apps.googleusercontent.com",
+          "client_id": "331364670782-2v151lpojqdqn7uikhtp12jolbmikg06.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.location_buddy",
-            "certificate_hash": "4e9bf0fb6b9879fe1b75945854ec972e14727a38"
+            "certificate_hash": "135cb4e6cb0693c3b852ab18175547f6b5921370"
           }
         },
         {
-          "client_id": "256926195561-m0vlsq8ka85odhk41gbo7ct82qliif6o.apps.googleusercontent.com",
+          "client_id": "331364670782-khnf7tkn70h2vt9077t677h4m0678bm5.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDc976MbYMDHrEjghm1AJO1XRCZuvuyqoE"
+          "current_key": "AIzaSyAbTylo0nK_CfKe1_csU21-5Op62sTYbU0"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "256926195561-m0vlsq8ka85odhk41gbo7ct82qliif6o.apps.googleusercontent.com",
+              "client_id": "331364670782-khnf7tkn70h2vt9077t677h4m0678bm5.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
