@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SplashView extends StatefulWidget {
   const SplashView({super.key});
@@ -17,7 +18,7 @@ class _SplashViewState extends State<SplashView> {
         //   future: remoteConfig.fetchAndActivate(),
         builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
+            return const Center(
               child: CircularProgressIndicator(),
             );
           } else if (snapshot.hasError) {
@@ -37,11 +38,11 @@ class _SplashViewState extends State<SplashView> {
                     "splashLogoUrl",
                     height: 150,
                   ),
-                  SizedBox(height: 16),
+                  SizedBox(height: 16.h),
                   Text(
                     "splashText",
                     style: TextStyle(
-                      fontSize: 24,
+                      fontSize: 24.h,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
