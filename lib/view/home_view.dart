@@ -17,7 +17,7 @@ class HomeView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton.extended(
-        backgroundColor: CustomHomeViewColor.lightViolet,
+        backgroundColor: CustomColor.lightViolet,
         onPressed: () {
           // Add your onPressed code here!
         },
@@ -37,9 +37,9 @@ class HomeView extends StatelessWidget {
                 height: 350.h,
                 decoration: const BoxDecoration(
                     gradient: LinearGradient(colors: [
-                  CustomHomeViewColor.lightViolet,
-                  CustomHomeViewColor.Violet,
-                  CustomHomeViewColor.violetSecond,
+                  CustomColor.lightViolet,
+                  CustomColor.Violet,
+                  CustomColor.violetSecond,
                 ])),
               ),
             ),
@@ -108,8 +108,8 @@ class HomeView extends StatelessWidget {
                                         Icons.map_outlined,
                                         size: 50.h,
                                       )),
-                                  textColor: CustomHomeViewColor.lightViolet,
-                                  iconColor: CustomHomeViewColor.lightViolet,
+                                  textColor: CustomColor.lightViolet,
+                                  iconColor: CustomColor.lightViolet,
                                   initiallyExpanded: false,
                                   maintainState: true,
                                   controlAffinity:

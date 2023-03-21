@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:location_buddy/provider/home_view_provider.dart';
 import 'package:location_buddy/provider/splash_view_provider.dart';
+import 'package:location_buddy/services/remote_config_service.dart';
 import 'package:location_buddy/utils/routes/routes.dart';
 import 'package:location_buddy/utils/routes/routes_name.dart';
 import 'package:provider/provider.dart';
@@ -25,7 +26,7 @@ class MyApp extends StatelessWidget {
           create: (_) => HomeViewModel(),
         ),
         ChangeNotifierProvider(
-          create: (_) => RemoteConfigProvider(),
+          create: (_) => SplashViewProvider(),
         ),
       ],
       child: ScreenUtilInit(
@@ -39,7 +40,7 @@ class MyApp extends StatelessWidget {
               theme: ThemeData(
                 primarySwatch: Colors.blue,
               ),
-              initialRoute: RoutesName.homeView,
+              initialRoute: RoutesName.splashView,
               onGenerateRoute: Routes.generateRoute,
             );
           }),
