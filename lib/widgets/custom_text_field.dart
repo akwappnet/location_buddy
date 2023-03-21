@@ -40,7 +40,7 @@ class _BuildTextFormFieldState extends State<BuildTextFormField> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(top: 30.sp),
+      padding: EdgeInsets.only(top: 0.sp),
       child: TextFormField(
         onChanged: (value) {
           widget.validation == null;
@@ -67,8 +67,9 @@ class _BuildTextFormFieldState extends State<BuildTextFormField> {
             padding: EdgeInsets.all(10.0.sp),
             child: SizedBox(child: widget.leftIcon),
           ),
-          contentPadding:
-              EdgeInsets.only(top: 10.sp, left: 15.sp, bottom: 10.sp),
+          contentPadding: EdgeInsets.only(
+            left: 15.sp,
+          ),
           border: InputBorder.none,
           isDense: false,
           labelText: widget.txtHint,
