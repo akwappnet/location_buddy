@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
               theme: ThemeData(
                 primarySwatch: Colors.blue,
               ),
-              initialRoute: RoutesName.homeView,
+              initialRoute: RoutesName.saveLocationView,
               onGenerateRoute: Routes.generateRoute,
             );
           }),

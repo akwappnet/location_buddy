@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:location_buddy/provider/splash_view_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -19,7 +20,7 @@ class SplashView extends StatelessWidget {
               child: Text(
                 remoteConfig.splashText,
                 style: TextStyle(
-                  fontSize: 24.0,
+                  fontSize: 24.0.sp,
                   color: Colors.white,
                 ),
               ),
