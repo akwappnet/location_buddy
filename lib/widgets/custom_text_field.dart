@@ -1,5 +1,6 @@
 // ignore_for_file: must_be_immutable
 
+import 'package:auto_direction/auto_direction.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -17,6 +18,7 @@ class BuildTextFormField extends StatefulWidget {
   TextEditingController? controller;
   final VoidCallback? onClicked;
   TextInputType? textType;
+
   //Text Form Widget
   BuildTextFormField({
     Key? key,
@@ -37,60 +39,65 @@ class BuildTextFormField extends StatefulWidget {
 
 class _BuildTextFormFieldState extends State<BuildTextFormField> {
   bool isError = true;
+  String text = "";
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(top: 0.sp),
-      child: TextFormField(
-        onChanged: (value) {
-          widget.validation == null;
-          setState(() {
-            isError = false;
-          });
-        },
-        keyboardType: widget.textType,
-        validator: widget.validation,
-        autovalidateMode: AutovalidateMode.onUserInteraction,
-        onTap: widget.onClicked,
-        readOnly: widget.readOnly ?? false,
-        obscureText: widget.isObserve,
-        cursorColor: Colors.black,
-        controller: widget.controller,
-        style: montserratHeadingStyle(
-            color: Colors.black,
-            fontSize: 16.sp,
-            fontFamily: FontFamliyM.REGULAR),
-        textInputAction: TextInputAction.next,
-        decoration: InputDecoration(
-          suffixIcon: widget.icon,
-          prefixIcon: Padding(
-            padding: EdgeInsets.all(10.0.sp),
-            child: SizedBox(child: widget.leftIcon),
+      child: AutoDirection(
+        text: text,
+        child: TextFormField(
+          onChanged: (value) {
+            widget.validation == null;
+            setState(() {
+              isError = false;
+              text = value;
+            });
+          },
+          keyboardType: widget.textType,
+          validator: widget.validation,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          onTap: widget.onClicked,
+          readOnly: widget.readOnly ?? false,
+          obscureText: widget.isObserve,
+          cursorColor: Colors.black,
+          controller: widget.controller,
+          style: montserratHeadingStyle(
+              color: Colors.black,
+              fontSize: 16.sp,
+              fontFamily: FontFamliyM.REGULAR),
+          textInputAction: TextInputAction.next,
+          decoration: InputDecoration(
+            suffixIcon: widget.icon,
+            prefixIcon: Padding(
+              padding: EdgeInsets.all(10.0.sp),
+              child: SizedBox(child: widget.leftIcon),
+            ),
+            contentPadding: EdgeInsets.only(
+              left: 15.sp,
+            ),
+            border: InputBorder.none,
+            isDense: false,
+            labelText: widget.txtHint,
+            errorStyle: TextStyle(color: Colors.black),
+            labelStyle: montserratHeading4tyle,
+            enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15.sp),
+                borderSide: BorderSide(
+                    color: isError ? Colors.black : Colors.black, width: 1.w)),
+            disabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15.sp),
+                borderSide: BorderSide(color: Colors.black, width: 1.w)),
+            focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15.sp),
+                borderSide: BorderSide(color: Colors.black, width: 1.w)),
+            focusedErrorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15.sp),
+                borderSide: BorderSide(color: Colors.black, width: 1.w)),
+            errorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15.sp),
+                borderSide: BorderSide(color: Colors.black, width: 1.w)),
           ),
-          contentPadding: EdgeInsets.only(
-            left: 15.sp,
-          ),
-          border: InputBorder.none,
-          isDense: false,
-          labelText: widget.txtHint,
-          errorStyle: TextStyle(color: Colors.black),
-          labelStyle: montserratHeading4tyle,
-          enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(15.sp),
-              borderSide: BorderSide(
-                  color: isError ? Colors.black : Colors.black, width: 1.w)),
-          disabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(15.sp),
-              borderSide: BorderSide(color: Colors.black, width: 1.w)),
-          focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(15.sp),
-              borderSide: BorderSide(color: Colors.black, width: 1.w)),
-          focusedErrorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(15.sp),
-              borderSide: BorderSide(color: Colors.black, width: 1.w)),
-          errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(15.sp),
-              borderSide: BorderSide(color: Colors.black, width: 1.w)),
         ),
       ),
     );
