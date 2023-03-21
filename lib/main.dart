@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
           create: (_) => HomeViewModel(),
         ),
         ChangeNotifierProvider(
-          create: (_) => RemoteConfigProvider(),
+          create: (_) => SplashViewProvider(),
         ),
       ],
       child: ScreenUtilInit(
@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
               theme: ThemeData(
                 primarySwatch: Colors.blue,
               ),
-              initialRoute: RoutesName.homeView,
+              initialRoute: RoutesName.splashView,
               onGenerateRoute: Routes.generateRoute,
             );
           }),
