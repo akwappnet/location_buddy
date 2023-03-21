@@ -23,9 +23,7 @@ class _SplashViewState extends State<SplashView> {
     splashProvider.initializeRemoteConfig();
 
     Timer(const Duration(seconds: 3), () {
-      Navigator.pushReplacementNamed(context, RoutesName.homeView);
-      // Navigator.pushReplacement(context,
-      //     MaterialPageRoute(builder: (BuildContext context) => HomePage()));
+      Navigator.pushReplacementNamed(context, RoutesName.bottomBar);
     });
   }
 
