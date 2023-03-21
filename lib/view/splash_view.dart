@@ -52,6 +52,13 @@ class _SplashViewState extends State<SplashView> {
                     ),
                   ),
                 ),
+
+                Center(
+                    child: Text(remoteConfig.splashText,
+                        style: TextStyle(
+                          fontSize: 24.0.sp,
+                          color: Colors.white,
+                        ))),
                 SizedBox(height: 50.h),
                 Center(
                   child: Text(

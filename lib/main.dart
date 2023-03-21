@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:location_buddy/provider/home_view_provider.dart';
 import 'package:location_buddy/provider/splash_view_provider.dart';
-import 'package:location_buddy/services/remote_config_service.dart';
 import 'package:location_buddy/utils/routes/routes.dart';
 import 'package:location_buddy/utils/routes/routes_name.dart';
 import 'package:provider/provider.dart';

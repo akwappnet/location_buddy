@@ -1,4 +1,4 @@
-// ignore_for_file: sized_box_for_whitespace, prefer_const_literals_to_create_immutables, must_be_immutable
+// ignore_for_file: sized_box_for_whitespace, prefer_const_literals_to_create_immutables, must_be_immutable, prefer_const_constructors_in_immutables, prefer_final_fields
 
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
@@ -13,17 +13,10 @@ class HomeView extends StatelessWidget {
   HomeView({super.key});
 
   var length = 1;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton.extended(
-        backgroundColor: CustomColor.lightViolet,
-        onPressed: () {
-          // Add your onPressed code here!
-        },
-        label: const Text('Add Route'),
-        icon: const Icon(Icons.add),
-      ),
       body: Container(
         width: double.maxFinite,
         height: double.maxFinite,
