@@ -2,10 +2,12 @@
 
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:location_buddy/utils/assets/assets_utils.dart';
 import 'package:location_buddy/utils/colors/colors.dart';
 import 'package:location_buddy/utils/routes/routes_name.dart';
+import 'package:location_buddy/widgets/custom_dialog_box.dart';
 import 'package:lottie/lottie.dart';
 import 'package:r_dotted_line_border/r_dotted_line_border.dart';
 
@@ -43,7 +45,7 @@ class HomeView extends StatelessWidget {
                   children: [
                     AvatarGlow(
                       endRadius: 30,
-                      glowColor: Colors.black,
+                      glowColor: Colors.red,
                       duration: const Duration(seconds: 5),
                       child: Icon(
                         Icons.location_on_outlined,
@@ -92,15 +94,20 @@ class HomeView extends StatelessWidget {
                           : Card(
                               elevation: 4,
                               child: ExpansionTile(
+                                  leading: Image.asset(
+                                    AssetsUtils.route,
+                                    height: 30,
+                                  ),
                                   trailing: GestureDetector(
-                                      onTap: () {
-                                        Navigator.pushNamed(
-                                            context, RoutesName.routeView);
-                                      },
-                                      child: Icon(
-                                        Icons.map_outlined,
-                                        size: 50.h,
-                                      )),
+                                    onTap: () {
+                                      Navigator.pushNamed(
+                                          context, RoutesName.routeView);
+                                    },
+                                    child: Image.asset(
+                                      AssetsUtils.map,
+                                      height: 40.h,
+                                    ),
+                                  ),
                                   textColor: CustomColor.lightViolet,
                                   iconColor: CustomColor.lightViolet,
                                   initiallyExpanded: false,
@@ -118,11 +125,10 @@ class HomeView extends StatelessWidget {
                                             Row(
                                               children: [
                                                 CircleAvatar(
-                                                  child: Icon(
-                                                    Icons.circle,
-                                                    size: 20.h,
-                                                  ),
-                                                ),
+                                                    backgroundColor:
+                                                        CustomColor.white,
+                                                    child: Image.asset(
+                                                        AssetsUtils.source)),
                                                 SizedBox(
                                                   width: 10.w,
                                                 ),
@@ -153,11 +159,11 @@ class HomeView extends StatelessWidget {
                                             Row(
                                               children: [
                                                 CircleAvatar(
-                                                  child: Icon(
-                                                    Icons.location_on,
-                                                    size: 30.h,
-                                                  ),
-                                                ),
+                                                    backgroundColor:
+                                                        CustomColor.white,
+                                                    child: Image.asset(
+                                                        AssetsUtils
+                                                            .destination)),
                                                 SizedBox(
                                                   width: 10.w,
                                                 ),

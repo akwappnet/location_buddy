@@ -31,18 +31,22 @@ class _SplashViewState extends State<SplashView> {
   Widget build(BuildContext context) {
     return Consumer<SplashViewProvider>(
       builder: (context, remoteConfig, _) {
+        Color backgroundColor = Color(
+            int.parse(remoteConfig.backgroundColor.substring(2), radix: 16));
+        Color textColor = Color(
+            int.parse(remoteConfig.splashTextColor.substring(2), radix: 16));
         return Scaffold(
           body: Container(
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
-            color: CustomColor.white,
+            color: backgroundColor,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Container(
-                  height: 260.h,
-                  width: 250.w,
+                  height: 210.h,
+                  width: 200.w,
                   decoration: BoxDecoration(
                     image: DecorationImage(
                       image: NetworkImage(remoteConfig.splashLogo),
@@ -51,19 +55,13 @@ class _SplashViewState extends State<SplashView> {
                   ),
                 ),
 
-                Center(
-                    child: Text(remoteConfig.splashText,
-                        style: TextStyle(
-                          fontSize: 24.0.sp,
-                          color: Colors.white,
-                        ))),
                 SizedBox(height: 50.h),
                 Center(
                   child: Text(
                     remoteConfig.splashText,
                     style: TextStyle(
-                        fontSize: 40.sp,
-                        color: CustomColor.Violet,
+                        fontSize: 32.sp,
+                        color: textColor,
                         fontWeight: FontWeight.w700),
                   ),
                 ),

@@ -1,6 +1,9 @@
-/* import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:location_buddy/utils/colors/colors.dart';
+
+import '../utils/font/font_family.dart';
+import '../utils/font/font_style.dart';
 
 class CustomDialogBox extends StatefulWidget {
   final String? heading, title, descriptions, btn1Text, btn2Text;
@@ -57,7 +60,7 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
               Text(
                 widget.heading ?? "",
                 style: const TextStyle(color: CustomColor.black),
-               /*  style: openSansHeadingStyle(
+                /*  style: openSansHeadingStyle(
                     color: PrimaryColor.blackColor,
                     fontSize: 24.sp,
                     fontWeight: FontWeight.w500,
@@ -69,11 +72,11 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
               ),
               Text(
                 widget.title ?? "",
-                style: openSansHeadingStyle(
-                    color: PrimaryColor.blackColor,
+                style: montserratHeadingStyle(
+                    color: Colors.black,
                     fontSize: 16.sp,
                     fontWeight: FontWeight.w500,
-                    fontFamily: FontFamliy.POPPINS_SEMI_BOLD),
+                    fontFamily: FontFamliyM.REGULAR),
                 textAlign: TextAlign.center,
               ),
               SizedBox(
@@ -81,11 +84,11 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
               ),
               Text(
                 widget.descriptions!,
-                style: openSansHeadingStyle(
-                    color: SecondaryColor.greyColor,
+                style: montserratHeadingStyle(
+                    color: Colors.black,
                     fontSize: 12.sp,
                     fontWeight: FontWeight.w500,
-                    fontFamily: FontFamliy.POPPINS_MEDIUM),
+                    fontFamily: FontFamliyM.REGULAR),
                 textAlign: TextAlign.center,
               ),
               SizedBox(
@@ -107,12 +110,14 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(6.sp)),
                                 backgroundColor: widget.backgroundColor ??
-                                    SematicColor.redColor),
+                                    CustomColor.redColor),
                             child: Text(
                               widget.btn1Text!,
-                              style: poppinsHeadingStyle(
-                                  fontFamily: FontFamliy.POPPINS_MEDIUM,
-                                  fontSize: 14.sp),
+                              style: montserratHeadingStyle(
+                                  color: CustomColor.white,
+                                  fontSize: 14.sp,
+                                  fontWeight: FontWeight.w500,
+                                  fontFamily: FontFamliyM.REGULAR),
                             ),
                           ),
                         ),
@@ -134,9 +139,11 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
                                 backgroundColor: SecondaryColor.greyColor),
                             child: Text(
                               widget.btn2Text!,
-                              style: poppinsHeadingStyle(
-                                  fontFamily: FontFamliy.POPPINS_MEDIUM,
-                                  fontSize: 14.sp),
+                              style: montserratHeadingStyle(
+                                  color: CustomColor.white,
+                                  fontSize: 14.sp,
+                                  fontWeight: FontWeight.w500,
+                                  fontFamily: FontFamliyM.REGULAR),
                             ),
                           ),
                         ),
@@ -152,7 +159,7 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
             backgroundColor: SecondaryColor.whiteColor,
             radius: 50.sp,
             child: CircleAvatar(
-              backgroundColor: widget.backgroundColor ?? SematicColor.redColor,
+              backgroundColor: widget.backgroundColor ?? CustomColor.redColor,
               radius: 45.sp,
               child: IconButton(
                 padding: EdgeInsets.zero,
@@ -171,4 +178,3 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
     );
   }
 }
- */
