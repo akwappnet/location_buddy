@@ -1,3 +1,4 @@
 class AssetsUtils {
-  static String loginIcon = "assets/images/ic_login.png";
+  static String noRoute = "assets/lottie/route_finder.json";
+  static String mapRoute = "assets/lottie/map_route.json";
 }
