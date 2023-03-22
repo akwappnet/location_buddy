@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:location_buddy/provider/splash_view_provider.dart';
-import 'package:location_buddy/utils/colors/colors.dart';
 import 'package:location_buddy/utils/routes/routes_name.dart';
 import 'package:provider/provider.dart';
 

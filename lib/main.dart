@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (_) => HomeViewModel(),
+          create: (_) => HomeViewProvider(),
         ),
         ChangeNotifierProvider(
           create: (_) => SplashViewProvider(),
@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
               theme: ThemeData(
                 primarySwatch: Colors.blue,
               ),
-              initialRoute: RoutesName.bottomBar,
+              initialRoute: RoutesName.splashView,
               onGenerateRoute: Routes.generateRoute,
             );
           }),
