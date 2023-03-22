@@ -14,7 +14,7 @@ class BuildTextFormField extends StatefulWidget {
   bool isObserve = false;
   bool? readOnly = false;
   final IconButton? icon;
-  String? Function(String?)? validation;
+  String? Function(String?)? onChange;
   TextEditingController? controller;
   final VoidCallback? onClicked;
   TextInputType? textType;
@@ -26,9 +26,10 @@ class BuildTextFormField extends StatefulWidget {
     this.txtHint,
     required this.isObserve,
     this.icon,
-    this.validation,
+    // this.validation,
     this.controller,
     this.onClicked,
+    this.onChange,
     this.readOnly,
     this.textType,
   }) : super(key: key);
@@ -47,17 +48,11 @@ class _BuildTextFormFieldState extends State<BuildTextFormField> {
       child: AutoDirection(
         text: text,
         child: TextFormField(
-          onChanged: (value) {
-            widget.validation == null;
-            setState(() {
-              isError = false;
-              text = value;
-            });
-          },
           keyboardType: widget.textType,
-          validator: widget.validation,
+          //validator: widget.validation,
           autovalidateMode: AutovalidateMode.onUserInteraction,
           onTap: widget.onClicked,
+          onChanged: widget.onChange,
           readOnly: widget.readOnly ?? false,
           obscureText: widget.isObserve,
           cursorColor: Colors.black,
@@ -68,18 +63,13 @@ class _BuildTextFormFieldState extends State<BuildTextFormField> {
               fontFamily: FontFamliyM.REGULAR),
           textInputAction: TextInputAction.next,
           decoration: InputDecoration(
-            suffixIcon: widget.icon,
-            prefixIcon: Padding(
-              padding: EdgeInsets.all(10.0.sp),
-              child: SizedBox(child: widget.leftIcon),
-            ),
             contentPadding: EdgeInsets.only(
               left: 15.sp,
             ),
             border: InputBorder.none,
             isDense: false,
             labelText: widget.txtHint,
-            errorStyle: TextStyle(color: Colors.black),
+            errorStyle: const TextStyle(color: Colors.black),
             labelStyle: montserratHeading4tyle,
             enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(15.sp),
