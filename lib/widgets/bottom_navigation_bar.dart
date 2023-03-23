@@ -12,7 +12,7 @@ class BottomNavBar extends StatelessWidget {
   BottomNavBar({super.key});
   ValueNotifier<int> _currentIndex = ValueNotifier<int>(0);
 
-  final List<Widget> _pages = [HomeView(), SaveLocationView()];
+  final List<Widget> _pages = [HomeView(), const SaveLocationView()];
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +55,7 @@ class BottomNavBar extends StatelessWidget {
                     SalomonBottomBarItem(
                       icon: const Icon(Icons.add),
                       title: const Text("Save Route"),
-                      selectedColor: Colors.pink,
+                      selectedColor: Colors.red,
                     ),
                   ],
                 );

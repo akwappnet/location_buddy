@@ -1,8 +1,13 @@
-// ignore_for_file: use_build_context_synchronously
+import 'dart:developer';
 
+import 'package:background_locator_2/settings/android_settings.dart';
+import 'package:background_locator_2/settings/ios_settings.dart';
+import 'package:background_locator_2/settings/locator_settings.dart';
+
+import 'package:background_locator_2/background_locator.dart';
+import 'package:background_locator_2/location_dto.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:location_buddy/utils/colors/colors.dart';
 import 'package:location_buddy/utils/routes/routes_name.dart';
 import 'package:location_buddy/widgets/custom_dialog_box.dart';
@@ -10,6 +15,9 @@ import 'package:location_buddy/widgets/custom_dialog_box.dart';
 import '../models/location_model.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+import '../services/location_callback_handler.dart';
+import '../services/take_location_permission.dart';
 
 class SaveLocationViewProvider extends ChangeNotifier {
   final TextEditingController savePointSourceController =
@@ -30,22 +38,44 @@ class SaveLocationViewProvider extends ChangeNotifier {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   String? _currentAddress;
-  Position? _currentPosition;
+  LocationDto? _currentLocation;
+  bool? _isRunningSerives;
 
+  String? _destinationLocationlongitude;
+  String? _destinationLocationLatitude;
+
+  bool? get isRunningSerives => _isRunningSerives;
   String? get currentAddress => _currentAddress;
-  Position? get currentPosition => _currentPosition;
+  LocationDto? get currentLocation => _currentLocation;
+  String? get destinationLocationlongitude => _destinationLocationlongitude;
+  String? get destinationLocationLatitude => _destinationLocationLatitude;
+
+  void setDestinationLocationlongitude(String destinationLocationlongitude) {
+    _destinationLocationlongitude = destinationLocationlongitude;
+    notifyListeners();
+  }
+
+  void setDestinationLocationLatitude(String destinationLocationLatitude) {
+    _destinationLocationLatitude = destinationLocationLatitude;
+    notifyListeners();
+  }
+
+  void setIsRunningSerives(bool isRunningSerives) {
+    _isRunningSerives = isRunningSerives;
+    notifyListeners();
+  }
+
+  void setCurretLocation(LocationDto currentLocation) {
+    _currentLocation = currentLocation;
+    notifyListeners();
+  }
 
   void setCurretAddress(String currentAddress) {
     _currentAddress = currentAddress;
     notifyListeners();
   }
 
-  void setCurretPosition(Position currentPosition) {
-    _currentPosition = currentPosition;
-    notifyListeners();
-  }
-
-  void addPerson(LocationInfo person) {
+  void addLocationInfo(LocationInfo person) {
     _locationInfo.add(person);
     notifyListeners();
   }
@@ -70,6 +100,10 @@ class SaveLocationViewProvider extends ChangeNotifier {
               savePointDestination: doc['savePointDestination'],
               sourceLocation: doc['sourceLocation'],
               destinationLocation: doc['destinationLocation'],
+              sourceLocationLatitude: doc['sourceLocationLatitude'],
+              sourceLocationlongitude: doc['sourceLocationlongitude'],
+              destinationLocationlongitude: doc['destinationLocationlongitude'],
+              destinationLocationLatitude: doc['destinationLocationLatitude'],
               id: doc['id'],
             ))
         .toList();
@@ -92,7 +126,7 @@ class SaveLocationViewProvider extends ChangeNotifier {
           savePointDestination: savePointDestination,
           sourceLocation: sourceLocation,
           destinationLocation: destinationLocation);
-      addPerson(locationInfo);
+      addLocationInfo(locationInfo);
       final docRef = firestore.collection('location_info').doc();
       await docRef.set({
         'savePointSource': savePointSource,
@@ -100,6 +134,12 @@ class SaveLocationViewProvider extends ChangeNotifier {
         'sourceLocation': sourceLocation,
         'destinationLocation': destinationLocation,
         'createdAt': DateTime.now().toString(),
+        'sourceLocationLatitude': currentLocation!.latitude.toString(),
+        'sourceLocationlongitude': currentLocation!.longitude.toString(),
+        'destinationLocationLatitude':
+            destinationLocationLatitude ?? currentLocation!.latitude.toString(),
+        'destinationLocationlongitude': destinationLocationlongitude ??
+            currentLocation!.longitude.toString(),
         'id': docRef.id,
       }).then(
         (value) {
@@ -135,7 +175,6 @@ class SaveLocationViewProvider extends ChangeNotifier {
 
 //delete saved location by id
   Future<void> deleteLocationInformation(String id) async {
-    print("-*-------------->$id");
     await firestore.collection('location_info').doc(id).delete();
     _locationInfo
         .removeWhere((locationInfo) => locationInfo.destinationLocation == id);
@@ -143,61 +182,99 @@ class SaveLocationViewProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-//handle Location Permission from user
-
-  Future<bool> handleLocationPermission(BuildContext context) async {
-    bool serviceEnabled;
-    LocationPermission permission;
-
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text(
-              'Location services are disabled. Please enable the services')));
-      return false;
-    }
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Location permissions are denied')));
-        return false;
-      }
-    }
-    if (permission == LocationPermission.deniedForever) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text(
-              'Location permissions are permanently denied, we cannot request permissions.')));
-      return false;
-    }
-    return true;
-  }
-
-  Future<void> getCurrentPosition(BuildContext context) async {
-    final hasPermission = await handleLocationPermission(context);
-
-    if (!hasPermission) return;
-    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
-        .then((Position position) {
-      setCurretPosition(position);
-      _getAddressFromLatLng(_currentPosition!);
-    }).catchError((e) {
-      debugPrint(e);
-    });
-  }
-
-  Future<void> _getAddressFromLatLng(Position position) async {
-    await placemarkFromCoordinates(
-            _currentPosition!.latitude, _currentPosition!.longitude)
+  Future<void> _getAddressFromLatLng(LocationDto position) async {
+    await placemarkFromCoordinates(position.latitude, position.longitude)
         .then((List<Placemark> placemarks) {
       Placemark place = placemarks[0];
       setCurretAddress(
           ' ${place.street} ${place.name} ${place.country} ${place.postalCode}');
-      print(_currentAddress);
+      log("----currentAddress----->${_currentAddress.toString()}");
       sourceController.text = _currentAddress.toString();
     }).catchError((e) {
       debugPrint(e);
     });
+  }
+
+  Future<void> updateUI(dynamic data) async {
+    LocationDto? locationDto =
+        (data != null) ? LocationDto.fromJson(data) : null;
+    await _updateNotificationText(locationDto!);
+    setCurretLocation(locationDto);
+    _getAddressFromLatLng(locationDto);
+
+    try {
+      FirebaseFirestore.instance.collection('location').doc('user1').set({
+        'latitude': currentLocation!.latitude,
+        'longitude': currentLocation!.longitude,
+        'name': 'Ram Ghumaliya',
+        'datetime': DateTime.now(),
+      }, SetOptions(merge: false));
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
+  Future<void> _updateNotificationText(LocationDto data) async {
+    // ignore: unnecessary_null_comparison
+    if (data == null) {
+      return;
+    }
+
+    await BackgroundLocator.updateNotificationText(
+        title: "new location received",
+        msg: "${DateTime.now()}",
+        bigMsg: "${data.latitude}, ${data.longitude}");
+  }
+
+  Future<void> initPlatformState() async {
+    log('Initializing...');
+
+    await BackgroundLocator.initialize();
+    log('Initialization done');
+    final isRunning = await BackgroundLocator.isServiceRunning();
+    setIsRunningSerives(isRunning);
+    log('Running ${isRunningSerives.toString()}');
+  }
+
+  Future<void> onStart(BuildContext context) async {
+    log("------onStart----->");
+    await trunOnLocation(context);
+    await startLocator();
+    final isRunning = await BackgroundLocator.isServiceRunning();
+    log("------Stat----->$isRunning");
+  }
+
+  void onStop() async {
+    await BackgroundLocator.unRegisterLocationUpdate();
+    final isRunning = await BackgroundLocator.isServiceRunning();
+    log("------stop----->$isRunning");
+  }
+
+  Future<void> startLocator() async {
+    Map<String, dynamic> data = {'countInit': 1};
+    return await BackgroundLocator.registerLocationUpdate(
+        LocationCallbackHandler.callback,
+        initCallback: LocationCallbackHandler.initCallback,
+        initDataCallback: data,
+        disposeCallback: LocationCallbackHandler.disposeCallback,
+        iosSettings: const IOSSettings(
+            accuracy: LocationAccuracy.NAVIGATION,
+            distanceFilter: 0,
+            stopWithTerminate: false),
+        autoStop: false,
+        androidSettings: const AndroidSettings(
+            accuracy: LocationAccuracy.NAVIGATION,
+            interval: 5,
+            distanceFilter: 0,
+            client: LocationClient.google,
+            androidNotificationSettings: AndroidNotificationSettings(
+                notificationChannelName: 'Location tracking',
+                notificationTitle: 'Start Location Tracking',
+                notificationMsg: 'Track location in background',
+                notificationBigMsg:
+                    'Background location is on to keep the app up-tp-date with your location. This is required for main features to work properly when the app is not running.',
+                notificationIconColor: Color(0xFF08957D),
+                notificationTapCallback:
+                    LocationCallbackHandler.notificationCallback)));
   }
 }

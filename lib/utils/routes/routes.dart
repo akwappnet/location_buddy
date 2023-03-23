@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:location_buddy/utils/routes/routes_name.dart';
 import 'package:location_buddy/view/home_view.dart';
+import 'package:location_buddy/view/order_traking_page.dart';
 import 'package:location_buddy/view/route_view.dart';
 import 'package:location_buddy/view/save_location_view.dart';
 import 'package:location_buddy/view/splash_view.dart';
@@ -25,6 +25,9 @@ class Routes {
       case RoutesName.saveLocationView:
         return MaterialPageRoute(
             builder: (BuildContext context) => const SaveLocationView());
+      case RoutesName.ordertrakingpage:
+        return MaterialPageRoute(
+            builder: (BuildContext context) => const OrderTrackingPage());
 
       default:
         // SystemNavigator.pop();

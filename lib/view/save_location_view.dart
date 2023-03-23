@@ -1,8 +1,13 @@
 // ignore_for_file: sized_box_for_whitespace
 
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:developer';
+import 'dart:isolate';
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_places_flutter/google_places_flutter.dart';
+import 'package:google_places_flutter/model/prediction.dart';
 import 'package:location_buddy/utils/assets/assets_utils.dart';
 import 'package:location_buddy/utils/colors/colors.dart';
 import 'package:location_buddy/widgets/custom_button_widget.dart';
@@ -12,6 +17,9 @@ import 'package:provider/provider.dart';
 import 'package:r_dotted_line_border/r_dotted_line_border.dart';
 
 import '../provider/save_location_view_provider.dart';
+import '../services/location_service_repository.dart';
+import '../utils/font/font_family.dart';
+import '../utils/font/font_style.dart';
 
 class SaveLocationView extends StatefulWidget {
   const SaveLocationView({super.key});
@@ -21,6 +29,41 @@ class SaveLocationView extends StatefulWidget {
 }
 
 class _SaveLocationViewState extends State<SaveLocationView> {
+  ReceivePort port = ReceivePort();
+  @override
+  void initState() {
+    super.initState();
+    if (IsolateNameServer.lookupPortByName(
+            LocationServiceRepository.isolateName) !=
+        null) {
+      IsolateNameServer.removePortNameMapping(
+          LocationServiceRepository.isolateName);
+    }
+    IsolateNameServer.registerPortWithName(
+        port.sendPort, LocationServiceRepository.isolateName);
+    port.listen(
+      (dynamic data) {
+        Provider.of<SaveLocationViewProvider>(context, listen: false)
+            .updateUI(data);
+      },
+    );
+    Provider.of<SaveLocationViewProvider>(context, listen: false)
+        .initPlatformState();
+    Provider.of<SaveLocationViewProvider>(context, listen: false)
+        .onStart(context);
+  }
+
+  @override
+  void dispose() {
+    final saveLocationViewProvider =
+        Provider.of<SaveLocationViewProvider>(context, listen: false);
+    saveLocationViewProvider.savePointSourceController.clear();
+    saveLocationViewProvider.savePointDestinationController.clear();
+    saveLocationViewProvider.destinationController.clear();
+    saveLocationViewProvider.sourceController.clear();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<SaveLocationViewProvider>(
@@ -151,13 +194,16 @@ class _SaveLocationViewState extends State<SaveLocationView> {
                                     ),
                                     SizedBox(
                                       width: 250.w,
-                                      child: BuildTextFormField(
+                                      child: placesAutoCompleteTextField(
+                                          saveLocationViewProvider
+                                              .destinationController),
+                                      /*  child: BuildTextFormField(
                                         isObserve: false,
                                         controller: saveLocationViewProvider
                                             .destinationController,
                                         txtHint: 'Destination location',
-                                      ),
-                                    )
+                                      ), */
+                                    ),
                                   ],
                                 ),
                               ],
@@ -205,5 +251,60 @@ class _SaveLocationViewState extends State<SaveLocationView> {
         ),
       );
     });
+  }
+
+  placesAutoCompleteTextField(TextEditingController controller) {
+    return GooglePlaceAutoCompleteTextField(
+        textEditingController: controller,
+        textStyle: TextStyle(
+            color: Colors.black,
+            fontSize: 16.sp,
+            fontFamily: FontFamliyM.REGULAR),
+        googleAPIKey: "AIzaSyAERKSFYMxdSR6mrMmgyesmQOr8miAFd4c",
+        inputDecoration: InputDecoration(
+          contentPadding: EdgeInsets.only(
+            left: 15.sp,
+          ),
+          border: InputBorder.none,
+          isDense: false,
+          labelText: "Destination Location",
+          errorStyle: const TextStyle(color: Colors.black),
+          labelStyle: montserratHeading4tyle,
+          enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(15.sp),
+              borderSide: BorderSide(color: Colors.black, width: 1.w)),
+          disabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(15.sp),
+              borderSide: BorderSide(color: Colors.black, width: 1.w)),
+          focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(15.sp),
+              borderSide: BorderSide(color: Colors.black, width: 1.w)),
+          focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(15.sp),
+              borderSide: BorderSide(color: Colors.black, width: 1.w)),
+          errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(15.sp),
+              borderSide: BorderSide(color: Colors.black, width: 1.w)),
+        ),
+        debounceTime: 800,
+        countries: const ["in", "fr"],
+        isLatLngRequired: true,
+        getPlaceDetailWithLatLng: (Prediction prediction) {
+          log("Latitude${prediction.lng}");
+          Provider.of<SaveLocationViewProvider>(context, listen: false)
+              .setDestinationLocationLatitude(prediction.lat.toString());
+          Provider.of<SaveLocationViewProvider>(context, listen: false)
+              .setDestinationLocationlongitude(prediction.lng.toString());
+        },
+        itmClick: (Prediction prediction) {
+          log("Latitude-->${prediction.description!.toLowerCase()}");
+          log("Longitude--->${prediction.lat}");
+          controller.text = prediction.description!;
+
+          controller.selection = TextSelection.fromPosition(
+              TextPosition(offset: prediction.description!.length));
+        }
+        // default 600 ms ,
+        );
   }
 }

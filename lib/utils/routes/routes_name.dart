@@ -4,4 +4,5 @@ class RoutesName {
   static const String routeView = "/route_view";
   static const String saveLocationView = "/save_location_view";
   static const String bottomBar = "/bottomBar";
+  static const String ordertrakingpage = "/order_traking_page";
 }
