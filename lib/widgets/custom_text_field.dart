@@ -48,6 +48,7 @@ class _BuildTextFormFieldState extends State<BuildTextFormField> {
       child: AutoDirection(
         text: text,
         child: TextFormField(
+          textCapitalization: TextCapitalization.words,
           keyboardType: widget.textType,
           //validator: widget.validation,
           autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -70,7 +71,10 @@ class _BuildTextFormFieldState extends State<BuildTextFormField> {
             isDense: false,
             labelText: widget.txtHint,
             errorStyle: const TextStyle(color: Colors.black),
-            labelStyle: montserratHeading4tyle,
+            labelStyle: montserratHeadingStyle(
+                color: Colors.black,
+                fontSize: 16.sp,
+                fontFamily: FontFamliyM.REGULAR),
             enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(15.sp),
                 borderSide: BorderSide(

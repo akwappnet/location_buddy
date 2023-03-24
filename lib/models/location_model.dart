@@ -1,5 +1,4 @@
 class LocationInfo {
-  String? savePointSource;
   String? savePointDestination;
   String? sourceLocation;
   String? destinationLocation;
@@ -10,7 +9,6 @@ class LocationInfo {
   String? id;
 
   LocationInfo({
-    this.savePointSource,
     this.savePointDestination,
     this.sourceLocation,
     this.destinationLocation,

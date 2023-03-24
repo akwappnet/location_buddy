@@ -20,8 +20,6 @@ import '../services/location_callback_handler.dart';
 import '../services/take_location_permission.dart';
 
 class SaveLocationViewProvider extends ChangeNotifier {
-  final TextEditingController savePointSourceController =
-      TextEditingController();
   final TextEditingController savePointDestinationController =
       TextEditingController();
   final TextEditingController sourceController = TextEditingController();
@@ -75,8 +73,8 @@ class SaveLocationViewProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void addLocationInfo(LocationInfo person) {
-    _locationInfo.add(person);
+  void addLocationInfo(LocationInfo locationInfo) {
+    _locationInfo.add(locationInfo);
     notifyListeners();
   }
 
@@ -96,7 +94,6 @@ class SaveLocationViewProvider extends ChangeNotifier {
         await FirebaseFirestore.instance.collection('location_info').get();
     final locationInfo = snapshot.docs
         .map((doc) => LocationInfo(
-              savePointSource: doc['savePointSource'],
               savePointDestination: doc['savePointDestination'],
               sourceLocation: doc['sourceLocation'],
               destinationLocation: doc['destinationLocation'],
@@ -114,22 +111,21 @@ class SaveLocationViewProvider extends ChangeNotifier {
 
 //store data of location in firebase collection
   Future<void> saveLocationToCollection(
-      String savePointSource,
       String savePointDestination,
       String sourceLocation,
       String destinationLocation,
       BuildContext context) async {
-    if (savePointSource.isNotEmpty) {
+    if (savePointDestination.isNotEmpty &&
+        sourceLocation.isNotEmpty &&
+        destinationLocation.isNotEmpty) {
       setSaving(true);
       final locationInfo = LocationInfo(
-          savePointSource: savePointSource,
           savePointDestination: savePointDestination,
           sourceLocation: sourceLocation,
           destinationLocation: destinationLocation);
       addLocationInfo(locationInfo);
       final docRef = firestore.collection('location_info').doc();
       await docRef.set({
-        'savePointSource': savePointSource,
         'savePointDestination': savePointDestination,
         'sourceLocation': sourceLocation,
         'destinationLocation': destinationLocation,
@@ -145,8 +141,7 @@ class SaveLocationViewProvider extends ChangeNotifier {
         (value) {
           showDialog(
             context: context,
-            barrierDismissible: true,
-            barrierLabel: '',
+            barrierDismissible: false,
             barrierColor: Colors.black38,
             builder: (BuildContext context) {
               return const CustomDialogBox(
@@ -166,10 +161,17 @@ class SaveLocationViewProvider extends ChangeNotifier {
       );
       setSaving(false);
       fetchLocationInformation();
-      savePointSourceController.clear();
       savePointDestinationController.clear();
       sourceController.clear();
       destinationController.clear();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          backgroundColor: CustomColor.redColor,
+          content: Text('Please fill all fields...'),
+          duration: Duration(seconds: 3),
+        ),
+      );
     }
   }
 
@@ -198,7 +200,7 @@ class SaveLocationViewProvider extends ChangeNotifier {
   Future<void> updateUI(dynamic data) async {
     LocationDto? locationDto =
         (data != null) ? LocationDto.fromJson(data) : null;
-    await _updateNotificationText(locationDto!);
+    await updateNotificationText(locationDto!);
     setCurretLocation(locationDto);
     _getAddressFromLatLng(locationDto);
 
@@ -214,7 +216,7 @@ class SaveLocationViewProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> _updateNotificationText(LocationDto data) async {
+  Future<void> updateNotificationText(LocationDto data) async {
     // ignore: unnecessary_null_comparison
     if (data == null) {
       return;
@@ -238,15 +240,24 @@ class SaveLocationViewProvider extends ChangeNotifier {
 
   Future<void> onStart(BuildContext context) async {
     log("------onStart----->");
+    await requestLocationPermission(context);
     await trunOnLocation(context);
     await startLocator();
     final isRunning = await BackgroundLocator.isServiceRunning();
     log("------Stat----->$isRunning");
   }
 
-  void onStop() async {
+  void onStop(BuildContext context) async {
     await BackgroundLocator.unRegisterLocationUpdate();
     final isRunning = await BackgroundLocator.isServiceRunning();
+    // ignore: use_build_context_synchronously
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        backgroundColor: CustomColor.Violet,
+        content: Text('Location Services Stoped'),
+        duration: Duration(seconds: 3),
+      ),
+    );
     log("------stop----->$isRunning");
   }
 

@@ -1,7 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:location_buddy/models/location_data_navigate.dart';
 import 'package:location_buddy/provider/home_view_provider.dart';
+import 'package:location_buddy/provider/live_traking_view_provider.dart';
 import 'package:location_buddy/provider/save_location_view_provider.dart';
 import 'package:location_buddy/provider/splash_view_provider.dart';
 import 'package:location_buddy/utils/routes/routes.dart';
@@ -30,6 +32,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => SaveLocationViewProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => LiveTrackingViewProvider(),
         ),
       ],
       child: ScreenUtilInit(

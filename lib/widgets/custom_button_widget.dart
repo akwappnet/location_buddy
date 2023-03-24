@@ -34,7 +34,7 @@ class AppButton extends StatelessWidget {
       width: isResponsive == true ? double.maxFinite : width,
       height: height,
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(radius ?? 20),
+          borderRadius: BorderRadius.circular(radius ?? 10),
           color: mycolor ?? CustomColor.redColor),
       child: Row(
         mainAxisAlignment: isResponsive == true
@@ -49,7 +49,7 @@ class AppButton extends StatelessWidget {
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: sizes ?? 20.sp,
-                      fontWeight: FontWeight.bold,
+                      fontFamily: FontFamliyM.REGULAR,
                     ),
                   ),
                 )
@@ -58,7 +58,6 @@ class AppButton extends StatelessWidget {
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: sizes ?? 20.sp,
-                      fontWeight: FontWeight.w900,
                       fontFamily: FontFamliyM.SEMIBOLD),
                 ),
         ],

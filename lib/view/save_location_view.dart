@@ -57,7 +57,6 @@ class _SaveLocationViewState extends State<SaveLocationView> {
   void dispose() {
     final saveLocationViewProvider =
         Provider.of<SaveLocationViewProvider>(context, listen: false);
-    saveLocationViewProvider.savePointSourceController.clear();
     saveLocationViewProvider.savePointDestinationController.clear();
     saveLocationViewProvider.destinationController.clear();
     saveLocationViewProvider.sourceController.clear();
@@ -101,11 +100,15 @@ class _SaveLocationViewState extends State<SaveLocationView> {
                               topLeft: Radius.circular(30.sp),
                               topRight: Radius.circular(30.sp))),
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
                             'SAVE ROUTE FOR YOUR DESTINATION',
-                            style: TextStyle(fontSize: 20.sp),
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 22.sp,
+                              fontFamily: FontFamliyM.SEMIBOLD,
+                            ),
                           ),
                           SizedBox(
                             height: 30.h,
@@ -113,23 +116,28 @@ class _SaveLocationViewState extends State<SaveLocationView> {
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              SizedBox(
-                                width: 160.w,
-                                child: BuildTextFormField(
-                                  controller: saveLocationViewProvider
-                                      .savePointSourceController,
-                                  isObserve: false,
-                                  txtHint: 'eg.office',
+                              Padding(
+                                padding:
+                                    EdgeInsets.symmetric(horizontal: 15.sp),
+                                child: SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width / 1.3,
+                                  child: BuildTextFormField(
+                                    controller: saveLocationViewProvider
+                                        .savePointDestinationController,
+                                    isObserve: false,
+                                    txtHint: 'Enter Title eg.Office',
+                                  ),
                                 ),
                               ),
-                              SizedBox(
+                              /* SizedBox(
                                 width: 5.w,
                               ),
                               Text('To', style: TextStyle(fontSize: 20.sp)),
                               SizedBox(
                                 width: 5.w,
-                              ),
-                              SizedBox(
+                              ), */
+                              /*  SizedBox(
                                 width: 160.w,
                                 child: BuildTextFormField(
                                   controller: saveLocationViewProvider
@@ -137,7 +145,7 @@ class _SaveLocationViewState extends State<SaveLocationView> {
                                   isObserve: false,
                                   txtHint: 'eg.market',
                                 ),
-                              ),
+                              ), */
                             ],
                           ),
                           SizedBox(
@@ -222,8 +230,6 @@ class _SaveLocationViewState extends State<SaveLocationView> {
                                   onTap: () async {
                                     await saveLocationViewProvider
                                         .saveLocationToCollection(
-                                            saveLocationViewProvider
-                                                .savePointSourceController.text,
                                             saveLocationViewProvider
                                                 .savePointDestinationController
                                                 .text,

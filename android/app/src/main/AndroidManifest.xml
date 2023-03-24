@@ -8,7 +8,7 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
    <application
-        android:label="location_buddy"
+        android:label="Location Buddy"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
