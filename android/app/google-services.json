@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "331364670782",
+    "project_id": "locationbuddy-bf395",
+    "storage_bucket": "locationbuddy-bf395.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:331364670782:android:a898c25ee55f458294606f",
+        "android_client_info": {
+          "package_name": "com.example.location_buddy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "331364670782-6stt8dt9pv5ifuquak3glqqh10ebaqb9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.location_buddy",
+            "certificate_hash": "d240d9016c9099bbc0ed6bbbc951786ca7c5fec9"
+          }
+        },
+        {
+          "client_id": "331364670782-3ji06i51j4u6n72sf7e4cs61sned7bjo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAbTylo0nK_CfKe1_csU21-5Op62sTYbU0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "331364670782-3ji06i51j4u6n72sf7e4cs61sned7bjo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
