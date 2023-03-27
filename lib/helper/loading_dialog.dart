@@ -18,5 +18,6 @@ void showCustomLoadingDialog(BuildContext context) async {
 Future<void> closeCustomLoadingDialog(BuildContext context) async {
   SimpleFontelicoProgressDialog dialog =
       SimpleFontelicoProgressDialog(context: context);
+  Navigator.pop(context);
   dialog.hide();
 }

@@ -36,7 +36,8 @@ class _ProfileViewState extends State<ProfileView> {
               width: 190.w,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage(auth.currentUser!.photoURL!),
+                  image: NetworkImage(auth.currentUser?.photoURL ??
+                      "https://cdn-icons-png.flaticon.com/128/3177/3177440.png"),
                   fit: BoxFit.fill,
                 ),
               ),
@@ -50,14 +51,14 @@ class _ProfileViewState extends State<ProfileView> {
                   ),
                   children: [
                     TextSpan(
-                      text: auth.currentUser!.displayName!,
+                      text: auth.currentUser?.displayName ?? "No Name",
                       style: TextStyle(
                           color: CustomColor.primaryColor,
                           fontWeight: FontWeight.w800,
                           fontFamily: FontFamliyM.ROBOTOBLACK),
                     ),
                     TextSpan(
-                      text: auth.currentUser!.email!,
+                      text: auth.currentUser?.email ?? "demo email",
                       style: TextStyle(
                           color: CustomColor.secondaryColor,
                           fontWeight: FontWeight.w800,
