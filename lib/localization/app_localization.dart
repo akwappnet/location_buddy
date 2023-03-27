@@ -18,8 +18,8 @@ class AppLocalization {
     'en': {
       'hello-world': 'Hello world!',
     },
-    'fr': {
-      'hello-world': 'Bonjour le monde!',
+    'ar': {
+      'hello-world': 'مرحبًا!',
     },
     'es': {
       'hello-world': 'Hola mundo!',
@@ -39,7 +39,7 @@ class AppLocalizationDelegate extends LocalizationsDelegate<AppLocalization> {
 
   @override
   bool isSupported(Locale locale) =>
-      ['en', 'fr', 'es', 'ru'].contains(locale.languageCode);
+      ['en', 'ar', 'es', 'ru'].contains(locale.languageCode);
 
   @override
   Future<AppLocalization> load(Locale locale) {

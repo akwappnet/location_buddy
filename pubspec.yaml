@@ -56,6 +56,10 @@ dependencies:
   google_places_flutter: ^2.0.5
   flutter_polyline_points: ^1.0.0
   google_maps_flutter: ^2.2.5
+  flutter_svg: ^1.1.6
+  google_sign_in: ^6.0.2
+  firebase_auth: ^4.3.0
+  simple_fontellico_progress_dialog: ^0.3.0
 
 dev_dependencies:
   flutter_test:
@@ -103,6 +107,22 @@ flutter:
     - family: montserrat_semibold
       fonts:
         - asset: assets/fonts/montserrat_semibold.ttf
+
+    - family: roboto_regular
+      fonts:
+        - asset: assets/fonts/roboto_regular.ttf
+
+    - family: roboto_light
+      fonts:
+        - asset: assets/fonts/roboto_light.ttf
+
+    - family: roboto_bold
+      fonts:
+        - asset: assets/fonts/roboto_bold.ttf
+
+    - family: roboto_black
+      fonts:
+        - asset: assets/fonts/roboto_black.ttf
 
   #
   # For details regarding fonts from package dependencies,

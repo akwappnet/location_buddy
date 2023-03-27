@@ -9,7 +9,7 @@ import 'package:location_buddy/provider/current_data_provider.dart';
 import 'package:location_buddy/provider/home_view_provider.dart';
 import 'package:location_buddy/provider/live_traking_view_provider.dart';
 import 'package:location_buddy/provider/save_location_view_provider.dart';
-import 'package:location_buddy/provider/splash_view_provider.dart';
+import 'package:location_buddy/provider/sign_in_provider.dart';
 import 'package:location_buddy/utils/routes/routes.dart';
 import 'package:location_buddy/utils/routes/routes_name.dart';
 import 'package:provider/provider.dart';
@@ -35,13 +35,13 @@ class MyApp extends StatelessWidget {
           create: (_) => HomeViewProvider(),
         ),
         ChangeNotifierProvider(
-          create: (_) => SplashViewProvider(),
-        ),
-        ChangeNotifierProvider(
           create: (_) => SaveLocationViewProvider(),
         ),
         ChangeNotifierProvider(
           create: (_) => LiveTrackingViewProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => SignInProvider(),
         ),
         ChangeNotifierProvider(
           create: (context) => currentData,
@@ -64,7 +64,7 @@ class MyApp extends StatelessWidget {
                 ],
                 supportedLocales: [
                   const Locale('en'),
-                  const Locale('fr'),
+                  const Locale('ar'),
                   const Locale('es'),
                   const Locale('ru'),
                 ],

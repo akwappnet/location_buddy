@@ -3,7 +3,7 @@
 class DefaultData {
   List<String> _languagesListDefault = [
     'English',
-    'Français',
+    'Arabic',
     'Español',
     'Русский',
   ];
