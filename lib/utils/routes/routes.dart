@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:location_buddy/utils/routes/routes_name.dart';
 import 'package:location_buddy/view/home_view.dart';
+import 'package:location_buddy/view/live_traking_view.dart';
 import 'package:location_buddy/view/route_view.dart';
 import 'package:location_buddy/view/save_location_view.dart';
 import 'package:location_buddy/view/splash_view.dart';
@@ -14,7 +14,7 @@ class Routes {
         return MaterialPageRoute(builder: (BuildContext context) => HomeView());
       case RoutesName.routeView:
         return MaterialPageRoute(
-            builder: (BuildContext context) => const RouteView());
+            builder: (BuildContext context) => const MapScreen());
       case RoutesName.splashView:
         return MaterialPageRoute(
             builder: (BuildContext context) => const SplashView());
@@ -25,6 +25,9 @@ class Routes {
       case RoutesName.saveLocationView:
         return MaterialPageRoute(
             builder: (BuildContext context) => const SaveLocationView());
+      case RoutesName.livetrakingpage:
+        return MaterialPageRoute(
+            builder: (BuildContext context) => const LiveTrackingPage());
 
       default:
         // SystemNavigator.pop();
