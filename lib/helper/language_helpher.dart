@@ -10,8 +10,8 @@ class LanguageHelper {
       case 'English':
         convertedLocale = Locale('en', 'EN');
         break;
-      case 'Français':
-        convertedLocale = Locale('fr', 'FR');
+      case 'Arabic':
+        convertedLocale = Locale('ar', 'AR');
         break;
       case 'Español':
         convertedLocale = Locale('es', 'ES');
@@ -33,8 +33,8 @@ class LanguageHelper {
       case 'en':
         langName = "English";
         break;
-      case 'fr':
-        langName = "Français";
+      case 'ar':
+        langName = "Arabic";
         break;
       case 'es':
         langName = "Español";

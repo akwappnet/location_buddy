@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:location_buddy/utils/colors/colors.dart';
 import 'package:location_buddy/view/home_view.dart';
+import 'package:location_buddy/view/profile_view.dart';
 import 'package:location_buddy/view/save_location_view.dart';
 import 'package:location_buddy/widgets/custom_dialog_box.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
@@ -12,7 +13,11 @@ class BottomNavBar extends StatelessWidget {
   BottomNavBar({super.key});
   ValueNotifier<int> _currentIndex = ValueNotifier<int>(0);
 
-  final List<Widget> _pages = [HomeView(), const SaveLocationView()];
+  final List<Widget> _pages = [
+    HomeView(),
+    const SaveLocationView(),
+    const ProfileView()
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -49,13 +54,18 @@ class BottomNavBar extends StatelessWidget {
                     SalomonBottomBarItem(
                       icon: const Icon(Icons.home),
                       title: const Text("Home"),
-                      selectedColor: CustomColor.Violet,
+                      selectedColor: CustomColor.primaryColor,
                     ),
 
                     SalomonBottomBarItem(
                       icon: const Icon(Icons.add),
                       title: const Text("Save Route"),
-                      selectedColor: Colors.red,
+                      selectedColor: CustomColor.primaryColor,
+                    ),
+                    SalomonBottomBarItem(
+                      icon: const Icon(Icons.person),
+                      title: const Text("Profile"),
+                      selectedColor: CustomColor.primaryColor,
                     ),
                   ],
                 );

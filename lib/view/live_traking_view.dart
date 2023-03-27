@@ -1,5 +1,4 @@
-
-import 'dart:developer';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -50,8 +49,8 @@ class _LiveTrackingPageState extends State<LiveTrackingPage> {
 
     _destination = Provider.of<LiveTrackingViewProvider>(context, listen: false)
         .locationData;
-    log('Latitude: ${_destination!.latitude}');
-    log('Longitude: ${_destination!.longitude}');
+    // log('Latitude: ${_destination!.latitude}');
+    // log('Longitude: ${_destination!.longitude}');
     if (IsolateNameServer.lookupPortByName(
             LocationServiceRepository.isolateName) !=
         null) {
@@ -94,15 +93,15 @@ class _LiveTrackingPageState extends State<LiveTrackingPage> {
 
     GoogleMapController googleMapController = await _controller.future;
     _updatePolyline(googleMapController);
-    googleMapController.animateCamera(CameraUpdate.newCameraPosition(
-      CameraPosition(
-        zoom: 16,
-        target: LatLng(
-          currentLocation!.latitude,
-          currentLocation!.longitude,
-        ),
-      ),
-    ));
+
+    LatLngBounds bounds = LatLngBounds(
+      southwest: LatLng(min(currentLocation!.latitude, _destination!.latitude),
+          min(currentLocation!.longitude, _destination!.longitude)),
+      northeast: LatLng(max(currentLocation!.latitude, _destination!.latitude),
+          max(currentLocation!.longitude, _destination!.longitude)),
+    );
+
+    googleMapController.animateCamera(CameraUpdate.newLatLngBounds(bounds, 50));
   }
 
   void _updatePolyline(GoogleMapController controller) async {
@@ -125,10 +124,12 @@ class _LiveTrackingPageState extends State<LiveTrackingPage> {
           }
           _polylineId = const PolylineId('route');
           _polylines.add(Polyline(
-              width: 5,
-              polylineId: _polylineId!,
-              color: CustomColor.Violet,
-              points: _polylineCoordinates));
+            width: 5,
+            polylineId: _polylineId!,
+            color: CustomColor.Violet,
+            points: _polylineCoordinates,
+            visible: true,
+          ));
         });
       }
     }

@@ -1,43 +1,27 @@
-import 'dart:async';
-import 'dart:developer';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:location_buddy/utils/assets/assets_utils.dart';
+import 'package:location_buddy/provider/sign_in_provider.dart';
 import 'package:location_buddy/utils/colors/colors.dart';
 import 'package:location_buddy/utils/font/font_family.dart';
-import 'package:location_buddy/utils/routes/routes_name.dart';
+import 'package:provider/provider.dart';
 
-class SplashView extends StatefulWidget {
-  const SplashView({super.key});
+class ProfileView extends StatefulWidget {
+  const ProfileView({super.key});
 
   @override
-  State<SplashView> createState() => _SplashViewState();
+  State<ProfileView> createState() => _ProfileViewState();
 }
 
-class _SplashViewState extends State<SplashView> {
+class _ProfileViewState extends State<ProfileView> {
   @override
   void initState() {
     super.initState();
-
-    Timer(const Duration(seconds: 3), () {
-      checkIfUserIsLoggedIn();
-    });
-  }
-
-  Future<void> checkIfUserIsLoggedIn() async {
-    FirebaseAuth auth = FirebaseAuth.instance;
-    if (auth.currentUser != null) {
-      log(auth.currentUser?.displayName ?? "No name");
-      Navigator.popAndPushNamed(context, RoutesName.bottomBar);
-    } else {
-      Navigator.popAndPushNamed(context, RoutesName.siginview);
-    }
   }
 
   @override
   Widget build(BuildContext context) {
+    FirebaseAuth auth = FirebaseAuth.instance;
     return Scaffold(
       body: Container(
         height: MediaQuery.of(context).size.height,
@@ -52,7 +36,7 @@ class _SplashViewState extends State<SplashView> {
               width: 190.w,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage(AssetsUtils.splash),
+                  image: AssetImage(auth.currentUser!.photoURL!),
                   fit: BoxFit.fill,
                 ),
               ),
@@ -66,14 +50,14 @@ class _SplashViewState extends State<SplashView> {
                   ),
                   children: [
                     TextSpan(
-                      text: 'Location ',
+                      text: auth.currentUser!.displayName!,
                       style: TextStyle(
                           color: CustomColor.primaryColor,
                           fontWeight: FontWeight.w800,
                           fontFamily: FontFamliyM.ROBOTOBLACK),
                     ),
                     TextSpan(
-                      text: 'Buddy',
+                      text: auth.currentUser!.email!,
                       style: TextStyle(
                           color: CustomColor.secondaryColor,
                           fontWeight: FontWeight.w800,
@@ -84,6 +68,13 @@ class _SplashViewState extends State<SplashView> {
                 textAlign: TextAlign.center,
               ),
             ),
+            ElevatedButton(
+                onPressed: () {
+                  final provider =
+                      Provider.of<SignInProvider>(context, listen: false);
+                  provider.signOut(context);
+                },
+                child: const Text("Logout"))
           ],
         ),
       ),

@@ -10,4 +10,6 @@ class AssetsUtils {
   static String sourceRed = "assets/images/ic_source_red.png";
   static String destination = "assets/images/ic_destination.png";
   static String destinationRed = "assets/images/ic_destination_red.png";
+  static String splash = "assets/images/ic_splash.png";
+  static String login = "assets/images/ic_login.png";
 }

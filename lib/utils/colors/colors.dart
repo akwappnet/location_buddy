@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 class CustomColor {
   static const Color lightViolet = Color(0xFFDEA0EF);
   // ignore: constant_identifier_names
+  static const Color secondaryColor = Color(0xFFFE9879);
+  static const Color primaryColor = Color(0xFF21899C);
+  // ignore: constant_identifier_names
   static const Color Violet = Color(0xFFCE87FB);
   static const Color violetSecond = Color(0xFFDBB0D5);
   static const Color white = Color(0xFFFFFFFF);
