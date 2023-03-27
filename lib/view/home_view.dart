@@ -5,7 +5,9 @@ import 'dart:developer';
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:location_buddy/models/location_data_navigate.dart';
+
+import 'package:location_buddy/data/default_data.dart';
+import 'package:location_buddy/provider/current_data_provider.dart';
 import 'package:location_buddy/provider/home_view_provider.dart';
 import 'package:location_buddy/provider/live_traking_view_provider.dart';
 import 'package:location_buddy/utils/assets/assets_utils.dart';
@@ -27,8 +29,8 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-  var length = 1;
-
+  // var length = 1;
+  final DefaultData defaultData = DefaultData();
   @override
   void initState() {
     super.initState();
@@ -96,7 +98,12 @@ class _HomeViewState extends State<HomeView> {
                           fontFamily: FontFamliyM.SEMIBOLD,
                         ),
                       ),
+                      // Text(
+                      //   AppLocalization.of(context)!.translate('hello-world'),
+                      //   style: TextStyle(color: Colors.indigo, fontSize: 5),
+                      // ),
                       SizedBox(
+/* <<<<<<< HEAD
                         width: 80.w,
                       ),
                       GestureDetector(
@@ -111,13 +118,53 @@ class _HomeViewState extends State<HomeView> {
                           size: 35.h,
                         ),
                       )
+======= */
+                        width: 50.w,
+                      ),
+                      Icon(
+                        Icons.language,
+                        color: Colors.white,
+                        size: 35.h,
+                      ),
+                      SizedBox(
+                        width: 5.w,
+                      ),
+                      Consumer<CurrentData>(
+                          builder: (context, currentData, child) {
+                        return DropdownButton<String>(
+                          value: currentData.defineCurrentLanguage(context),
+                          icon: const Icon(
+                            Icons.arrow_downward,
+                            color: Colors.white,
+                          ),
+                          iconSize: 20,
+                          elevation: 0,
+                          style: const TextStyle(color: Colors.white),
+                          underline: Container(
+                            height: 1,
+                          ),
+                          dropdownColor: CustomColor.Violet,
+                          onChanged: (String? newValue) {
+                            currentData.changeLocale(newValue!);
+                          },
+                          items: defaultData.languagesListDefault
+                              .map<DropdownMenuItem<String>>(
+                            (String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              );
+                            },
+                          ).toList(),
+                        );
+                      }),
                     ],
                   )),
               RefreshIndicator(
                 displacement: 30.sp,
                 color: CustomColor.Violet,
                 onRefresh: () async {
-                  print("----");
+                  log("----");
                 },
                 child: Positioned(
                   top: 150.h,

@@ -241,6 +241,7 @@ class SaveLocationViewProvider extends ChangeNotifier {
   Future<void> onStart(BuildContext context) async {
     log("------onStart----->");
     await requestLocationPermission(context);
+    // ignore: use_build_context_synchronously
     await trunOnLocation(context);
     await startLocator();
     final isRunning = await BackgroundLocator.isServiceRunning();

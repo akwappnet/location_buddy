@@ -1,17 +1,12 @@
+
 import 'dart:developer';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:isolate';
 import 'dart:ui';
 
-import 'package:background_locator_2/background_locator.dart';
 import 'package:background_locator_2/location_dto.dart';
-import 'package:background_locator_2/settings/android_settings.dart';
-import 'package:background_locator_2/settings/ios_settings.dart';
-import 'package:background_locator_2/settings/locator_settings.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -55,8 +50,8 @@ class _LiveTrackingPageState extends State<LiveTrackingPage> {
 
     _destination = Provider.of<LiveTrackingViewProvider>(context, listen: false)
         .locationData;
-    print('Latitude: ${_destination!.latitude}');
-    print('Longitude: ${_destination!.longitude}');
+    log('Latitude: ${_destination!.latitude}');
+    log('Longitude: ${_destination!.longitude}');
     if (IsolateNameServer.lookupPortByName(
             LocationServiceRepository.isolateName) !=
         null) {

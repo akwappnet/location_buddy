@@ -1,5 +1,3 @@
-import 'dart:math' show asin, cos, pi, pow, sin, sqrt;
-
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -10,15 +8,15 @@ class MapScreen extends StatefulWidget {
   }) : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _MapScreenState createState() => _MapScreenState();
 }
 
 class _MapScreenState extends State<MapScreen> {
   late GoogleMapController _controller;
-  late LatLngBounds _bounds;
 
-  LatLng source = LatLng(37.4219999, -122.0840575);
-  LatLng destination = LatLng(37.42796133580664, -122.085749655962);
+  LatLng source = const LatLng(37.4219999, -122.0840575);
+  LatLng destination = const LatLng(37.42796133580664, -122.085749655962);
 
   @override
   Widget build(BuildContext context) {
@@ -31,34 +29,15 @@ class _MapScreenState extends State<MapScreen> {
         onMapCreated: (GoogleMapController controller) {
           _controller = controller;
 
-          final southwestLat = source.latitude < destination.latitude
-              ? source.latitude
-              : destination.latitude;
-          final southwestLng = source.longitude < destination.longitude
-              ? source.longitude
-              : destination.longitude;
-
-          final northeastLat = source.latitude > destination.latitude
-              ? source.latitude
-              : destination.latitude;
-          final northeastLng = source.longitude > destination.longitude
-              ? source.longitude
-              : destination.longitude;
-
-          final southwest = LatLng(southwestLat, southwestLng);
-          final northeast = LatLng(northeastLat, northeastLng);
-
-          _bounds = LatLngBounds(southwest: southwest, northeast: northeast);
-
           _centerViewOnMarkers();
         },
         markers: {
           Marker(
-            markerId: MarkerId('source'),
+            markerId: const MarkerId('source'),
             position: source,
           ),
           Marker(
-            markerId: MarkerId('destination'),
+            markerId: const MarkerId('destination'),
             position: destination,
           ),
         },
@@ -67,9 +46,9 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   Future<void> _centerViewOnMarkers() async {
-    await Future.delayed(Duration(milliseconds: 100));
+    await Future.delayed(const Duration(milliseconds: 100));
 
-    final distanceInMeters = await Geolocator.distanceBetween(
+    final distanceInMeters = Geolocator.distanceBetween(
       source.latitude,
       source.longitude,
       destination.latitude,
