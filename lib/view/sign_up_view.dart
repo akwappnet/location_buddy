@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:location_buddy/utils/assets/assets_utils.dart';
 import 'package:location_buddy/view/home_view.dart';
+import 'package:provider/provider.dart';
 
+import '../provider/sign_in_provider.dart';
 import '../utils/font/font_family.dart';
 import '../utils/routes/routes_name.dart';
 import '../widgets/custom_text_field_new.dart';
@@ -16,8 +18,16 @@ class SignUpView extends StatefulWidget {
 }
 
 class _SignUpViewState extends State<SignUpView> {
+  TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passController = TextEditingController();
+  @override
+  void dispose() {
+    super.dispose();
+    emailController.clear();
+    nameController.clear();
+    passController.clear();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -82,9 +92,27 @@ class _SignUpViewState extends State<SignUpView> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 BuildTextFormFieldNew(
+                  controller: nameController,
+                  size: size,
+                  isObserve: false,
+                  textType: TextInputType.name,
+                  txtHint: "Enter Name",
+                  leftIcon: Icon(
+                    Icons.person,
+                    color: nameController.text.isEmpty
+                        ? const Color(0xFF151624).withOpacity(0.5)
+                        : const Color.fromRGBO(44, 185, 176, 1),
+                    size: 24,
+                  ),
+                ),
+                SizedBox(
+                  height: size.height * 0.02,
+                ),
+                BuildTextFormFieldNew(
                   controller: emailController,
                   size: size,
                   isObserve: false,
+                  textType: TextInputType.emailAddress,
                   txtHint: "Enter Email",
                   leftIcon: Icon(
                     Icons.email,
@@ -102,6 +130,7 @@ class _SignUpViewState extends State<SignUpView> {
                   size: size,
                   isObserve: true,
                   txtHint: "Enter Password",
+                  textType: TextInputType.visiblePassword,
                   leftIcon: Icon(
                     Icons.lock,
                     color: passController.text.isEmpty
@@ -114,23 +143,7 @@ class _SignUpViewState extends State<SignUpView> {
                 SizedBox(
                   height: size.height * 0.02,
                 ),
-                BuildTextFormFieldNew(
-                  controller: passController,
-                  size: size,
-                  isObserve: true,
-                  txtHint: "Enter Confirm Password",
-                  leftIcon: Icon(
-                    Icons.lock,
-                    color: passController.text.isEmpty
-                        ? const Color(0xFF151624).withOpacity(0.5)
-                        : const Color.fromRGBO(44, 185, 176, 1),
-                    size: 24,
-                  ),
-                ),
-                //emailTextField(size),
-                SizedBox(
-                  height: size.height * 0.02,
-                ),
+
                 signUpButton(size),
               ],
             ),
@@ -159,7 +172,7 @@ class _SignUpViewState extends State<SignUpView> {
         ),
         children: [
           TextSpan(
-            text: 'Registration ',
+            text: 'Welcome ',
             style: TextStyle(
                 fontWeight: FontWeight.w800,
                 fontFamily: FontFamliyM.ROBOTOBOLD),
@@ -179,14 +192,19 @@ class _SignUpViewState extends State<SignUpView> {
   Widget signUpButton(Size size) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => HomeView()),
-        );
+        final provider = Provider.of<SignInProvider>(context, listen: false);
+        provider
+            .signUpWithEmailAndPassword(emailController.text,
+                passController.text, nameController.text, context)
+            .then((value) {
+          nameController.clear();
+          emailController.clear();
+          passController.clear();
+        });
       },
       child: Container(
         alignment: Alignment.center,
-        height: size.height / 13,
+        height: size.height / 15,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15.0),
           color: const Color(0xFF21899C),

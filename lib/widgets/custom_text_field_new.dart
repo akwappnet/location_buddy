@@ -49,7 +49,7 @@ class _BuildTextFormFieldNewState extends State<BuildTextFormFieldNew> {
         ),
         maxLines: 1,
         obscureText: widget.isObserve,
-        keyboardType: TextInputType.emailAddress,
+        keyboardType: widget.textType ?? TextInputType.name,
         cursorColor: const Color(0xFF151624),
         decoration: InputDecoration(
           hintText: widget.txtHint,

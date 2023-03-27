@@ -22,9 +22,6 @@ class SignInView extends StatefulWidget {
 }
 
 class _SignInViewState extends State<SignInView> {
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passController = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -75,6 +72,7 @@ class _SignInViewState extends State<SignInView> {
   }
 
   Widget buildCard(Size size) {
+    final provider = Provider.of<SignInProvider>(context, listen: false);
     return Container(
       alignment: Alignment.center,
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -110,13 +108,13 @@ class _SignInViewState extends State<SignInView> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 BuildTextFormFieldNew(
-                  controller: emailController,
+                  controller: provider.emailController,
                   size: size,
                   isObserve: false,
                   txtHint: "Enter Email",
                   leftIcon: Icon(
                     Icons.email,
-                    color: emailController.text.isEmpty
+                    color: provider.emailController.text.isEmpty
                         ? const Color(0xFF151624).withOpacity(0.5)
                         : const Color.fromRGBO(44, 185, 176, 1),
                     size: 24,
@@ -126,13 +124,13 @@ class _SignInViewState extends State<SignInView> {
                   height: size.height * 0.02,
                 ),
                 BuildTextFormFieldNew(
-                  controller: passController,
+                  controller: provider.passController,
                   size: size,
                   isObserve: true,
                   txtHint: "Enter Password",
                   leftIcon: Icon(
                     Icons.lock,
-                    color: passController.text.isEmpty
+                    color: provider.passController.text.isEmpty
                         ? const Color(0xFF151624).withOpacity(0.5)
                         : const Color.fromRGBO(44, 185, 176, 1),
                     size: 24,
@@ -238,14 +236,13 @@ class _SignInViewState extends State<SignInView> {
   Widget signInButton(Size size) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => HomeView()),
-        );
+        final provider = Provider.of<SignInProvider>(context, listen: false);
+        provider.signInWithEmailAndPassword(provider.emailController.text,
+            provider.passController.text, context);
       },
       child: Container(
         alignment: Alignment.center,
-        height: size.height / 13,
+        height: size.height / 14,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15.0),
           color: const Color(0xFF21899C),
@@ -309,7 +306,7 @@ class _SignInViewState extends State<SignInView> {
   // ignore: non_constant_identifier_names
   Widget google_facebookButton(Size size) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.end,
       children: <Widget>[
         //google button
         GestureDetector(
@@ -320,8 +317,8 @@ class _SignInViewState extends State<SignInView> {
           },
           child: Container(
             alignment: Alignment.center,
-            width: size.width / 2.8,
-            height: size.height / 13,
+            width: size.width / 1.3,
+            height: size.height / 15,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10.0),
               border: Border.all(
@@ -362,56 +359,6 @@ class _SignInViewState extends State<SignInView> {
         ),
 
         const SizedBox(width: 16),
-
-        //facebook button
-        GestureDetector(
-          onTap: () {
-            /*  final provider =
-                Provider.of<SignInProvider>(context, listen: false);
-            provider.signOut(); */
-          },
-          child: Container(
-            alignment: Alignment.center,
-            width: size.width / 2.8,
-            height: size.height / 13,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10.0),
-              border: Border.all(
-                width: 1.0,
-                color: CustomColor.black,
-              ),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Container(
-                  alignment: Alignment.center,
-                  width: 24.0,
-                  height: 24.0,
-                  color: const Color(0xFFC4C4C4).withOpacity(0.0),
-                  child: SvgPicture.string(
-                    // Vector
-                    '<svg viewBox="13.0 11.0 18.62 22.92" ><path transform="translate(13.0, 11.0)" d="M 13.86734199523926 0.01146837882697582 C 13.81864452362061 -0.04295870289206505 12.0640869140625 0.03295278549194336 10.53726387023926 1.690114140510559 C 9.010440826416016 3.345843315124512 9.245336532592773 5.245062351226807 9.279711723327637 5.293760299682617 C 9.3140869140625 5.34245777130127 11.45679569244385 5.418369293212891 12.82463455200195 3.491936922073364 C 14.19247245788574 1.565504670143127 13.91604042053223 0.06732775270938873 13.86734199523926 0.01146837882697582 L 13.86734199523926 0.01146837882697582 Z M 18.61395645141602 16.8165454864502 C 18.54520606994629 16.67904663085938 15.28387928009033 15.04909896850586 15.5875244140625 11.91524410247803 C 15.89117050170898 8.77995777130127 17.98661231994629 7.920583248138428 18.01955604553223 7.827484607696533 C 18.05249786376953 7.73438549041748 17.16447639465332 6.695973873138428 16.22346115112305 6.170322895050049 C 15.53254699707031 5.799720764160156 14.76786804199219 5.587391376495361 13.98478984832764 5.548707962036133 C 13.83010196685791 5.544411182403564 13.29299354553223 5.41264009475708 12.18869590759277 5.714853763580322 C 11.46109199523926 5.913942337036133 9.821117401123047 6.558474063873291 9.369945526123047 6.584255218505859 C 8.917341232299805 6.610036373138428 7.570987701416016 5.83659839630127 6.122940540313721 5.631780624389648 C 5.196248054504395 5.452744007110596 4.213696002960205 5.819411754608154 3.510440826416016 6.10157299041748 C 2.808617830276489 6.382302284240723 1.473721981048584 7.181520938873291 0.5398677587509155 9.305609703063965 C -0.3939864635467529 11.42826557159424 0.09442496299743652 14.79128551483154 0.4439041316509247 15.83685874938965 C 0.7933833003044128 16.8809986114502 1.339086413383484 18.59258651733398 2.267211437225342 19.84154510498047 C 3.092211484909058 21.25092124938965 4.186482429504395 22.22917556762695 4.643383502960205 22.56146812438965 C 5.100284576416016 22.89375877380371 6.389346599578857 23.11433219909668 7.283096790313721 22.65743255615234 C 8.002107620239258 22.21628570556641 9.299763679504395 21.96277046203613 9.81252384185791 21.98138999938965 C 10.32385158538818 22.00000953674316 11.33218574523926 22.20196151733398 12.3648681640625 22.75339508056641 C 13.18270683288574 23.03555679321289 13.95614337921143 22.9181079864502 14.73101329803467 22.60300445556641 C 15.50588321685791 22.28646850585938 16.62736701965332 21.08620643615723 17.93648147583008 18.65274429321289 C 18.43348693847656 17.52123260498047 18.6597900390625 16.90964508056641 18.61395645141602 16.8165454864502 L 18.61395645141602 16.8165454864502 Z" fill="#000000" stroke="none" stroke-width="1" stroke-miterlimit="4" stroke-linecap="butt" /></svg>',
-                    width: 18.62,
-                    height: 22.92,
-                  ),
-                ),
-                const SizedBox(
-                  width: 16,
-                ),
-                Text(
-                  'Apple',
-                  style: TextStyle(
-                    fontSize: 14.0,
-                    color: CustomColor.black,
-                    fontFamily: FontFamliyM.ROBOTOBOLD,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ],
-            ),
-          ),
-        ),
       ],
     );
   }
