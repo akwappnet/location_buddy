@@ -32,7 +32,21 @@ class AppLocalization {
       'hint-source': 'Source location',
       'hint-destination': 'Destination location',
       'save-button': 'SAVE ROUTE',
-      'save-button2': 'Please Wait..'
+      'save-button2': 'Please Wait..',
+      //profile page language translate
+      'welcome': "Welcome",
+      'setting': "App Setting",
+      'language': 'Language',
+      'select-language': 'Select Language',
+      'privacy': 'Privacy',
+      'privacy-subtitle': 'Location Buddy Privacy',
+      'about': 'About',
+      'about-title': 'Learn more about location buddy',
+      'account': 'Account',
+      'logout': 'Logout',
+      'logout-title': 'I want to logout from app',
+      'delete-account': 'Delete Account',
+      'delete-account-title': 'I want to delete account,',
     },
     'ar': {
       //bottom bar language translate
@@ -52,6 +66,20 @@ class AppLocalization {
       'hint-destination': 'موقع المصدر',
       'save-button': 'حفظ المسار',
       'save-button2': 'الرجاء الانتظار..',
+      //profile page language translate
+      'welcome': " أهلًا وسهلًا",
+      'setting': "إعداد التطبيق",
+      'language': 'اللغة',
+      'select-language': 'اختر اللغة',
+      'privacy': 'الخصوصيه',
+      'privacy-subtitle': 'خصوصية الأصدقاء الموقع',
+      'about': 'عن',
+      'about-title': 'تعرف على المزيد حول صديق الموقع',
+      'account': 'حساب',
+      'logout': 'الخروج',
+      'logout-title': 'أريد تسجيل الخروج من التطبيق',
+      'delete-account': 'حذف الحساب',
+      'delete-account-title': 'أريد حذف الحساب',
     },
   };
 

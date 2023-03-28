@@ -69,8 +69,6 @@ class MyApp extends StatelessWidget {
                 supportedLocales: [
                   const Locale('en'),
                   const Locale('ar'),
-                  const Locale('es'),
-                  const Locale('ru'),
                 ],
                 theme: ThemeData(
                   primarySwatch: Colors.blue,

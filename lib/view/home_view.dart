@@ -6,9 +6,8 @@ import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import 'package:location_buddy/data/default_data.dart';
 import 'package:location_buddy/localization/app_localization.dart';
-import 'package:location_buddy/provider/current_data_provider.dart';
+
 import 'package:location_buddy/provider/home_view_provider.dart';
 import 'package:location_buddy/provider/live_traking_view_provider.dart';
 import 'package:location_buddy/utils/assets/assets_utils.dart';
@@ -17,7 +16,6 @@ import 'package:location_buddy/utils/font/font_family.dart';
 import 'package:location_buddy/utils/routes/routes_name.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
-import 'package:r_dotted_line_border/r_dotted_line_border.dart';
 
 import '../provider/save_location_view_provider.dart';
 import '../services/take_location_permission.dart';

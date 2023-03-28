@@ -51,7 +51,7 @@ class ForgetPasswordView extends StatelessWidget {
         ),
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: 22.sp),
-          child: Container(
+          child: SizedBox(
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
             child: Column(
