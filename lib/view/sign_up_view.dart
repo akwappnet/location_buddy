@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:location_buddy/utils/assets/assets_utils.dart';
+import 'package:location_buddy/utils/validation/validation.dart';
 import 'package:location_buddy/view/home_view.dart';
 import 'package:provider/provider.dart';
 
@@ -32,23 +33,28 @@ class _SignUpViewState extends State<SignUpView> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    return Scaffold(
-      resizeToAvoidBottomInset: true,
-      backgroundColor: const Color(0xFFF8F8F8),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                SizedBox(
-                  height: 40.h,
-                ),
-                buildCard(size),
-                buildFooter(size),
-              ],
+    return GestureDetector(
+      onTap: () {
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
+      child: Scaffold(
+        resizeToAvoidBottomInset: true,
+        backgroundColor: const Color(0xFFF8F8F8),
+        body: SafeArea(
+          child: SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  SizedBox(
+                    height: 40.h,
+                  ),
+                  buildCard(size),
+                  buildFooter(size),
+                ],
+              ),
             ),
           ),
         ),
@@ -110,6 +116,7 @@ class _SignUpViewState extends State<SignUpView> {
                 ),
                 BuildTextFormFieldNew(
                   controller: emailController,
+                  validation: emailValidator,
                   size: size,
                   isObserve: false,
                   textType: TextInputType.emailAddress,
@@ -127,6 +134,7 @@ class _SignUpViewState extends State<SignUpView> {
                 ),
                 BuildTextFormFieldNew(
                   controller: passController,
+                  validation: passwordValidator,
                   size: size,
                   isObserve: true,
                   txtHint: "Enter Password",
@@ -251,7 +259,7 @@ class _SignUpViewState extends State<SignUpView> {
             TextSpan(
               recognizer: TapGestureRecognizer()
                 ..onTap = () {
-                  Navigator.pushReplacementNamed(context, RoutesName.siginview);
+                  Navigator.pushReplacementNamed(context, RoutesName.siginView);
                 },
               text: 'Sign In here',
               style: TextStyle(

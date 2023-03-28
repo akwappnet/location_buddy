@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:location_buddy/data/default_data.dart';
+import 'package:location_buddy/localization/app_localization.dart';
 import 'package:location_buddy/provider/current_data_provider.dart';
 import 'package:location_buddy/provider/home_view_provider.dart';
 import 'package:location_buddy/provider/live_traking_view_provider.dart';
@@ -75,7 +76,7 @@ class _HomeViewState extends State<HomeView> {
                   ),
                 ),
                 Text(
-                  remoteConfig.appName,
+                  AppLocalization.of(context)!.translate('app-name'),
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 25.sp,
@@ -102,8 +103,10 @@ class _HomeViewState extends State<HomeView> {
                         EdgeInsets.only(left: 20.sp, right: 20.sp, top: 10.sp),
                     width: MediaQuery.of(context).size.width,
                     child: locationInfoProvider.isLoading
-                        ? Lottie.asset(AssetsUtils.loadinghome,
-                            height: 250.h, width: 250.w, animate: true)
+                        ? Center(
+                            child: Lottie.asset(AssetsUtils.loadinghome,
+                                height: 250.h, width: 250.w, animate: true),
+                          )
                         : locationInfoProvider.locationInfo.isEmpty
                             ? Column(
                                 children: [
@@ -118,7 +121,8 @@ class _HomeViewState extends State<HomeView> {
                                     height: 50.h,
                                   ),
                                   Text(
-                                    'No location information ! ',
+                                    AppLocalization.of(context)!
+                                        .translate('no-record'),
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                         fontSize: 28.sp,
@@ -130,7 +134,8 @@ class _HomeViewState extends State<HomeView> {
                                     height: 20.h,
                                   ),
                                   Text(
-                                    "When you have loction details you'll see them here...",
+                                    AppLocalization.of(context)!
+                                        .translate('no-record2'),
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                         fontSize: 20.sp,
@@ -150,209 +155,155 @@ class _HomeViewState extends State<HomeView> {
                                   final locationInfo =
                                       locationInfoProvider.locationInfo[index];
 
-                                  return GestureDetector(
-                                    onLongPress: () {
-                                      locationInfoProvider
-                                          .deleteLocationInformation(
-                                              locationInfo.id!);
-                                      // locationInfoProvider.deletePerson(locationInfo.id!);
-                                    },
-                                    child: Card(
-                                      elevation: 4,
-                                      child: ExpansionTile(
-                                          leading: Icon(Icons.map_outlined),
-                                          trailing: GestureDetector(
-                                            onTap: () {
-                                              double latitude = double.parse(
-                                                  locationInfo
-                                                      .destinationLocationLatitude
-                                                      .toString());
-                                              double longitude = double.parse(
-                                                  locationInfo
-                                                      .destinationLocationlongitude
-                                                      .toString());
-                                              Provider.of<LiveTrackingViewProvider>(
-                                                      context,
-                                                      listen: false)
-                                                  .setLocationData(
-                                                      latitude, longitude);
-                                              Navigator.pushNamed(
-                                                context,
-                                                RoutesName.livetrakingpage,
-                                              );
-                                            },
-                                            child: Image.asset(
-                                              AssetsUtils.map,
-                                              height: 40.h,
-                                            ),
-                                          ),
-                                          textColor: CustomColor.black,
-                                          iconColor:
-                                              Colors.black.withOpacity(0),
-                                          initiallyExpanded: true,
-                                          maintainState: true,
-                                          controlAffinity:
-                                              ListTileControlAffinity.leading,
-                                          title: Text(
-                                            locationInfo.savePointDestination!,
-                                            style: TextStyle(
-                                                fontSize: 20.sp,
-                                                fontFamily:
-                                                    FontFamliyM.SEMIBOLD,
-                                                fontWeight: FontWeight.w600),
-                                            softWrap: false,
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
+                                  return Card(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15.0),
+                                      side: const BorderSide(
+                                          color: Colors.black12, width: 1.0),
+                                    ),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(30)),
+                                      height: 195.h,
+                                      width: MediaQuery.of(context).size.width,
+                                      child: Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 25.sp, vertical: 10.sp),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
-                                            Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 10.sp,
-                                                  vertical: 10.sp),
-                                              child: ListTileTheme(
-                                                child: Column(
-                                                  children: [
-                                                    Row(
-                                                      children: [
-                                                        CircleAvatar(
-                                                            backgroundColor:
-                                                                CustomColor
-                                                                    .white,
-                                                            child: Image.asset(
-                                                                AssetsUtils
-                                                                    .source)),
-                                                        SizedBox(
-                                                          width: 10.w,
-                                                        ),
-                                                        Column(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          children: [
-                                                            Text(
-                                                              ' Source',
-                                                              style: TextStyle(
-                                                                  fontSize:
-                                                                      20.sp,
-                                                                  fontFamily:
-                                                                      FontFamliyM
-                                                                          .SEMIBOLD,
-                                                                  color:
-                                                                      CustomColor
-                                                                          .Violet,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w600),
-                                                            ),
-                                                            SizedBox(
-                                                              width: MediaQuery.of(
-                                                                          context)
-                                                                      .size
-                                                                      .height /
-                                                                  3.5,
-                                                              child: Text(
-                                                                '${locationInfo.sourceLocation}',
-                                                                style:
-                                                                    TextStyle(
-                                                                  fontSize:
-                                                                      18.sp,
-                                                                  fontFamily:
-                                                                      FontFamliyM
-                                                                          .BOLD,
-                                                                ),
-                                                                softWrap: false,
-                                                                maxLines: 1,
-                                                                overflow:
-                                                                    TextOverflow
-                                                                        .ellipsis,
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        )
-                                                      ],
-                                                    ),
-                                                    Padding(
-                                                      padding: EdgeInsets.all(
-                                                          20.0.sp),
-                                                      child: Container(
-                                                        height: 20.h,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          border:
-                                                              RDottedLineBorder(
-                                                            left:
-                                                                const BorderSide(
-                                                              color:
-                                                                  Colors.grey,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    Row(
-                                                      children: [
-                                                        CircleAvatar(
-                                                            backgroundColor:
-                                                                CustomColor
-                                                                    .white,
-                                                            child: Image.asset(
-                                                                AssetsUtils
-                                                                    .destination)),
-                                                        SizedBox(
-                                                          width: 10.w,
-                                                        ),
-                                                        Column(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          children: [
-                                                            Text(
-                                                              'Destination',
-                                                              style: TextStyle(
-                                                                  fontSize:
-                                                                      20.sp,
-                                                                  fontFamily:
-                                                                      FontFamliyM
-                                                                          .SEMIBOLD,
-                                                                  color:
-                                                                      CustomColor
-                                                                          .Violet,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w600),
-                                                            ),
-                                                            SizedBox(
-                                                              width: MediaQuery.of(
-                                                                          context)
-                                                                      .size
-                                                                      .height /
-                                                                  3.5,
-                                                              child: Text(
-                                                                '${locationInfo.destinationLocation}',
-                                                                style:
-                                                                    TextStyle(
-                                                                  fontSize:
-                                                                      18.sp,
-                                                                  fontFamily:
-                                                                      FontFamliyM
-                                                                          .BOLD,
-                                                                ),
-                                                                softWrap: false,
-                                                                maxLines: 1,
-                                                                overflow:
-                                                                    TextOverflow
-                                                                        .ellipsis,
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        )
-                                                      ],
-                                                    ),
-                                                  ],
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text(
+                                                  locationInfo
+                                                      .savePointDestination!,
+                                                  style: TextStyle(
+                                                      color: CustomColor
+                                                          .primaryColor,
+                                                      fontSize: 20.sp,
+                                                      fontFamily:
+                                                          FontFamliyM.SEMIBOLD,
+                                                      fontWeight:
+                                                          FontWeight.w600),
+                                                  softWrap: false,
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
                                                 ),
+                                                GestureDetector(
+                                                    onTap: () {
+                                                      double latitude = double
+                                                          .parse(locationInfo
+                                                              .destinationLocationLatitude
+                                                              .toString());
+                                                      double longitude = double
+                                                          .parse(locationInfo
+                                                              .destinationLocationlongitude
+                                                              .toString());
+                                                      Provider.of<LiveTrackingViewProvider>(
+                                                              context,
+                                                              listen: false)
+                                                          .setLocationData(
+                                                              latitude,
+                                                              longitude);
+                                                      Navigator.pushNamed(
+                                                        context,
+                                                        RoutesName
+                                                            .livetrakingpage,
+                                                      );
+                                                    },
+                                                    child: Image.asset(
+                                                      AssetsUtils.mapNew,
+                                                      height: 32.h,
+                                                      width: 40.w,
+                                                    ))
+                                              ],
+                                            ),
+                                            Text(
+                                              AppLocalization.of(context)!
+                                                  .translate('source'),
+                                              style: TextStyle(
+                                                  fontSize: 20.sp,
+                                                  fontFamily:
+                                                      FontFamliyM.SEMIBOLD,
+                                                  color: CustomColor
+                                                      .secondaryColor,
+                                                  fontWeight: FontWeight.w600),
+                                            ),
+                                            SizedBox(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .height /
+                                                  3,
+                                              child: Text(
+                                                '${locationInfo.sourceLocation}',
+                                                style: TextStyle(
+                                                  fontSize: 18.sp,
+                                                  fontFamily: FontFamliyM.BOLD,
+                                                ),
+                                                softWrap: false,
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
                                               ),
                                             ),
-                                          ]),
+                                            SizedBox(
+                                              height: 20.h,
+                                            ),
+                                            Text(
+                                              AppLocalization.of(context)!
+                                                  .translate('destination'),
+                                              style: TextStyle(
+                                                  fontSize: 20.sp,
+                                                  fontFamily:
+                                                      FontFamliyM.SEMIBOLD,
+                                                  color: CustomColor
+                                                      .secondaryColor,
+                                                  fontWeight: FontWeight.w600),
+                                            ),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                SizedBox(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .height /
+                                                      3.5,
+                                                  child: Text(
+                                                    '${locationInfo.destinationLocation}',
+                                                    style: TextStyle(
+                                                      fontSize: 18.sp,
+                                                      fontFamily:
+                                                          FontFamliyM.BOLD,
+                                                    ),
+                                                    softWrap: false,
+                                                    maxLines: 1,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                ),
+                                                GestureDetector(
+                                                    onTap: () {
+                                                      locationInfoProvider
+                                                          .deleteLocationInformation(
+                                                              locationInfo.id!);
+                                                    },
+                                                    child: Image.asset(
+                                                      AssetsUtils.delete,
+                                                      height: 30.h,
+                                                      width: 40.w,
+                                                    ))
+                                              ],
+                                            )
+                                          ],
+                                        ),
+                                      ),
                                     ),
                                   );
                                 }),

@@ -32,7 +32,7 @@ class _SplashViewState extends State<SplashView> {
       log(auth.currentUser?.displayName ?? "No name");
       Navigator.popAndPushNamed(context, RoutesName.bottomBar);
     } else {
-      Navigator.popAndPushNamed(context, RoutesName.siginview);
+      Navigator.popAndPushNamed(context, RoutesName.siginView);
     }
   }
 

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:location_buddy/provider/forget_password_provider.dart';
 import 'package:location_buddy/utils/routes/routes_name.dart';
+import 'package:location_buddy/view/forget_password_view.dart';
 import 'package:location_buddy/view/home_view.dart';
 import 'package:location_buddy/view/live_traking_view.dart';
 import 'package:location_buddy/view/route_view.dart';
@@ -38,12 +40,15 @@ class Routes {
       case RoutesName.livetrakingpage:
         return MaterialPageRoute(
             builder: (BuildContext context) => const LiveTrackingPage());
-      case RoutesName.siginview:
+      case RoutesName.siginView:
         return MaterialPageRoute(
             builder: (BuildContext context) => const SignInView());
-      case RoutesName.sigupview:
+      case RoutesName.sigupView:
         return MaterialPageRoute(
             builder: (BuildContext context) => const SignUpView());
+      case RoutesName.forgetPasswordView:
+        return MaterialPageRoute(
+            builder: (BuildContext context) => ForgetPasswordView());
 
       default:
         // SystemNavigator.pop();

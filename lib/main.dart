@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:location_buddy/localization/app_localization.dart';
 import 'package:location_buddy/provider/current_data_provider.dart';
+import 'package:location_buddy/provider/forget_password_provider.dart';
 
 import 'package:location_buddy/provider/home_view_provider.dart';
 import 'package:location_buddy/provider/live_traking_view_provider.dart';
@@ -42,6 +43,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => SignInProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => ForgetPassword(),
         ),
         ChangeNotifierProvider(
           create: (context) => currentData,

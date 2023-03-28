@@ -12,4 +12,6 @@ class AssetsUtils {
   static String destinationRed = "assets/images/ic_destination_red.png";
   static String splash = "assets/images/ic_splash.png";
   static String login = "assets/images/ic_login.png";
+  static String mapNew = "assets/images/ic_new_map.png";
+  static String delete = "assets/images/ic_delete_new.png";
 }

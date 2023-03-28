@@ -194,7 +194,7 @@ class SignInProvider with ChangeNotifier {
         // ignore: use_build_context_synchronously
         await Future.delayed(const Duration(seconds: 2)).then((value) {
           closeCustomLoadingDialog(context);
-          Navigator.popAndPushNamed(context, RoutesName.siginview);
+          Navigator.popAndPushNamed(context, RoutesName.siginView);
         });
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -239,7 +239,7 @@ class SignInProvider with ChangeNotifier {
     await _auth.signOut();
     _user = null;
     // ignore: use_build_context_synchronously
-    Navigator.popAndPushNamed(context, RoutesName.siginview);
+    Navigator.popAndPushNamed(context, RoutesName.siginView);
     notifyListeners();
   }
 }

@@ -13,12 +13,7 @@ class LanguageHelper {
       case 'Arabic':
         convertedLocale = Locale('ar', 'AR');
         break;
-      case 'Español':
-        convertedLocale = Locale('es', 'ES');
-        break;
-      case 'Русский':
-        convertedLocale = Locale('ru', 'RU');
-        break;
+
       default:
         convertedLocale = Locale('en', 'EN');
     }
@@ -36,12 +31,7 @@ class LanguageHelper {
       case 'ar':
         langName = "Arabic";
         break;
-      case 'es':
-        langName = "Español";
-        break;
-      case 'ru':
-        langName = "Русский";
-        break;
+
       default:
         langName = "English";
     }

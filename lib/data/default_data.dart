@@ -4,8 +4,6 @@ class DefaultData {
   List<String> _languagesListDefault = [
     'English',
     'Arabic',
-    'Español',
-    'Русский',
   ];
 
   get languagesListDefault => _languagesListDefault;
