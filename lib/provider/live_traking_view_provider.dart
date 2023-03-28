@@ -26,7 +26,7 @@ class LiveTrackingViewProvider extends ChangeNotifier {
   void setCustomMarkerIcon() async {
     currentLocationIcon = await getBytesFromAsset(
         path: AssetsUtils.source, //paste the custom image path
-        width: 70 // size of custom image as marker
+        width: 60 // size of custom image as marker
         );
 
     destinationIcon = await getBytesFromAsset(

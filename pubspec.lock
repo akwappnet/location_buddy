@@ -36,6 +36,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.2"
+  babstrap_settings_screen:
+    dependency: "direct main"
+    description:
+      name: babstrap_settings_screen
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.5+1"
   background_locator_2:
     dependency: "direct main"
     description:

@@ -22,6 +22,14 @@
           }
         },
         {
+          "client_id": "331364670782-vpc3j3lmcpqms2qe4dpeh9u9i16dmsqa.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.location_buddy",
+            "certificate_hash": "4e9bf0fb6b9879fe1b75945854ec972e14727a38"
+          }
+        },
+        {
           "client_id": "331364670782-3ji06i51j4u6n72sf7e4cs61sned7bjo.apps.googleusercontent.com",
           "client_type": 3
         }

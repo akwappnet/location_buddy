@@ -7,6 +7,7 @@ class LocationInfo {
   String? destinationLocationLatitude;
   String? destinationLocationlongitude;
   String? id;
+  String? userId;
 
   LocationInfo({
     this.savePointDestination,
@@ -17,5 +18,6 @@ class LocationInfo {
     this.destinationLocationLatitude,
     this.destinationLocationlongitude,
     this.id,
+    this.userId,
   });
 }

@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:location_buddy/localization/app_localization.dart';
 import 'package:location_buddy/utils/colors/colors.dart';
 import 'package:location_buddy/view/home_view.dart';
 import 'package:location_buddy/view/profile_view.dart';
@@ -30,7 +31,7 @@ class BottomNavBar extends StatelessWidget {
               return CustomDialogBox(
                 heading: "Exit App",
                 icon: const Icon(Icons.exit_to_app),
-                backgroundColor: CustomColor.Violet,
+                backgroundColor: CustomColor.primaryColor,
                 title: "Are you sure you want to exit app ?",
                 descriptions: "", //
                 btn1Text: "Exit",
@@ -53,18 +54,24 @@ class BottomNavBar extends StatelessWidget {
                     /// Home
                     SalomonBottomBarItem(
                       icon: const Icon(Icons.home),
-                      title: const Text("Home"),
+                      title: Text(
+                        AppLocalization.of(context)!.translate('home'),
+                      ),
                       selectedColor: CustomColor.primaryColor,
                     ),
 
                     SalomonBottomBarItem(
                       icon: const Icon(Icons.add),
-                      title: const Text("Save Route"),
+                      title: Text(
+                        AppLocalization.of(context)!.translate('save-route'),
+                      ),
                       selectedColor: CustomColor.primaryColor,
                     ),
                     SalomonBottomBarItem(
                       icon: const Icon(Icons.person),
-                      title: const Text("Profile"),
+                      title: Text(
+                        AppLocalization.of(context)!.translate('profile'),
+                      ),
                       selectedColor: CustomColor.primaryColor,
                     ),
                   ],

@@ -60,12 +60,11 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
             children: <Widget>[
               Text(
                 widget.heading ?? "",
-                style: const TextStyle(color: CustomColor.black),
-                /*  style: openSansHeadingStyle(
-                    color: PrimaryColor.blackColor,
+                style: TextStyle(
+                    color: CustomColor.black,
                     fontSize: 24.sp,
                     fontWeight: FontWeight.w500,
-                    fontFamily: FontFamliy.OPEN_SANS_SEMI_BOLD), */
+                    fontFamily: FontFamliyM.BOLD),
                 textAlign: TextAlign.center,
               ),
               SizedBox(
@@ -77,7 +76,7 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
                     color: Colors.black,
                     fontSize: 16.sp,
                     fontWeight: FontWeight.w500,
-                    fontFamily: FontFamliyM.REGULAR),
+                    fontFamily: FontFamliyM.ROBOTOREGULAR),
                 textAlign: TextAlign.center,
               ),
               SizedBox(
@@ -118,7 +117,7 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
                                   color: CustomColor.white,
                                   fontSize: 14.sp,
                                   fontWeight: FontWeight.w500,
-                                  fontFamily: FontFamliyM.REGULAR),
+                                  fontFamily: FontFamliyM.ROBOTOBOLD),
                             ),
                           ),
                         ),
@@ -144,7 +143,7 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
                                   color: CustomColor.white,
                                   fontSize: 14.sp,
                                   fontWeight: FontWeight.w500,
-                                  fontFamily: FontFamliyM.REGULAR),
+                                  fontFamily: FontFamliyM.ROBOTOBOLD),
                             ),
                           ),
                         ),

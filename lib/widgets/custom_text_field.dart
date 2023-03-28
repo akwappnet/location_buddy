@@ -18,6 +18,7 @@ class BuildTextFormField extends StatefulWidget {
   TextEditingController? controller;
   final VoidCallback? onClicked;
   TextInputType? textType;
+  dynamic validation;
 
   //Text Form Widget
   BuildTextFormField({
@@ -26,7 +27,7 @@ class BuildTextFormField extends StatefulWidget {
     this.txtHint,
     required this.isObserve,
     this.icon,
-    // this.validation,
+    this.validation,
     this.controller,
     this.onClicked,
     this.onChange,
@@ -50,7 +51,7 @@ class _BuildTextFormFieldState extends State<BuildTextFormField> {
         child: TextFormField(
           textCapitalization: TextCapitalization.words,
           keyboardType: widget.textType,
-          //validator: widget.validation,
+          validator: widget.validation,
           autovalidateMode: AutovalidateMode.onUserInteraction,
           onTap: widget.onClicked,
           onChanged: widget.onChange,
@@ -61,7 +62,7 @@ class _BuildTextFormFieldState extends State<BuildTextFormField> {
           style: montserratHeadingStyle(
               color: Colors.black,
               fontSize: 16.sp,
-              fontFamily: FontFamliyM.REGULAR),
+              fontFamily: FontFamliyM.ROBOTOREGULAR),
           textInputAction: TextInputAction.next,
           decoration: InputDecoration(
             contentPadding: EdgeInsets.only(
@@ -74,7 +75,7 @@ class _BuildTextFormFieldState extends State<BuildTextFormField> {
             labelStyle: montserratHeadingStyle(
                 color: Colors.black,
                 fontSize: 16.sp,
-                fontFamily: FontFamliyM.REGULAR),
+                fontFamily: FontFamliyM.ROBOTOREGULAR),
             enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(15.sp),
                 borderSide: BorderSide(
