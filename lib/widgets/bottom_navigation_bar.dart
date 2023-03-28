@@ -60,7 +60,7 @@ class BottomNavBar extends StatelessWidget {
                     SalomonBottomBarItem(
                       icon: const Icon(Icons.add),
                       title: const Text("Save Route"),
-                      selectedColor: CustomColor.primaryColor,
+                      selectedColor: CustomColor.secondaryColor,
                     ),
                     SalomonBottomBarItem(
                       icon: const Icon(Icons.person),
