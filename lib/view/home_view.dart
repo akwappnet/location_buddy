@@ -103,22 +103,6 @@ class _HomeViewState extends State<HomeView> {
                       //   style: TextStyle(color: Colors.indigo, fontSize: 5),
                       // ),
                       SizedBox(
-/* <<<<<<< HEAD
-                        width: 80.w,
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          Provider.of<SaveLocationViewProvider>(context,
-                                  listen: false)
-                              .onStop(context);
-                        },
-                        child: Icon(
-                          Icons.language,
-                          color: Colors.white,
-                          size: 35.h,
-                        ),
-                      )
-======= */
                         width: 50.w,
                       ),
                       Icon(
@@ -129,35 +113,6 @@ class _HomeViewState extends State<HomeView> {
                       SizedBox(
                         width: 5.w,
                       ),
-                      Consumer<CurrentData>(
-                          builder: (context, currentData, child) {
-                        return DropdownButton<String>(
-                          value: currentData.defineCurrentLanguage(context),
-                          icon: const Icon(
-                            Icons.arrow_downward,
-                            color: Colors.white,
-                          ),
-                          iconSize: 20,
-                          elevation: 0,
-                          style: const TextStyle(color: Colors.white),
-                          underline: Container(
-                            height: 1,
-                          ),
-                          dropdownColor: CustomColor.Violet,
-                          onChanged: (String? newValue) {
-                            currentData.changeLocale(newValue!);
-                          },
-                          items: defaultData.languagesListDefault
-                              .map<DropdownMenuItem<String>>(
-                            (String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            },
-                          ).toList(),
-                        );
-                      }),
                     ],
                   )),
               RefreshIndicator(
@@ -218,7 +173,6 @@ class _HomeViewState extends State<HomeView> {
                                 ],
                               )
                             : ListView.builder(
-                                primary: false,
                                 scrollDirection: Axis.vertical,
                                 shrinkWrap: true,
                                 physics: const NeverScrollableScrollPhysics(),
@@ -269,7 +223,7 @@ class _HomeViewState extends State<HomeView> {
                                           ),
                                           textColor: CustomColor.lightViolet,
                                           iconColor: CustomColor.lightViolet,
-                                          initiallyExpanded: false,
+                                          initiallyExpanded: true,
                                           maintainState: true,
                                           controlAffinity:
                                               ListTileControlAffinity.leading,
@@ -329,7 +283,7 @@ class _HomeViewState extends State<HomeView> {
                                                                           context)
                                                                       .size
                                                                       .height /
-                                                                  3,
+                                                                  3.5,
                                                               child: Text(
                                                                 '${locationInfo.sourceLocation}',
                                                                 style:
@@ -406,7 +360,7 @@ class _HomeViewState extends State<HomeView> {
                                                                           context)
                                                                       .size
                                                                       .height /
-                                                                  3,
+                                                                  3.5,
                                                               child: Text(
                                                                 '${locationInfo.destinationLocation}',
                                                                 style:
