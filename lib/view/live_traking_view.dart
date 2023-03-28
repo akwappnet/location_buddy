@@ -106,108 +106,117 @@ class _LiveTrackingPageState extends State<LiveTrackingPage> {
   }
 
 //   // Function to calculate the distance between two LatLng points using Haversine formula
-//   double _distanceBetween(LatLng point1, LatLng point2) {
-//     const int earthRadius = 6371000; // in meters
-//     double lat1 = point1.latitude * (pi / 180);
-//     double lon1 = point1.longitude * (pi / 180);
-//     double lat2 = point2.latitude * (pi / 180);
-//     double lon2 = point2.longitude * (pi / 180);
-//     double dLat = lat2 - lat1;
-//     double dLon = lon2 - lon1;
-//     double a =
-//         pow(sin(dLat / 2), 2) + cos(lat1) * cos(lat2) * pow(sin(dLon / 2), 2);
-//     double c = 2 * atan2(sqrt(a), sqrt(1 - a));
-//     double distance = earthRadius * c;
-//     return distance;
-//   }
-// Future<List<LatLng>> getShortestPath(
-//   LatLng start,
-//   LatLng destination,
-//   Function(Map<LatLng, List<LatLng>>) onGraphCreated,
-// ) async {
-//   PolylinePoints polylinePoints = PolylinePoints();
-//   PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-//     google_api_key,
-//     PointLatLng(start.latitude, start.longitude),
-//     PointLatLng(destination.latitude, destination.longitude),
-//   );
-//   print('Retrieved polyline with ${result.points.length} points');
+  // ignore: unused_element
+  double _distanceBetween(LatLng point1, LatLng point2) {
+    const int earthRadius = 6371000; // in meters
+    double lat1 = point1.latitude * (pi / 180);
+    double lon1 = point1.longitude * (pi / 180);
+    double lat2 = point2.latitude * (pi / 180);
+    double lon2 = point2.longitude * (pi / 180);
+    double dLat = lat2 - lat1;
+    double dLon = lon2 - lon1;
+    double a =
+        pow(sin(dLat / 2), 2) + cos(lat1) * cos(lat2) * pow(sin(dLon / 2), 2);
+    double c = 2 * atan2(sqrt(a), sqrt(1 - a));
+    double distance = earthRadius * c;
+    return distance;
+  }
 
-//   Map<LatLng, List<LatLng>> graph = {};
-//   for (int i = 0; i < result.points.length - 1; i++) {
-//     LatLng node =
-//         LatLng(result.points[i].latitude, result.points[i].longitude);
-//     if (!graph.containsKey(node)) {
-//       graph[node] = [];
-//     }
-//     for (int j = i + 1; j < result.points.length; j++) {
-//       LatLng neighbor =
-//           LatLng(result.points[j].latitude, result.points[j].longitude);
-//       double distance = _distanceBetween(node, neighbor);
-//       print('Distance between $node and $neighbor: $distance');
-//       if (distance <= 3000) {
-//         if (!graph.containsKey(node)) {
-//           graph[node] = [];
-//         }
-//         graph[node]!.add(neighbor);
-//         if (!graph.containsKey(neighbor)) {
-//           graph[neighbor] = [];
-//         }
-//         graph[neighbor]!.add(node);
-//       }
-//     }
-//   }
+/* 
 
-//   // Add start and destination nodes to graph if they are not already present
-//   if (!graph.containsKey(start)) {
-//     graph[start] = [];
-//   }
-//   if (!graph.containsKey(destination)) {
-//     graph[destination] = [];
-//   }
+Future<List<LatLng>> getShortestPath(
+    LatLng start,
+    LatLng destination,
+    Function(Map<LatLng, List<LatLng>>) onGraphCreated,
+) async {
+  PolylinePoints polylinePoints = PolylinePoints();
+  PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+    google_api_key,
+    PointLatLng(start.latitude, start.longitude),
+    PointLatLng(destination.latitude, destination.longitude),
+  );
+  print('Retrieved polyline with ${result.points.length} points');
 
-//   print('Created graph with ${graph.length} nodes');
-//   onGraphCreated(graph);
+  Map<LatLng, List<LatLng>> graph = {};
+  for (int i = 0; i < result.points.length - 1; i++) {
+    LatLng node = LatLng(result.points[i].latitude, result.points[i].longitude);
+    if (!graph.containsKey(node)) {
+      graph[node] = [];
+    }
+    for (int j = i + 1; j < result.points.length; j++) {
+      LatLng neighbor = LatLng(result.points[j].latitude, result.points[j].longitude);
+      double distance = _distanceBetween(node, neighbor);
+      print('Distance between $node and $neighbor: $distance');
+      if (distance <= 3000) {
+        if (!graph.containsKey(node)) {
+          graph[node] = [];
+        }
+        graph[node]!.add(neighbor);
+        if (!graph.containsKey(neighbor)) {
+          graph[neighbor] = [];
+        }
+        graph[neighbor]!.add(node);
+      }
+    }
+  }
 
-//   Map<LatLng, double> distances = {};
-//   Map<LatLng, LatLng> previous = {};
-//   HeapPriorityQueue<LatLng> queue = HeapPriorityQueue(
-//     (a, b) => (distances[a] ?? double.infinity)
-//         .compareTo((distances[b] ?? double.infinity)),
-//   );
+  // Add start and destination nodes to graph if they are not already present
+  if (!graph.containsKey(start)) {
+    graph[start] = [];
+  }
+  if (!graph.containsKey(destination)) {
+    graph[destination] = [];
+  }
 
-//   // Set initial distances and add start node to queue
-//   distances[start] = 0;
-//   queue.add(start);
+  print('Created graph with ${graph.length} nodes');
+  onGraphCreated(graph);
 
-//   while (queue.isNotEmpty) {
-//     LatLng current = queue.removeFirst();
-//     if (current == destination) {
-//       break;
-//     }
-//     for (LatLng neighbor in graph[current]!) {
-//       double distance = _distanceBetween(current, neighbor);
-//       double tentativeDistance = (distances[current] ?? double.infinity) +
-//           distance +
-//           _distanceBetween(neighbor, destination);
-//       if ((distances[neighbor] ?? double.infinity) > tentativeDistance) {
-//         distances[neighbor] = tentativeDistance;
-//         previous[neighbor] = current;
-//         if (queue.contains(neighbor)) {
-//           queue.updatePriority(neighbor);
-//         } else {
-//           queue.add(neighbor);
-//         }
-//       }
-//     }
-//   }
+  Map<LatLng, double> distances = {};
+  Map<LatLng, LatLng> previous = {};
+  PriorityQueue<LatLng> queue = PriorityQueue(
+    (a, b) => (distances[a] ?? double.infinity).compareTo((distances[b] ?? double.infinity)),
+  );
 
-//   // Build the path by following the previous nodes from the destination to the start
-//   List<LatLng> path = [destination];
-//   LatLng current = destination;
-//   while (previous[current] != null) {
-//     path.insert(0, previous[current]!);
-//     current = previous[current] as LatLng;
+  // Set initial distances and add start node to queue
+  distances[start] = 0;
+  queue.add(start);
+
+  while (queue.isNotEmpty) {
+    LatLng current = queue.removeFirst();
+    if (current == destination) {
+      break;
+    }
+    for (LatLng neighbor in graph[current]!) {
+      double distance = _distanceBetween(current, neighbor);
+      double tentativeDistance = (distances[current] ?? double.infinity) +
+          distance +
+          _distanceBetween(neighbor, destination);
+      if ((distances[neighbor] ?? double.infinity) > tentativeDistance) {
+        distances[neighbor] = tentativeDistance;
+        previous[neighbor] = current;
+        if (queue.contains(neighbor)) {
+          queue.remove(neighbor);
+          queue.add(neighbor);
+        } else {
+          queue.add(neighbor);
+        }
+      }
+    }
+  }
+
+  // Build the path by following the previous nodes from the destination to the start
+  List<LatLng> path = [destination];
+  LatLng current = destination;
+  while (previous[current] != null) {
+    path.insert(0, previous[current]!);
+    current = previous[current]!;
+  }
+
+  print('Found shortest path with ${path.length} points');
+  return path;
+}
+ */
+
   // void _updatePolyline(GoogleMapController controller) async {
   //   if (currentLocation != null && _destination != null) {
   //     List<LatLng> path = await getShortestPath(
@@ -260,9 +269,9 @@ class _LiveTrackingPageState extends State<LiveTrackingPage> {
           }
           _polylineId = const PolylineId('route');
           _polylines.add(Polyline(
-            width: 5,
+            width: 3,
             polylineId: _polylineId!,
-            color: CustomColor.Violet,
+            color: CustomColor.primaryColor,
             points: _polylineCoordinates,
             visible: true,
           ));
@@ -284,7 +293,7 @@ class _LiveTrackingPageState extends State<LiveTrackingPage> {
         height: 50.sp,
         sizes: 20.sp,
         text: 'Stop Tracking',
-        mycolor: CustomColor.Violet,
+        mycolor: CustomColor.primaryColor,
       ),
     );
     final size = SizedBox(height: 40.h);
@@ -307,7 +316,7 @@ class _LiveTrackingPageState extends State<LiveTrackingPage> {
                   style: TextStyle(
                       fontSize: 28.sp,
                       fontFamily: FontFamliyM.SEMIBOLD,
-                      color: CustomColor.Violet,
+                      color: CustomColor.primaryColor,
                       fontWeight: FontWeight.w600),
                 ),
                 SizedBox(
@@ -317,7 +326,7 @@ class _LiveTrackingPageState extends State<LiveTrackingPage> {
             ),
           )
         : SizedBox(
-            height: 600,
+            height: 500,
             width: MediaQuery.of(context).size.width,
             child: GoogleMap(
               //myLocationEnabled: true,
@@ -349,7 +358,7 @@ class _LiveTrackingPageState extends State<LiveTrackingPage> {
           );
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: CustomColor.Violet,
+        backgroundColor: CustomColor.primaryColor,
         title: const Text('Live Tracking'),
       ),
       body: Container(
@@ -366,4 +375,86 @@ class _LiveTrackingPageState extends State<LiveTrackingPage> {
       ),
     );
   }
+}
+
+class PriorityQueue<T> {
+  final _heap = <_PriorityQueueEntry<T>>[];
+
+  void add(T value, double priority) {
+    final entry = _PriorityQueueEntry(value, priority);
+    _heap.add(entry);
+    _bubbleUp(_heap.length - 1);
+  }
+
+  T removeFirst() {
+    final first = _heap.first;
+    final last = _heap.removeLast();
+    if (_heap.isNotEmpty) {
+      _heap[0] = last;
+      _bubbleDown(0);
+    }
+    return first.value;
+  }
+
+  bool get isEmpty => _heap.isEmpty;
+
+  void updatePriority(T value, double priority) {
+    final index = _heap.indexWhere((entry) => entry.value == value);
+    if (index != -1) {
+      final entry = _heap[index];
+      final newEntry = _PriorityQueueEntry(entry.value, priority);
+      _heap[index] = newEntry;
+      if (priority < entry.priority) {
+        _bubbleUp(index);
+      } else {
+        _bubbleDown(index);
+      }
+    }
+  }
+
+  void _bubbleUp(int index) {
+    final entry = _heap[index];
+    while (index > 0) {
+      final parentIndex = (index - 1) ~/ 2;
+      final parent = _heap[parentIndex];
+      if (entry.priority < parent.priority) {
+        _heap[index] = parent;
+        index = parentIndex;
+      } else {
+        break;
+      }
+    }
+    _heap[index] = entry;
+  }
+
+  void _bubbleDown(int index) {
+    final entry = _heap[index];
+    final endIndex = _heap.length - 1;
+    while (true) {
+      final leftChildIndex = 2 * index + 1;
+      final rightChildIndex = 2 * index + 2;
+      int minChildIndex = leftChildIndex;
+      if (minChildIndex > endIndex) {
+        break;
+      }
+      if (rightChildIndex <= endIndex &&
+          _heap[rightChildIndex].priority < _heap[leftChildIndex].priority) {
+        minChildIndex = rightChildIndex;
+      }
+      if (_heap[minChildIndex].priority < entry.priority) {
+        _heap[index] = _heap[minChildIndex];
+        index = minChildIndex;
+      } else {
+        break;
+      }
+    }
+    _heap[index] = entry;
+  }
+}
+
+class _PriorityQueueEntry<T> {
+  final T value;
+  final double priority;
+
+  _PriorityQueueEntry(this.value, this.priority);
 }

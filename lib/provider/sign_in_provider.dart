@@ -194,7 +194,7 @@ class SignInProvider with ChangeNotifier {
             });
         await Future.delayed(const Duration(seconds: 2)).then((value) {
           closeCustomLoadingDialog(context);
-          Navigator.popAndPushNamed(context, RoutesName.siginview);
+          Navigator.popAndPushNamed(context, RoutesName.siginView);
         });
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -254,7 +254,7 @@ class SignInProvider with ChangeNotifier {
             );
           });
       await Future.delayed(const Duration(seconds: 2)).then(
-          (value) => Navigator.popAndPushNamed(context, RoutesName.siginview));
+          (value) => Navigator.popAndPushNamed(context, RoutesName.siginView));
 
       notifyListeners();
     } catch (e) {
@@ -274,7 +274,8 @@ class SignInProvider with ChangeNotifier {
     await _googleSignIn.signOut();
     await _auth.signOut();
     _user = null;
-    Navigator.popAndPushNamed(context, RoutesName.siginview);
+
+    Navigator.popAndPushNamed(context, RoutesName.siginView);
     notifyListeners();
   }
 }

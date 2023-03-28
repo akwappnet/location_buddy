@@ -9,6 +9,7 @@ import 'package:background_locator_2/location_dto.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:location_buddy/helper/loading_dialog.dart';
 import 'package:location_buddy/utils/colors/colors.dart';
 import 'package:location_buddy/utils/routes/routes_name.dart';
 import 'package:location_buddy/widgets/custom_dialog_box.dart';
@@ -161,7 +162,7 @@ class SaveLocationViewProvider extends ChangeNotifier {
               return const CustomDialogBox(
                 heading: "Success",
                 icon: Icon(Icons.done),
-                backgroundColor: CustomColor.violetSecond,
+                backgroundColor: CustomColor.primaryColor,
                 title: "Location Saved successful",
                 descriptions: "", //
                 btn1Text: "",
@@ -190,17 +191,35 @@ class SaveLocationViewProvider extends ChangeNotifier {
   }
 
 //delete saved location by id
-  Future<void> deleteLocationInformation(String id) async {
-    await firestore
-        .collection('users')
-        .doc(_auth.currentUser?.uid)
-        .collection('locationInfo')
-        .doc(id)
-        .delete();
-    _locationInfo
-        .removeWhere((locationInfo) => locationInfo.destinationLocation == id);
-    fetchLocationInformation();
-    notifyListeners();
+  Future<void> deleteLocationInformation(
+      String id, BuildContext context) async {
+    try {
+      showCustomLoadingDialog(context);
+      await firestore
+          .collection('users')
+          .doc(_auth.currentUser?.uid)
+          .collection('locationInfo')
+          .doc(id)
+          .delete();
+      _locationInfo.removeWhere(
+          (locationInfo) => locationInfo.destinationLocation == id);
+      await closeCustomLoadingDialog(context);
+      Navigator.pop(context);
+      await fetchLocationInformation();
+      // ignore: use_build_context_synchronously
+
+      notifyListeners();
+    } catch (e) {
+      closeCustomLoadingDialog(context);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: CustomColor.redColor,
+          content: Text('Error deleting account: $e'),
+          duration: const Duration(seconds: 3),
+        ),
+      );
+      log('Error deleting account: $e');
+    }
   }
 
   Future<void> _getAddressFromLatLng(LocationDto position) async {
@@ -273,7 +292,7 @@ class SaveLocationViewProvider extends ChangeNotifier {
     // ignore: use_build_context_synchronously
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        backgroundColor: CustomColor.Violet,
+        backgroundColor: CustomColor.primaryColor,
         content: Text('Location Services Stoped'),
         duration: Duration(seconds: 3),
       ),

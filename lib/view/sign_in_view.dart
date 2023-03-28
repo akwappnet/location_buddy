@@ -5,6 +5,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:location_buddy/utils/assets/assets_utils.dart';
 import 'package:location_buddy/utils/colors/colors.dart';
+
+import 'package:location_buddy/utils/validation/validation.dart';
 import 'package:provider/provider.dart';
 
 import '../provider/sign_in_provider.dart';
@@ -45,23 +47,28 @@ class _SignInViewState extends State<SignInView> {
             });
         return Future.value(true);
       },
-      child: Scaffold(
-        resizeToAvoidBottomInset: true,
-        backgroundColor: const Color(0xFFF8F8F8),
-        body: SafeArea(
-          child: SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  SizedBox(
-                    height: 40.h,
-                  ),
-                  buildCard(size),
-                  buildFooter(size),
-                ],
+      child: GestureDetector(
+        onTap: () {
+          FocusManager.instance.primaryFocus?.unfocus();
+        },
+        child: Scaffold(
+          resizeToAvoidBottomInset: true,
+          backgroundColor: const Color(0xFFF8F8F8),
+          body: SafeArea(
+            child: SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    SizedBox(
+                      height: 40.h,
+                    ),
+                    buildCard(size),
+                    buildFooter(size),
+                  ],
+                ),
               ),
             ),
           ),
@@ -107,6 +114,7 @@ class _SignInViewState extends State<SignInView> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 BuildTextFormFieldNew(
+                  validation: emailValidator,
                   controller: provider.emailController,
                   size: size,
                   isObserve: false,
@@ -124,6 +132,7 @@ class _SignInViewState extends State<SignInView> {
                 ),
                 BuildTextFormFieldNew(
                   controller: provider.passController,
+                  validation: passwordValidator,
                   size: size,
                   isObserve: true,
                   txtHint: "Enter Password",
@@ -218,14 +227,19 @@ class _SignInViewState extends State<SignInView> {
         // ignore: prefer_const_literals_to_create_immutables
         children: [
           const Spacer(),
-          Text(
-            'Forgot password?',
-            style: TextStyle(
-                fontSize: 16.sp,
-                color: const Color(0xFF21899C),
-                fontWeight: FontWeight.w500,
-                fontFamily: FontFamliyM.ROBOTOBOLD),
-            textAlign: TextAlign.right,
+          GestureDetector(
+            onTap: () {
+              Navigator.pushNamed(context, RoutesName.forgetPasswordView);
+            },
+            child: Text(
+              'Forgot password?',
+              style: TextStyle(
+                  fontSize: 16.sp,
+                  color: const Color(0xFF21899C),
+                  fontWeight: FontWeight.w500,
+                  fontFamily: FontFamliyM.ROBOTOBOLD),
+              textAlign: TextAlign.right,
+            ),
           ),
         ],
       ),
@@ -382,7 +396,7 @@ class _SignInViewState extends State<SignInView> {
             TextSpan(
               recognizer: TapGestureRecognizer()
                 ..onTap = () {
-                  Navigator.pushNamed(context, RoutesName.sigupview);
+                  Navigator.pushNamed(context, RoutesName.sigupView);
                 },
               text: 'Sign Up here',
               style: TextStyle(

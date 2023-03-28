@@ -240,7 +240,7 @@ class _ProfileViewState extends State<ProfileView> {
                         });
                   });
             },
-            icons: Icons.lock_outline,
+            icons: Icons.logout,
             title: "Logout",
             subtitle: "I want to logout from app",
             trailing: const Icon(Icons.arrow_forward_ios_rounded,
@@ -278,14 +278,14 @@ class _ProfileViewState extends State<ProfileView> {
             title: "Delete account",
             subtitle: "I want to delete account",
             trailing: const Icon(Icons.arrow_forward_ios_rounded,
-                color: CustomColor.redColor),
+                color: CustomColor.secondaryColor),
             titleStyle: TextStyle(
-                color: CustomColor.redColor,
+                color: CustomColor.secondaryColor,
                 fontSize: 20.sp,
                 fontFamily: FontFamliyM.ROBOTOBOLD,
                 fontWeight: FontWeight.w600),
             iconStyle: IconStyle(
-              iconsColor: CustomColor.redColor,
+              iconsColor: CustomColor.secondaryColor,
               backgroundColor: CustomColor.white,
             ),
           ),

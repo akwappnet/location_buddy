@@ -15,6 +15,8 @@ class BuildTextFormFieldNew extends StatefulWidget {
   TextEditingController controller;
   final VoidCallback? onClicked;
   TextInputType? textType;
+  dynamic validation;
+  Icon? suffixIcon;
 
   //Text Form Widget
   BuildTextFormFieldNew({
@@ -28,6 +30,7 @@ class BuildTextFormFieldNew extends StatefulWidget {
     this.onChange,
     this.readOnly,
     this.textType,
+    this.validation,
     required this.size,
   }) : super(key: key);
 
@@ -40,7 +43,9 @@ class _BuildTextFormFieldNewState extends State<BuildTextFormFieldNew> {
   Widget build(BuildContext context) {
     return SizedBox(
       height: widget.size.height / 12,
-      child: TextField(
+      child: TextFormField(
+        validator: widget.validation,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
         controller: widget.controller,
         style: TextStyle(
           fontSize: 18.0,
@@ -74,23 +79,18 @@ class _BuildTextFormFieldNewState extends State<BuildTextFormFieldNew> {
               borderSide: const BorderSide(
                 color: Color.fromRGBO(44, 185, 176, 1),
               )),
+          focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(40),
+              borderSide: const BorderSide(
+                color: Color.fromRGBO(176, 11, 36, 1),
+              )),
+          errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(40),
+              borderSide: const BorderSide(
+                color: Color.fromRGBO(176, 11, 36, 1),
+              )),
           prefixIcon: widget.leftIcon,
-          suffix: Container(
-            alignment: Alignment.center,
-            width: 24.0,
-            height: 24.0,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(100.0),
-              color: const Color.fromRGBO(44, 185, 176, 1),
-            ),
-            child: widget.controller.text.isEmpty
-                ? const Center()
-                : const Icon(
-                    Icons.check,
-                    color: Colors.white,
-                    size: 13,
-                  ),
-          ),
+          suffix: widget.suffixIcon,
         ),
       ),
     );

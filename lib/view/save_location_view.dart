@@ -1,4 +1,4 @@
-// ignore_for_file: sized_box_for_whitespace
+// ignore_for_file: sized_box_for_whitespace, prefer_const_literals_to_create_immutables
 
 import 'dart:developer';
 import 'dart:isolate';
@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_places_flutter/google_places_flutter.dart';
 import 'package:google_places_flutter/model/prediction.dart';
+import 'package:location_buddy/localization/app_localization.dart';
 import 'package:location_buddy/utils/assets/assets_utils.dart';
 import 'package:location_buddy/utils/colors/colors.dart';
 import 'package:location_buddy/widgets/custom_button_widget.dart';
@@ -103,11 +104,12 @@ class _SaveLocationViewState extends State<SaveLocationView> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            'SAVE ROUTE FOR YOUR DESTINATION',
+                            AppLocalization.of(context)!.translate('heading'),
                             textAlign: TextAlign.center,
                             style: TextStyle(
+                              color: CustomColor.primaryColor,
                               fontSize: 22.sp,
-                              fontFamily: FontFamliyM.SEMIBOLD,
+                              fontFamily: FontFamliyM.ROBOTOBOLD,
                             ),
                           ),
                           SizedBox(
@@ -126,26 +128,11 @@ class _SaveLocationViewState extends State<SaveLocationView> {
                                     controller: saveLocationViewProvider
                                         .savePointDestinationController,
                                     isObserve: false,
-                                    txtHint: 'Enter Title eg.Office',
+                                    txtHint: AppLocalization.of(context)!
+                                        .translate('hint-title'),
                                   ),
                                 ),
                               ),
-                              /* SizedBox(
-                                width: 5.w,
-                              ),
-                              Text('To', style: TextStyle(fontSize: 20.sp)),
-                              SizedBox(
-                                width: 5.w,
-                              ), */
-                              /*  SizedBox(
-                                width: 160.w,
-                                child: BuildTextFormField(
-                                  controller: saveLocationViewProvider
-                                      .savePointDestinationController,
-                                  isObserve: false,
-                                  txtHint: 'eg.market',
-                                ),
-                              ), */
                             ],
                           ),
                           SizedBox(
@@ -160,8 +147,7 @@ class _SaveLocationViewState extends State<SaveLocationView> {
                                   children: [
                                     CircleAvatar(
                                         backgroundColor: CustomColor.white,
-                                        child:
-                                            Image.asset(AssetsUtils.sourceRed)),
+                                        child: Image.asset(AssetsUtils.source)),
                                     SizedBox(
                                       width: 10.w,
                                     ),
@@ -172,7 +158,8 @@ class _SaveLocationViewState extends State<SaveLocationView> {
                                         controller: saveLocationViewProvider
                                             .sourceController,
                                         isObserve: false,
-                                        txtHint: 'Source location',
+                                        txtHint: AppLocalization.of(context)!
+                                            .translate('hint-source'),
                                       ),
                                     )
                                   ],
@@ -196,7 +183,7 @@ class _SaveLocationViewState extends State<SaveLocationView> {
                                     CircleAvatar(
                                         backgroundColor: CustomColor.white,
                                         child: Image.asset(
-                                            AssetsUtils.destinationRed)),
+                                            AssetsUtils.destination)),
                                     SizedBox(
                                       width: 10.w,
                                     ),
@@ -205,12 +192,6 @@ class _SaveLocationViewState extends State<SaveLocationView> {
                                       child: placesAutoCompleteTextField(
                                           saveLocationViewProvider
                                               .destinationController),
-                                      /*  child: BuildTextFormField(
-                                        isObserve: false,
-                                        controller: saveLocationViewProvider
-                                            .destinationController,
-                                        txtHint: 'Destination location',
-                                      ), */
                                     ),
                                   ],
                                 ),
@@ -223,8 +204,10 @@ class _SaveLocationViewState extends State<SaveLocationView> {
                           saveLocationViewProvider.isSaving
                               ? AppButton(
                                   height: 50.sp,
+                                  mycolor: CustomColor.primaryColor,
                                   sizes: 20.sp,
-                                  text: 'Please wait...',
+                                  text: AppLocalization.of(context)!
+                                      .translate('save-button2'),
                                 )
                               : GestureDetector(
                                   onTap: () async {
@@ -240,10 +223,11 @@ class _SaveLocationViewState extends State<SaveLocationView> {
                                             context);
                                   },
                                   child: AppButton(
-                                    mycolor: CustomColor.secondaryColor,
+                                    mycolor: CustomColor.primaryColor,
                                     height: 50.sp,
                                     sizes: 20.sp,
-                                    text: 'SAVE ROUTE',
+                                    text: AppLocalization.of(context)!
+                                        .translate('save-button'),
                                   ),
                                 ),
                           //Expanded(child: ListViewWidget())
@@ -264,9 +248,9 @@ class _SaveLocationViewState extends State<SaveLocationView> {
     return GooglePlaceAutoCompleteTextField(
         textEditingController: controller,
         textStyle: TextStyle(
-            color: Colors.black,
+            color: CustomColor.black,
             fontSize: 16.sp,
-            fontFamily: FontFamliyM.REGULAR),
+            fontFamily: FontFamliyM.ROBOTOREGULAR),
         googleAPIKey: "AIzaSyAERKSFYMxdSR6mrMmgyesmQOr8miAFd4c",
         inputDecoration: InputDecoration(
           contentPadding: EdgeInsets.only(
@@ -274,9 +258,12 @@ class _SaveLocationViewState extends State<SaveLocationView> {
           ),
           border: InputBorder.none,
           isDense: false,
-          labelText: "Destination Location",
+          labelText: AppLocalization.of(context)!.translate('hint-destination'),
           errorStyle: const TextStyle(color: Colors.black),
-          labelStyle: montserratHeading4tyle,
+          labelStyle: TextStyle(
+              color: CustomColor.black,
+              fontSize: 16.sp,
+              fontFamily: FontFamliyM.ROBOTOREGULAR),
           enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(15.sp),
               borderSide: BorderSide(color: Colors.black, width: 1.w)),
