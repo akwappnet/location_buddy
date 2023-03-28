@@ -240,6 +240,7 @@ class _SaveLocationViewState extends State<SaveLocationView> {
                                             context);
                                   },
                                   child: AppButton(
+                                    mycolor: CustomColor.secondaryColor,
                                     height: 50.sp,
                                     sizes: 20.sp,
                                     text: 'SAVE ROUTE',

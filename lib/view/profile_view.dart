@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:location_buddy/data/default_data.dart';
+import 'package:location_buddy/provider/current_data_provider.dart';
 import 'package:location_buddy/provider/sign_in_provider.dart';
 import 'package:location_buddy/utils/colors/colors.dart';
 import 'package:location_buddy/utils/font/font_family.dart';
@@ -19,6 +21,8 @@ class _ProfileViewState extends State<ProfileView> {
     super.initState();
   }
 
+  final DefaultData defaultData = DefaultData();
+
   @override
   Widget build(BuildContext context) {
     FirebaseAuth auth = FirebaseAuth.instance;
@@ -31,6 +35,34 @@ class _ProfileViewState extends State<ProfileView> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            Consumer<CurrentData>(builder: (context, currentData, child) {
+              return DropdownButton<String>(
+                value: currentData.defineCurrentLanguage(context),
+                icon: const Icon(
+                  Icons.arrow_downward,
+                  color: Colors.red,
+                ),
+                iconSize: 20,
+                elevation: 0,
+                style: const TextStyle(color: Colors.red),
+                underline: Container(
+                  height: 1,
+                ),
+                dropdownColor: CustomColor.Violet,
+                onChanged: (String? newValue) {
+                  currentData.changeLocale(newValue!);
+                },
+                items: defaultData.languagesListDefault
+                    .map<DropdownMenuItem<String>>(
+                  (String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  },
+                ).toList(),
+              );
+            }),
             Container(
               height: 190.h,
               width: 190.w,

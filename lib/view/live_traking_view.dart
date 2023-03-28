@@ -6,6 +6,7 @@ import 'dart:isolate';
 import 'dart:ui';
 
 import 'package:background_locator_2/location_dto.dart';
+
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -103,6 +104,141 @@ class _LiveTrackingPageState extends State<LiveTrackingPage> {
 
     googleMapController.animateCamera(CameraUpdate.newLatLngBounds(bounds, 50));
   }
+
+//   // Function to calculate the distance between two LatLng points using Haversine formula
+//   double _distanceBetween(LatLng point1, LatLng point2) {
+//     const int earthRadius = 6371000; // in meters
+//     double lat1 = point1.latitude * (pi / 180);
+//     double lon1 = point1.longitude * (pi / 180);
+//     double lat2 = point2.latitude * (pi / 180);
+//     double lon2 = point2.longitude * (pi / 180);
+//     double dLat = lat2 - lat1;
+//     double dLon = lon2 - lon1;
+//     double a =
+//         pow(sin(dLat / 2), 2) + cos(lat1) * cos(lat2) * pow(sin(dLon / 2), 2);
+//     double c = 2 * atan2(sqrt(a), sqrt(1 - a));
+//     double distance = earthRadius * c;
+//     return distance;
+//   }
+// Future<List<LatLng>> getShortestPath(
+//   LatLng start,
+//   LatLng destination,
+//   Function(Map<LatLng, List<LatLng>>) onGraphCreated,
+// ) async {
+//   PolylinePoints polylinePoints = PolylinePoints();
+//   PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+//     google_api_key,
+//     PointLatLng(start.latitude, start.longitude),
+//     PointLatLng(destination.latitude, destination.longitude),
+//   );
+//   print('Retrieved polyline with ${result.points.length} points');
+
+//   Map<LatLng, List<LatLng>> graph = {};
+//   for (int i = 0; i < result.points.length - 1; i++) {
+//     LatLng node =
+//         LatLng(result.points[i].latitude, result.points[i].longitude);
+//     if (!graph.containsKey(node)) {
+//       graph[node] = [];
+//     }
+//     for (int j = i + 1; j < result.points.length; j++) {
+//       LatLng neighbor =
+//           LatLng(result.points[j].latitude, result.points[j].longitude);
+//       double distance = _distanceBetween(node, neighbor);
+//       print('Distance between $node and $neighbor: $distance');
+//       if (distance <= 3000) {
+//         if (!graph.containsKey(node)) {
+//           graph[node] = [];
+//         }
+//         graph[node]!.add(neighbor);
+//         if (!graph.containsKey(neighbor)) {
+//           graph[neighbor] = [];
+//         }
+//         graph[neighbor]!.add(node);
+//       }
+//     }
+//   }
+
+//   // Add start and destination nodes to graph if they are not already present
+//   if (!graph.containsKey(start)) {
+//     graph[start] = [];
+//   }
+//   if (!graph.containsKey(destination)) {
+//     graph[destination] = [];
+//   }
+
+//   print('Created graph with ${graph.length} nodes');
+//   onGraphCreated(graph);
+
+//   Map<LatLng, double> distances = {};
+//   Map<LatLng, LatLng> previous = {};
+//   HeapPriorityQueue<LatLng> queue = HeapPriorityQueue(
+//     (a, b) => (distances[a] ?? double.infinity)
+//         .compareTo((distances[b] ?? double.infinity)),
+//   );
+
+//   // Set initial distances and add start node to queue
+//   distances[start] = 0;
+//   queue.add(start);
+
+//   while (queue.isNotEmpty) {
+//     LatLng current = queue.removeFirst();
+//     if (current == destination) {
+//       break;
+//     }
+//     for (LatLng neighbor in graph[current]!) {
+//       double distance = _distanceBetween(current, neighbor);
+//       double tentativeDistance = (distances[current] ?? double.infinity) +
+//           distance +
+//           _distanceBetween(neighbor, destination);
+//       if ((distances[neighbor] ?? double.infinity) > tentativeDistance) {
+//         distances[neighbor] = tentativeDistance;
+//         previous[neighbor] = current;
+//         if (queue.contains(neighbor)) {
+//           queue.updatePriority(neighbor);
+//         } else {
+//           queue.add(neighbor);
+//         }
+//       }
+//     }
+//   }
+
+//   // Build the path by following the previous nodes from the destination to the start
+//   List<LatLng> path = [destination];
+//   LatLng current = destination;
+//   while (previous[current] != null) {
+//     path.insert(0, previous[current]!);
+//     current = previous[current] as LatLng;
+  // void _updatePolyline(GoogleMapController controller) async {
+  //   if (currentLocation != null && _destination != null) {
+  //     List<LatLng> path = await getShortestPath(
+  //         LatLng(currentLocation!.latitude, currentLocation!.longitude),
+  //         LatLng(_destination!.latitude, _destination!.longitude), (graph) {
+  //       // You can use this optional callback to access the graph if needed
+  //     });
+  //     if (path.isNotEmpty) {
+  //       _polylineCoordinates.clear();
+  //       for (var point in path) {
+  //         _polylineCoordinates.add(LatLng(point.latitude, point.longitude));
+  //       }
+  //       print('Polyline Coordinates: $_polylineCoordinates');
+  //     }
+  //     setState(() {
+  //       if (_polylineId != null) {
+  //         _polylines.removeWhere(
+  //             (Polyline polyline) => polyline.polylineId == _polylineId);
+  //       }
+  //       _polylineId = const PolylineId('route');
+  //       _polylines.add(Polyline(
+  //         width: 5,
+  //         polylineId: _polylineId!,
+  //         color: CustomColor.Violet,
+  //         points: path,
+  //         visible: true,
+  //       ));
+  //       print('Polylines: $_polylineCoordinates');
+  //     });
+  //   }
+  // }
 
   void _updatePolyline(GoogleMapController controller) async {
     if (currentLocation != null) {

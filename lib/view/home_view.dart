@@ -30,7 +30,7 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   // var length = 1;
-  final DefaultData defaultData = DefaultData();
+
   @override
   void initState() {
     super.initState();
@@ -56,83 +56,51 @@ class _HomeViewState extends State<HomeView> {
 
     return Consumer<HomeViewProvider>(builder: (context, remoteConfig, _) {
       return Scaffold(
-        body: Container(
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
-          child: Stack(
-            children: [
-              Positioned(
-                left: 0,
-                right: 0,
-                child: Container(
-                  width: double.maxFinite,
-                  height: 350.h,
-                  decoration: const BoxDecoration(
-                      gradient: LinearGradient(colors: [
-                    CustomColor.lightViolet,
-                    CustomColor.Violet,
-                    CustomColor.violetSecond,
-                  ])),
+        backgroundColor: CustomColor.primaryColor,
+        body: Column(
+          children: [
+            SizedBox(
+              height: 50.h,
+            ),
+            Row(
+              children: [
+                AvatarGlow(
+                  endRadius: 30,
+                  glowColor: Colors.red,
+                  duration: const Duration(seconds: 5),
+                  child: Icon(
+                    Icons.location_on_outlined,
+                    size: 35.h,
+                    color: Colors.white,
+                  ),
                 ),
-              ),
-              Positioned(
-                  left: 20.h,
-                  top: 50.h,
-                  child: Row(
-                    children: [
-                      AvatarGlow(
-                        endRadius: 30,
-                        glowColor: Colors.red,
-                        duration: const Duration(seconds: 5),
-                        child: Icon(
-                          Icons.location_on_outlined,
-                          size: 35.h,
-                          color: Colors.white,
-                        ),
-                      ),
-                      Text(
-                        remoteConfig.appName,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 25.sp,
-                          fontFamily: FontFamliyM.SEMIBOLD,
-                        ),
-                      ),
-                      // Text(
-                      //   AppLocalization.of(context)!.translate('hello-world'),
-                      //   style: TextStyle(color: Colors.indigo, fontSize: 5),
-                      // ),
-                      SizedBox(
-                        width: 50.w,
-                      ),
-                      Icon(
-                        Icons.language,
-                        color: Colors.white,
-                        size: 35.h,
-                      ),
-                      SizedBox(
-                        width: 5.w,
-                      ),
-                    ],
-                  )),
-              RefreshIndicator(
-                displacement: 30.sp,
-                color: CustomColor.Violet,
-                onRefresh: () async {
-                  log("----");
-                },
-                child: Positioned(
-                  top: 150.h,
+                Text(
+                  remoteConfig.appName,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 25.sp,
+                    fontFamily: FontFamliyM.SEMIBOLD,
+                  ),
+                ),
+                // Text(
+                //   AppLocalization.of(context)!.translate('hello-world'),
+                //   style: TextStyle(color: Colors.indigo, fontSize: 5),
+                // ),
+              ],
+            ),
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                    color: CustomColor.white,
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(30.sp),
+                        topRight: Radius.circular(30.sp))),
+                child: SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
                   child: Container(
                     padding:
                         EdgeInsets.only(left: 20.sp, right: 20.sp, top: 10.sp),
                     width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height,
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(30.sp),
-                            topRight: Radius.circular(30.sp))),
                     child: locationInfoProvider.isLoading
                         ? Lottie.asset(AssetsUtils.loadinghome,
                             height: 250.h, width: 250.w, animate: true)
@@ -155,7 +123,7 @@ class _HomeViewState extends State<HomeView> {
                                     style: TextStyle(
                                         fontSize: 28.sp,
                                         fontFamily: FontFamliyM.SEMIBOLD,
-                                        color: CustomColor.Violet,
+                                        color: CustomColor.primaryColor,
                                         fontWeight: FontWeight.w600),
                                   ),
                                   SizedBox(
@@ -192,10 +160,7 @@ class _HomeViewState extends State<HomeView> {
                                     child: Card(
                                       elevation: 4,
                                       child: ExpansionTile(
-                                          leading: Image.asset(
-                                            AssetsUtils.route,
-                                            height: 30,
-                                          ),
+                                          leading: Icon(Icons.map_outlined),
                                           trailing: GestureDetector(
                                             onTap: () {
                                               double latitude = double.parse(
@@ -221,8 +186,9 @@ class _HomeViewState extends State<HomeView> {
                                               height: 40.h,
                                             ),
                                           ),
-                                          textColor: CustomColor.lightViolet,
-                                          iconColor: CustomColor.lightViolet,
+                                          textColor: CustomColor.black,
+                                          iconColor:
+                                              Colors.black.withOpacity(0),
                                           initiallyExpanded: true,
                                           maintainState: true,
                                           controlAffinity:
@@ -393,8 +359,8 @@ class _HomeViewState extends State<HomeView> {
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       );
     });
