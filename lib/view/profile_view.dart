@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:location_buddy/data/default_data.dart';
+import 'package:location_buddy/localization/app_localization.dart';
 import 'package:location_buddy/utils/colors/colors.dart';
 import 'package:location_buddy/utils/font/font_family.dart';
 import 'package:provider/provider.dart';
@@ -70,7 +71,7 @@ class _ProfileViewState extends State<ProfileView> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "Welcome ,",
+                              AppLocalization.of(context)!.translate('welcome'),
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 28.sp,
@@ -92,8 +93,8 @@ class _ProfileViewState extends State<ProfileView> {
                 ],
               )),
           Padding(
-            padding: EdgeInsets.only(left: 22.sp, top: 22.sp),
-            child: Text("App Setting",
+            padding: EdgeInsets.symmetric(horizontal: 22.sp, vertical: 22.sp),
+            child: Text(AppLocalization.of(context)!.translate('setting'),
                 style: TextStyle(
                     color: CustomColor.black,
                     fontSize: 20.sp,
@@ -101,108 +102,80 @@ class _ProfileViewState extends State<ProfileView> {
                     fontWeight: FontWeight.w700)),
           ),
           SettingsItem(
-            onTap: () {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return SimpleDialog(
-                    title: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Text("Select Language",
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 20.sp,
-                                    fontFamily: FontFamliyM.ROBOTOBOLD,
-                                    fontWeight: FontWeight.w600)),
-                            const Spacer(),
-                            IconButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                icon: const Icon(Icons.clear))
-                          ],
-                        ),
-                        Consumer<CurrentData>(
-                            builder: (context, currentData, child) {
-                          return DropdownButton<String>(
-                            value: currentData.defineCurrentLanguage(context),
-                            icon: const Icon(
-                              Icons.arrow_downward,
-                              color: Colors.red,
-                            ),
-                            iconSize: 20,
-                            elevation: 0,
-                            style: const TextStyle(color: Colors.red),
-                            underline: Container(
-                              height: 1,
-                            ),
-                            dropdownColor: CustomColor.Violet,
-                            onChanged: (String? newValue) {
-                              currentData.changeLocale(newValue!);
-                            },
-                            items: defaultData.languagesListDefault
-                                .map<DropdownMenuItem<String>>(
-                              (String value) {
-                                return DropdownMenuItem<String>(
-                                  value: value,
-                                  child: Text(value),
-                                );
-                              },
-                            ).toList(),
-                          );
-                        }),
-                      ],
-                    ),
-                  );
+            trailing:
+                Consumer<CurrentData>(builder: (context, currentData, child) {
+              return DropdownButton<String>(
+                value: currentData.defineCurrentLanguage(context),
+                icon: const Icon(
+                  Icons.arrow_downward,
+                  color: CustomColor.primaryColor,
+                ),
+                iconSize: 20,
+                elevation: 0,
+                style: const TextStyle(color: CustomColor.primaryColor),
+                underline: Container(
+                  height: 1,
+                ),
+                dropdownColor: CustomColor.white,
+                onChanged: (String? newValue) {
+                  currentData.changeLocale(newValue!);
                 },
+                items: defaultData.languagesListDefault
+                    .map<DropdownMenuItem<String>>(
+                  (String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  },
+                ).toList(),
               );
-            },
-            trailing: Icon(Icons.arrow_forward_ios_rounded,
-                color: SecondaryColor.greyIconColor),
+            }),
             icons: Icons.language,
             iconStyle: IconStyle(
               iconsColor: SecondaryColor.greyIconColor,
               backgroundColor: CustomColor.white,
             ),
-            title: 'Language',
+            title: AppLocalization.of(context)!.translate('language'),
             titleStyle: TextStyle(
                 color: CustomColor.black,
                 fontSize: 20.sp,
                 fontFamily: FontFamliyM.ROBOTOBOLD,
                 fontWeight: FontWeight.w600),
-            subtitle: "Select language formate",
+            subtitle: AppLocalization.of(context)!.translate('select-language'),
           ),
           SettingsItem(
             trailing: Icon(Icons.arrow_forward_ios_rounded,
                 color: SecondaryColor.greyIconColor),
             onTap: () {
-              showCustomDialog("Privacy", context);
+              showCustomDialog(
+                  AppLocalization.of(context)!.translate('privacy'), context);
             },
             icons: Icons.lock_open_sharp,
             iconStyle: IconStyle(
               iconsColor: SecondaryColor.greyIconColor,
               backgroundColor: CustomColor.white,
             ),
-            title: 'Privacy',
+            title: AppLocalization.of(context)!.translate('privacy'),
             titleStyle: TextStyle(
                 color: CustomColor.black,
                 fontSize: 20.sp,
                 fontFamily: FontFamliyM.ROBOTOBOLD,
                 fontWeight: FontWeight.w600),
-            subtitle: "Location Buddy privacy",
+            subtitle:
+                AppLocalization.of(context)!.translate('privacy-subtitle'),
           ),
           SettingsItem(
             onTap: () {
-              showCustomDialog("About", context);
+              showCustomDialog(
+                  AppLocalization.of(context)!.translate('about'), context);
             },
             icons: Icons.info_outline,
             iconStyle: IconStyle(
               iconsColor: SecondaryColor.greyIconColor,
               backgroundColor: CustomColor.white,
             ),
-            title: 'About',
+            title: AppLocalization.of(context)!.translate('about'),
             trailing: Icon(Icons.arrow_forward_ios_rounded,
                 color: SecondaryColor.greyIconColor),
             titleStyle: TextStyle(
@@ -210,11 +183,11 @@ class _ProfileViewState extends State<ProfileView> {
                 fontSize: 20.sp,
                 fontFamily: FontFamliyM.ROBOTOBOLD,
                 fontWeight: FontWeight.w600),
-            subtitle: "Learn more about location buddy",
+            subtitle: AppLocalization.of(context)!.translate('about-title'),
           ),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 22.sp),
-            child: Text("Account",
+            child: Text(AppLocalization.of(context)!.translate('account'),
                 style: TextStyle(
                     color: CustomColor.black,
                     fontSize: 20.sp,
@@ -241,8 +214,8 @@ class _ProfileViewState extends State<ProfileView> {
                   });
             },
             icons: Icons.logout,
-            title: "Logout",
-            subtitle: "I want to logout from app",
+            title: AppLocalization.of(context)!.translate('logout'),
+            subtitle: AppLocalization.of(context)!.translate('logout-title'),
             trailing: const Icon(Icons.arrow_forward_ios_rounded,
                 color: CustomColor.primaryColor),
             titleStyle: TextStyle(
@@ -275,8 +248,9 @@ class _ProfileViewState extends State<ProfileView> {
                   });
             },
             icons: Icons.delete_outline_outlined,
-            title: "Delete account",
-            subtitle: "I want to delete account",
+            title: AppLocalization.of(context)!.translate('delete-account'),
+            subtitle:
+                AppLocalization.of(context)!.translate('delete-account-title'),
             trailing: const Icon(Icons.arrow_forward_ios_rounded,
                 color: CustomColor.secondaryColor),
             titleStyle: TextStyle(
@@ -293,97 +267,6 @@ class _ProfileViewState extends State<ProfileView> {
       ),
     );
   }
-
-/*   @override
-  Widget build(BuildContext context) {
-    FirebaseAuth auth = FirebaseAuth.instance;
-    return Scaffold(
-      body: Container(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        color: CustomColor.white,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Consumer<CurrentData>(builder: (context, currentData, child) {
-              return DropdownButton<String>(
-                value: currentData.defineCurrentLanguage(context),
-                icon: const Icon(
-                  Icons.arrow_downward,
-                  color: Colors.red,
-                ),
-                iconSize: 20,
-                elevation: 0,
-                style: const TextStyle(color: Colors.red),
-                underline: Container(
-                  height: 1,
-                ),
-                dropdownColor: CustomColor.Violet,
-                onChanged: (String? newValue) {
-                  currentData.changeLocale(newValue!);
-                },
-                items: defaultData.languagesListDefault
-                    .map<DropdownMenuItem<String>>(
-                  (String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  },
-                ).toList(),
-              );
-            }),
-            Container(
-              height: 190.h,
-            width: 190.w,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: NetworkImage(auth.currentUser?.photoURL ??
-                      "https://cdn-icons-png.flaticon.com/128/3177/3177440.png"),
-                  fit: BoxFit.fill,
-                ),
-              ),
-            ),
-            SizedBox(height: 50.h),
-            Center(
-              child: Text.rich(
-                TextSpan(
-                  style: TextStyle(
-                    fontSize: 32.sp,
-                  ),
-                  children: [
-                    TextSpan(
-                      text: auth.currentUser?.displayName ?? "No Name",
-                      style: TextStyle(
-                          color: CustomColor.primaryColor,
-                          fontWeight: FontWeight.w800,
-                          fontFamily: FontFamliyM.ROBOTOBLACK),
-                    ),
-                    TextSpan(
-                      text: auth.currentUser?.email ?? "demo email",
-                      style: TextStyle(
-                          color: CustomColor.secondaryColor,
-                          fontWeight: FontWeight.w800,
-                          fontFamily: FontFamliyM.ROBOTOBOLD),
-                    ),
-                  ],
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-            ElevatedButton(
-                onPressed: () {
-                  final provider =
-                      Provider.of<SignInProvider>(context, listen: false);
-                  provider.signOut(context);
-                },
-                child: const Text("Logout"))
-          ],
-        ),
-      ),
-    );
-  } */
 }
 
 void showCustomDialog(String title, BuildContext context) => showDialog(
@@ -403,11 +286,6 @@ void showCustomDialog(String title, BuildContext context) => showDialog(
                   children: [
                     Text(
                       title,
-                      /*   style: openSansHeadingStyle(
-                          color: PrimaryColor.blackColor,
-                          fontFamily: FontFamliy.OPEN_SANS,
-                          fontSize: 22.sp,
-                          fontWeight: FontWeight.w700), */
                     ),
                     const Spacer(),
                     IconButton(

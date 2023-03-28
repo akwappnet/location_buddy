@@ -20,7 +20,6 @@ import 'package:r_dotted_line_border/r_dotted_line_border.dart';
 import '../provider/save_location_view_provider.dart';
 import '../services/location_service_repository.dart';
 import '../utils/font/font_family.dart';
-import '../utils/font/font_style.dart';
 
 class SaveLocationView extends StatefulWidget {
   const SaveLocationView({super.key});

@@ -7,6 +7,7 @@ import 'package:location_buddy/utils/assets/assets_utils.dart';
 import 'package:location_buddy/utils/colors/colors.dart';
 
 import 'package:location_buddy/utils/validation/validation.dart';
+
 import 'package:provider/provider.dart';
 
 import '../provider/sign_in_provider.dart';

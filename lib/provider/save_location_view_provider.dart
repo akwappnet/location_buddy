@@ -203,7 +203,9 @@ class SaveLocationViewProvider extends ChangeNotifier {
           .delete();
       _locationInfo.removeWhere(
           (locationInfo) => locationInfo.destinationLocation == id);
+      // ignore: use_build_context_synchronously
       await closeCustomLoadingDialog(context);
+      // ignore: use_build_context_synchronously
       Navigator.pop(context);
       await fetchLocationInformation();
       // ignore: use_build_context_synchronously

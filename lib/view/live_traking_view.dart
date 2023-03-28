@@ -1,3 +1,5 @@
+// ignore_for_file: unused_element
+
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -106,7 +108,7 @@ class _LiveTrackingPageState extends State<LiveTrackingPage> {
   }
 
 //   // Function to calculate the distance between two LatLng points using Haversine formula
-  // ignore: unused_element
+
   double _distanceBetween(LatLng point1, LatLng point2) {
     const int earthRadius = 6371000; // in meters
     double lat1 = point1.latitude * (pi / 180);

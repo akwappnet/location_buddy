@@ -276,6 +276,7 @@ class SignInProvider with ChangeNotifier {
     _user = null;
 
     Navigator.popAndPushNamed(context, RoutesName.siginView);
+
     notifyListeners();
   }
 }
