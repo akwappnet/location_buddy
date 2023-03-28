@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:location_buddy/utils/routes/routes_name.dart';
 import 'package:location_buddy/view/home_view.dart';
 import 'package:location_buddy/view/live_traking_view.dart';
+import 'package:location_buddy/view/profile_view.dart';
 import 'package:location_buddy/view/route_view.dart';
 import 'package:location_buddy/view/save_location_view.dart';
 import 'package:location_buddy/view/sign_in_view.dart';
@@ -44,6 +45,9 @@ class Routes {
       case RoutesName.sigupview:
         return MaterialPageRoute(
             builder: (BuildContext context) => const SignUpView());
+      case RoutesName.profileView:
+        return MaterialPageRoute(
+            builder: (BuildContext context) => const ProfileView());
 
       default:
         // SystemNavigator.pop();

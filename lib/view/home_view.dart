@@ -6,8 +6,6 @@ import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import 'package:location_buddy/data/default_data.dart';
-import 'package:location_buddy/provider/current_data_provider.dart';
 import 'package:location_buddy/provider/home_view_provider.dart';
 import 'package:location_buddy/provider/live_traking_view_provider.dart';
 import 'package:location_buddy/utils/assets/assets_utils.dart';
@@ -160,7 +158,8 @@ class _HomeViewState extends State<HomeView> {
                                     child: Card(
                                       elevation: 4,
                                       child: ExpansionTile(
-                                          leading: Icon(Icons.map_outlined),
+                                          leading:
+                                              const Icon(Icons.map_outlined),
                                           trailing: GestureDetector(
                                             onTap: () {
                                               double latitude = double.parse(

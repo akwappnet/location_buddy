@@ -2,7 +2,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:location_buddy/utils/assets/assets_utils.dart';
-import 'package:location_buddy/view/home_view.dart';
 import 'package:provider/provider.dart';
 
 import '../provider/sign_in_provider.dart';

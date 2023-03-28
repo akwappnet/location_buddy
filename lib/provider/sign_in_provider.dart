@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -43,13 +45,14 @@ class SignInProvider with ChangeNotifier {
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
-      // ignore: use_build_context_synchronously
+
       showCustomLoadingDialog(context);
       final UserCredential userCredential =
           await _auth.signInWithCredential(credential);
       _user = userCredential.user;
       log("------------->${_user?.displayName.toString()}");
       log("------------->$_auth");
+
       notifyListeners();
       if (_user != null && _user!.email!.isNotEmpty) {
         showDialog(
@@ -74,7 +77,6 @@ class SignInProvider with ChangeNotifier {
 
         // ignore: use_build_conte
       } else {
-        // ignore: use_build_context_synchronously
         clearText();
         closeCustomLoadingDialog(context);
 
@@ -124,7 +126,6 @@ class SignInProvider with ChangeNotifier {
                 btn2Text: "",
               );
             });
-        // ignore: use_build_context_synchronously
 
         await Future.delayed(const Duration(seconds: 2)).then((value) {
           clearText();
@@ -191,7 +192,6 @@ class SignInProvider with ChangeNotifier {
                 btn2Text: "",
               );
             });
-        // ignore: use_build_context_synchronously
         await Future.delayed(const Duration(seconds: 2)).then((value) {
           closeCustomLoadingDialog(context);
           Navigator.popAndPushNamed(context, RoutesName.siginview);
@@ -208,7 +208,6 @@ class SignInProvider with ChangeNotifier {
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         closeCustomLoadingDialog(context);
-        // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             backgroundColor: CustomColor.redColor,
@@ -219,7 +218,6 @@ class SignInProvider with ChangeNotifier {
         log('The password provided is too weak.');
       } else if (e.code == 'email-already-in-use') {
         closeCustomLoadingDialog(context);
-        // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             backgroundColor: CustomColor.redColor,
@@ -234,11 +232,48 @@ class SignInProvider with ChangeNotifier {
     }
   }
 
+  Future<void> deleteAccount(BuildContext context) async {
+    try {
+      showCustomLoadingDialog(context);
+      await _auth.currentUser?.delete();
+      await _googleSignIn.signOut();
+      await _auth.signOut();
+      _user = null;
+      await closeCustomLoadingDialog(context);
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return const CustomDialogBox(
+              heading: "Success",
+              icon: Icon(Icons.done),
+              backgroundColor: CustomColor.primaryColor,
+              title: "Your account deleted Successfully",
+              descriptions: "", //
+              btn1Text: "",
+              btn2Text: "",
+            );
+          });
+      await Future.delayed(const Duration(seconds: 2)).then(
+          (value) => Navigator.popAndPushNamed(context, RoutesName.siginview));
+
+      notifyListeners();
+    } catch (e) {
+      closeCustomLoadingDialog(context);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: CustomColor.redColor,
+          content: Text('Error deleting account: $e'),
+          duration: const Duration(seconds: 3),
+        ),
+      );
+      log('Error deleting account: $e');
+    }
+  }
+
   Future<void> signOut(BuildContext context) async {
     await _googleSignIn.signOut();
     await _auth.signOut();
     _user = null;
-    // ignore: use_build_context_synchronously
     Navigator.popAndPushNamed(context, RoutesName.siginview);
     notifyListeners();
   }

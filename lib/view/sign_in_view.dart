@@ -5,7 +5,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:location_buddy/utils/assets/assets_utils.dart';
 import 'package:location_buddy/utils/colors/colors.dart';
-import 'package:location_buddy/view/home_view.dart';
 import 'package:provider/provider.dart';
 
 import '../provider/sign_in_provider.dart';
