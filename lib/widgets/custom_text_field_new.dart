@@ -1,6 +1,7 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:location_buddy/utils/font/font_family.dart';
 
@@ -69,10 +70,8 @@ class _BuildTextFormFieldNewState extends State<BuildTextFormFieldNew> {
           filled: true,
           enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(40),
-              borderSide: BorderSide(
-                color: widget.controller.text.isEmpty
-                    ? Colors.transparent
-                    : const Color(0xFF2CB9B0),
+              borderSide: const BorderSide(
+                color: Color(0xFF2CB9B0),
               )),
           focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(40),
@@ -82,12 +81,17 @@ class _BuildTextFormFieldNewState extends State<BuildTextFormFieldNew> {
           focusedErrorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(40),
               borderSide: const BorderSide(
-                color: Color.fromRGBO(176, 11, 36, 1),
+                color: Color.fromRGBO(44, 185, 176, 1),
               )),
           errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(40),
               borderSide: const BorderSide(
-                color: Color.fromRGBO(176, 11, 36, 1),
+                color: Color.fromRGBO(44, 185, 176, 1),
+              )),
+          disabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(40.sp),
+              borderSide: BorderSide(
+                color: Color.fromRGBO(44, 185, 176, 1),
               )),
           prefixIcon: widget.leftIcon,
           suffix: widget.suffixIcon,

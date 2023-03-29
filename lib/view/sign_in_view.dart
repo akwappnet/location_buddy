@@ -138,8 +138,8 @@ class _SignInViewState extends State<SignInView> {
                   validation: passwordValidator,
                   size: size,
                   isObserve: true,
-                  txtHint:
-                      AppLocalization.of(context)!.translate('empty-field'),
+                  txtHint: AppLocalization.of(context)!
+                      .translate('txt-password-hint'),
                   leftIcon: Icon(
                     Icons.lock,
                     color: provider.passController.text.isEmpty
