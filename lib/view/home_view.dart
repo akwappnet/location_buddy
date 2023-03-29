@@ -165,14 +165,16 @@ class _HomeViewState extends State<HomeView> {
                                       decoration: BoxDecoration(
                                           borderRadius:
                                               BorderRadius.circular(30)),
-                                      height: 195.h,
+                                      height: 210.h,
                                       width: MediaQuery.of(context).size.width,
                                       child: Padding(
                                         padding: EdgeInsets.symmetric(
-                                            horizontal: 25.sp, vertical: 10.sp),
+                                            horizontal: 25.sp, vertical: 20.sp),
                                         child: Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
                                             Row(
                                               mainAxisAlignment:
@@ -250,9 +252,6 @@ class _HomeViewState extends State<HomeView> {
                                                 maxLines: 1,
                                                 overflow: TextOverflow.ellipsis,
                                               ),
-                                            ),
-                                            SizedBox(
-                                              height: 20.h,
                                             ),
                                             Text(
                                               AppLocalization.of(context)!
