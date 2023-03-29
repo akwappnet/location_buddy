@@ -19,6 +19,7 @@ import 'package:location_buddy/utils/constants.dart';
 import 'package:location_buddy/utils/font/font_family.dart';
 import 'package:location_buddy/widgets/loading_map.dart';
 import 'package:provider/provider.dart';
+import '../localization/app_localization.dart';
 import '../models/location_data_navigate.dart';
 import '../services/location_service_repository.dart';
 import '../widgets/custom_button_widget.dart';
@@ -294,7 +295,7 @@ Future<List<LatLng>> getShortestPath(
       child: AppButton(
         height: 50.sp,
         sizes: 20.sp,
-        text: 'Stop Tracking',
+        text: AppLocalization.of(context)!.translate('stop-tracking'),
         mycolor: CustomColor.primaryColor,
       ),
     );
@@ -313,7 +314,7 @@ Future<List<LatLng>> getShortestPath(
                   height: 50.h,
                 ),
                 Text(
-                  'Please wait... ',
+                  AppLocalization.of(context)!.translate('save-button2'),
                   textAlign: TextAlign.center,
                   style: TextStyle(
                       fontSize: 28.sp,
@@ -361,7 +362,9 @@ Future<List<LatLng>> getShortestPath(
     return Scaffold(
       appBar: AppBar(
         backgroundColor: CustomColor.primaryColor,
-        title: const Text('Live Tracking'),
+        title: Text(
+          AppLocalization.of(context)!.translate('live-tracking'),
+        ),
       ),
       body: Container(
         color: CustomColor.white,

@@ -7,6 +7,7 @@ import 'package:location_buddy/localization/app_localization.dart';
 import 'package:location_buddy/utils/colors/colors.dart';
 import 'package:location_buddy/utils/font/font_family.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../provider/current_data_provider.dart';
 import '../provider/sign_in_provider.dart';
 import '../widgets/custom_dialog_box.dart';
@@ -117,7 +118,11 @@ class _ProfileViewState extends State<ProfileView> {
                   height: 1,
                 ),
                 dropdownColor: CustomColor.white,
-                onChanged: (String? newValue) {
+                onChanged: (String? newValue) async {
+                  SharedPreferences prefs =
+                      await SharedPreferences.getInstance();
+                  await prefs.setString('dateFormat', newValue ?? "English");
+                  print(prefs.getString("dateFormat"));
                   currentData.changeLocale(newValue!);
                 },
                 items: defaultData.languagesListDefault

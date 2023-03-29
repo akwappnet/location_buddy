@@ -29,13 +29,13 @@ class BottomNavBar extends StatelessWidget {
             context: context,
             builder: (BuildContext context) {
               return CustomDialogBox(
-                heading: "Exit App",
+                heading: AppLocalization.of(context)!.translate('exit-app'),
                 icon: const Icon(Icons.exit_to_app),
                 backgroundColor: CustomColor.primaryColor,
-                title: "Are you sure you want to exit app ?",
+                title: AppLocalization.of(context)!.translate('dialog-title'),
                 descriptions: "", //
-                btn1Text: "Exit",
-                btn2Text: "Cancel",
+                btn1Text: AppLocalization.of(context)!.translate('btn-exit'),
+                btn2Text: AppLocalization.of(context)!.translate('btn-cancel'),
                 onClicked: () {
                   SystemNavigator.pop();
                 },
