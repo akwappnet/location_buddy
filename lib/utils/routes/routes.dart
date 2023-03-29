@@ -29,47 +29,31 @@ class Routes {
                 child: const MapScreen()));
       case RoutesName.splashView:
         return MaterialPageRoute(
-            builder: (BuildContext context) => Directionality(
-                textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
-                child: const SplashView()));
+            builder: (BuildContext context) => const SplashView());
 
       case RoutesName.bottomBar:
         return MaterialPageRoute(
-            builder: (BuildContext context) => Directionality(
-                textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
-                child: BottomNavBar()));
+            builder: (BuildContext context) => BottomNavBar());
       case RoutesName.saveLocationView:
         return MaterialPageRoute(
-            builder: (BuildContext context) => Directionality(
-                textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
-                child: const SaveLocationView()));
+            builder: (BuildContext context) => const SaveLocationView());
       case RoutesName.livetrakingpage:
         return MaterialPageRoute(
-            builder: (BuildContext context) => Directionality(
-                textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
-                child: const LiveTrackingPage()));
+            builder: (BuildContext context) => const LiveTrackingPage());
       case RoutesName.siginView:
         return MaterialPageRoute(
-            builder: (BuildContext context) => Directionality(
-                textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
-                child: const SignInView()));
+            builder: (BuildContext context) => const SignInView());
       case RoutesName.sigupView:
         return MaterialPageRoute(
-            builder: (BuildContext context) => Directionality(
-                textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
-                child: const SignUpView()));
+            builder: (BuildContext context) => const SignUpView());
 
       case RoutesName.profileView:
         return MaterialPageRoute(
-            builder: (BuildContext context) => Directionality(
-                textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
-                child: const ProfileView()));
+            builder: (BuildContext context) => const ProfileView());
 
       case RoutesName.forgetPasswordView:
         return MaterialPageRoute(
-            builder: (BuildContext context) => Directionality(
-                textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
-                child: ForgetPasswordView()));
+            builder: (BuildContext context) => ForgetPasswordView());
 
       default:
         // SystemNavigator.pop();
