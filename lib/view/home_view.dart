@@ -76,10 +76,6 @@ class _HomeViewState extends State<HomeView> {
                     fontFamily: FontFamliyM.SEMIBOLD,
                   ),
                 ),
-                // Text(
-                //   AppLocalization.of(context)!.translate('hello-world'),
-                //   style: TextStyle(color: Colors.indigo, fontSize: 5),
-                // ),
               ],
             ),
             Expanded(

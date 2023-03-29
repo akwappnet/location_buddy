@@ -8,6 +8,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:location_buddy/utils/colors/colors.dart';
 
 import '../helper/loading_dialog.dart';
+import '../localization/app_localization.dart';
 import '../utils/routes/routes_name.dart';
 import '../widgets/custom_dialog_box.dart';
 
@@ -60,10 +61,11 @@ class SignInProvider with ChangeNotifier {
             builder: (BuildContext context) {
               // ignore: prefer_const_constructors
               return CustomDialogBox(
-                heading: "Success",
+                heading: AppLocalization.of(context)!.translate('success'),
                 icon: const Icon(Icons.done),
                 backgroundColor: CustomColor.primaryColor,
-                title: "Login Successfull",
+                title:
+                    AppLocalization.of(context)!.translate('login-successfull'),
                 descriptions: "", //
                 btn1Text: "",
                 btn2Text: "",
@@ -85,13 +87,14 @@ class SignInProvider with ChangeNotifier {
             builder: (BuildContext context) {
               // ignore: prefer_const_constructors
               return CustomDialogBox(
-                heading: "Error",
+                heading: AppLocalization.of(context)!.translate('error'),
                 icon: const Icon(Icons.clear),
                 backgroundColor: CustomColor.redColor,
-                title: "Somthing went wrong please try again...",
+                title: AppLocalization.of(context)!.translate('error-somthing'),
+
                 descriptions: "", //
                 btn1Text: "",
-                btn2Text: "Ok",
+                btn2Text: AppLocalization.of(context)!.translate('ok'),
               );
             });
       }
@@ -117,10 +120,12 @@ class SignInProvider with ChangeNotifier {
             builder: (BuildContext context) {
               // ignore: prefer_const_constructors
               return CustomDialogBox(
-                heading: "Success",
+                heading: AppLocalization.of(context)!.translate('success'),
+                //heading: "Success",
                 icon: const Icon(Icons.done),
                 backgroundColor: CustomColor.primaryColor,
-                title: "Login Successfull",
+                title:
+                    AppLocalization.of(context)!.translate('login-successfull'),
                 descriptions: "", //
                 btn1Text: "",
                 btn2Text: "",
@@ -134,10 +139,12 @@ class SignInProvider with ChangeNotifier {
         });
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
+          SnackBar(
             backgroundColor: CustomColor.redColor,
-            content: Text('Please fill all fields...'),
-            duration: Duration(seconds: 3),
+            content: Text(
+              AppLocalization.of(context)!.translate('empty-field'),
+            ),
+            duration: const Duration(seconds: 3),
           ),
         );
       }
@@ -147,10 +154,12 @@ class SignInProvider with ChangeNotifier {
         closeCustomLoadingDialog(context);
 
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
+          SnackBar(
             backgroundColor: CustomColor.redColor,
-            content: Text('No user found for that email.'),
-            duration: Duration(seconds: 3),
+            content: Text(
+              AppLocalization.of(context)!.translate('error-no-user'),
+            ),
+            duration: const Duration(seconds: 3),
           ),
         );
         log('No user found for that email.');
@@ -158,10 +167,12 @@ class SignInProvider with ChangeNotifier {
         clearText();
         closeCustomLoadingDialog(context);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
+          SnackBar(
             backgroundColor: CustomColor.redColor,
-            content: Text('Wrong password...'),
-            duration: Duration(seconds: 3),
+            content: Text(
+              AppLocalization.of(context)!.translate('error-password'),
+            ),
+            duration: const Duration(seconds: 3),
           ),
         );
         log('Wrong password provided for that user.');
@@ -198,10 +209,12 @@ class SignInProvider with ChangeNotifier {
         });
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
+          SnackBar(
             backgroundColor: CustomColor.redColor,
-            content: Text('Please fill all fields...'),
-            duration: Duration(seconds: 3),
+            content: Text(
+              AppLocalization.of(context)!.translate('empty-field'),
+            ),
+            duration: const Duration(seconds: 3),
           ),
         );
       }
@@ -209,20 +222,24 @@ class SignInProvider with ChangeNotifier {
       if (e.code == 'weak-password') {
         closeCustomLoadingDialog(context);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
+          SnackBar(
             backgroundColor: CustomColor.redColor,
-            content: Text('The password provided is too weak.'),
-            duration: Duration(seconds: 3),
+            content: Text(
+              AppLocalization.of(context)!.translate('password-weak'),
+            ),
+            duration: const Duration(seconds: 3),
           ),
         );
         log('The password provided is too weak.');
       } else if (e.code == 'email-already-in-use') {
         closeCustomLoadingDialog(context);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
+          SnackBar(
             backgroundColor: CustomColor.redColor,
-            content: Text('The account already exists for that email.'),
-            duration: Duration(seconds: 3),
+            content: Text(
+              AppLocalization.of(context)!.translate('email-already-exists'),
+            ),
+            duration: const Duration(seconds: 3),
           ),
         );
         log('The account already exists for that email.');
@@ -243,11 +260,12 @@ class SignInProvider with ChangeNotifier {
       showDialog(
           context: context,
           builder: (BuildContext context) {
-            return const CustomDialogBox(
-              heading: "Success",
-              icon: Icon(Icons.done),
+            return CustomDialogBox(
+              heading: AppLocalization.of(context)!.translate('success'),
+              icon: const Icon(Icons.done),
               backgroundColor: CustomColor.primaryColor,
-              title: "Your account deleted Successfully",
+              title: AppLocalization.of(context)!
+                  .translate('account-delete-success'),
               descriptions: "", //
               btn1Text: "",
               btn2Text: "",
@@ -262,7 +280,9 @@ class SignInProvider with ChangeNotifier {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           backgroundColor: CustomColor.redColor,
-          content: Text('Error deleting account: $e'),
+          content: Text(
+            AppLocalization.of(context)!.translate('account-delete-error'),
+          ),
           duration: const Duration(seconds: 3),
         ),
       );

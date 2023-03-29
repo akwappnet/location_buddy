@@ -7,6 +7,7 @@ import 'package:location_buddy/utils/validation/validation.dart';
 
 import 'package:provider/provider.dart';
 
+import '../localization/app_localization.dart';
 import '../provider/sign_in_provider.dart';
 import '../utils/font/font_family.dart';
 import '../utils/routes/routes_name.dart';
@@ -103,7 +104,8 @@ class _SignUpViewState extends State<SignUpView> {
                   size: size,
                   isObserve: false,
                   textType: TextInputType.name,
-                  txtHint: "Enter Name",
+                  txtHint:
+                      AppLocalization.of(context)!.translate('txt-name-hint'),
                   leftIcon: Icon(
                     Icons.person,
                     color: nameController.text.isEmpty
@@ -121,7 +123,8 @@ class _SignUpViewState extends State<SignUpView> {
                   size: size,
                   isObserve: false,
                   textType: TextInputType.emailAddress,
-                  txtHint: "Enter Email",
+                  txtHint:
+                      AppLocalization.of(context)!.translate('txt-email-hint'),
                   leftIcon: Icon(
                     Icons.email,
                     color: emailController.text.isEmpty
@@ -138,7 +141,8 @@ class _SignUpViewState extends State<SignUpView> {
                   validation: passwordValidator,
                   size: size,
                   isObserve: true,
-                  txtHint: "Enter Password",
+                  txtHint: AppLocalization.of(context)!
+                      .translate('txt-password-hint'),
                   textType: TextInputType.visiblePassword,
                   leftIcon: Icon(
                     Icons.lock,
@@ -181,13 +185,13 @@ class _SignUpViewState extends State<SignUpView> {
         ),
         children: [
           TextSpan(
-            text: 'Welcome ',
+            text: AppLocalization.of(context)!.translate('welcome'),
             style: TextStyle(
                 fontWeight: FontWeight.w800,
                 fontFamily: FontFamliyM.ROBOTOBOLD),
           ),
           TextSpan(
-            text: 'Here',
+            text: AppLocalization.of(context)!.translate('back'),
             style: TextStyle(
                 color: const Color(0xFFFE9879),
                 fontWeight: FontWeight.w800,
@@ -226,7 +230,7 @@ class _SignUpViewState extends State<SignUpView> {
           ],
         ),
         child: Text(
-          'Sign Up',
+          AppLocalization.of(context)!.translate('sign-up'),
           style: TextStyle(
             fontSize: 16.0,
             color: Colors.white,
@@ -251,7 +255,7 @@ class _SignUpViewState extends State<SignUpView> {
           ),
           children: [
             TextSpan(
-              text: 'Already have an account ? ',
+              text: AppLocalization.of(context)!.translate('already-account'),
               style: TextStyle(
                 fontWeight: FontWeight.w500,
                 fontFamily: FontFamliyM.ROBOTOBOLD,
@@ -262,7 +266,7 @@ class _SignUpViewState extends State<SignUpView> {
                 ..onTap = () {
                   Navigator.pushReplacementNamed(context, RoutesName.siginView);
                 },
-              text: 'Sign In here',
+              text: AppLocalization.of(context)!.translate('sign-in'),
               style: TextStyle(
                 color: const Color(0xFFFF7248),
                 fontWeight: FontWeight.w500,

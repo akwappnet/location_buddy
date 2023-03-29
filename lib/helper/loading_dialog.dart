@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:location_buddy/utils/colors/colors.dart';
 import 'package:simple_fontellico_progress_dialog/simple_fontico_loading.dart';
 
+import '../localization/app_localization.dart';
+
 //show loading dialog when data processing
 void showCustomLoadingDialog(BuildContext context) async {
   SimpleFontelicoProgressDialog dialog =
@@ -9,7 +11,7 @@ void showCustomLoadingDialog(BuildContext context) async {
   dialog.show(
       backgroundColor: CustomColor.white,
       indicatorColor: CustomColor.primaryColor,
-      message: 'Please Wait...',
+      message: AppLocalization.of(context)!.translate('save-button2'),
       radius: 10,
       type: SimpleFontelicoProgressDialogType.hurricane);
 }

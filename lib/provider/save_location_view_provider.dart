@@ -10,6 +10,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:location_buddy/helper/loading_dialog.dart';
+import 'package:location_buddy/localization/app_localization.dart';
 import 'package:location_buddy/utils/colors/colors.dart';
 import 'package:location_buddy/utils/routes/routes_name.dart';
 import 'package:location_buddy/widgets/custom_dialog_box.dart';
@@ -159,11 +160,12 @@ class SaveLocationViewProvider extends ChangeNotifier {
             barrierDismissible: false,
             barrierColor: Colors.black38,
             builder: (BuildContext context) {
-              return const CustomDialogBox(
-                heading: "Success",
-                icon: Icon(Icons.done),
+              return CustomDialogBox(
+                heading: AppLocalization.of(context)!.translate('success'),
+                icon: const Icon(Icons.done),
                 backgroundColor: CustomColor.primaryColor,
-                title: "Location Saved successful",
+                title:
+                    AppLocalization.of(context)!.translate('save-successfull'),
                 descriptions: "", //
                 btn1Text: "",
                 btn2Text: "",
@@ -181,10 +183,10 @@ class SaveLocationViewProvider extends ChangeNotifier {
       destinationController.clear();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        SnackBar(
           backgroundColor: CustomColor.redColor,
-          content: Text('Please fill all fields...'),
-          duration: Duration(seconds: 3),
+          content: Text(AppLocalization.of(context)!.translate('empty-field')),
+          duration: const Duration(seconds: 3),
         ),
       );
     }
@@ -216,7 +218,9 @@ class SaveLocationViewProvider extends ChangeNotifier {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           backgroundColor: CustomColor.redColor,
-          content: Text('Error deleting account: $e'),
+          content: Text(
+            AppLocalization.of(context)!.translate('error-data-delete'),
+          ),
           duration: const Duration(seconds: 3),
         ),
       );

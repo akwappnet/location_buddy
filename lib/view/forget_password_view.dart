@@ -11,6 +11,8 @@ import 'package:location_buddy/widgets/custom_button_widget.dart';
 import 'package:location_buddy/widgets/custom_text_field_new.dart';
 import 'package:provider/provider.dart';
 
+import '../localization/app_localization.dart';
+
 class ForgetPasswordView extends StatelessWidget {
   //Intialize Controller
   TextEditingController emailController = TextEditingController();
@@ -41,7 +43,7 @@ class ForgetPasswordView extends StatelessWidget {
                 color: CustomColor.black,
               )),
           title: Text(
-            "Forgot Password",
+            AppLocalization.of(context)!.translate('forgot-password-1'),
             style: TextStyle(
                 color: CustomColor.black,
                 fontSize: 20.sp,
@@ -61,7 +63,7 @@ class ForgetPasswordView extends StatelessWidget {
                   height: 50.h,
                 ),
                 Text(
-                  'Forget Password ?',
+                  AppLocalization.of(context)!.translate('forgot-password'),
                   style: TextStyle(
                       color: CustomColor.secondaryColor,
                       fontFamily: FontFamliyM.ROBOTOREGULAR,
@@ -71,7 +73,7 @@ class ForgetPasswordView extends StatelessWidget {
                 SizedBox(
                   height: 30.h,
                 ),
-                Text('Enter Email to contact you to reset your password',
+                Text(AppLocalization.of(context)!.translate('fogot-desc'),
                     textAlign: TextAlign.center,
                     style: TextStyle(
                         color: CustomColor.black,
@@ -88,7 +90,8 @@ class ForgetPasswordView extends StatelessWidget {
                     validation: emailValidator,
                     size: size,
                     isObserve: false,
-                    txtHint: "Enter Email",
+                    txtHint: AppLocalization.of(context)!
+                        .translate('txt-email-hint'),
                     leftIcon: Icon(
                       Icons.email,
                       color: emailController.text.isEmpty
@@ -112,8 +115,9 @@ class ForgetPasswordView extends StatelessWidget {
                             .resetPassword(emailController.text, context)
                             .then((_) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text('Password reset email sent!')),
+                            SnackBar(
+                                content: Text(AppLocalization.of(context)!
+                                    .translate('email-sent'))),
                           );
                           Navigator.pop(context);
                         }).catchError((e) {
@@ -125,7 +129,7 @@ class ForgetPasswordView extends StatelessWidget {
                     },
                     child: AppButton(
                       mycolor: CustomColor.primaryColor,
-                      text: 'CONTINUE',
+                      text: AppLocalization.of(context)!.translate('continue'),
                       height: 54.h,
                     ),
                   ),
