@@ -9,6 +9,8 @@ import 'package:location_buddy/utils/colors/colors.dart';
 import 'package:location_buddy/utils/font/font_family.dart';
 import 'package:location_buddy/utils/routes/routes_name.dart';
 
+import '../localization/app_localization.dart';
+
 class SplashView extends StatefulWidget {
   const SplashView({super.key});
 
@@ -66,14 +68,14 @@ class _SplashViewState extends State<SplashView> {
                   ),
                   children: [
                     TextSpan(
-                      text: 'Location ',
+                      text: AppLocalization.of(context)!.translate('location'),
                       style: TextStyle(
                           color: CustomColor.primaryColor,
                           fontWeight: FontWeight.w800,
                           fontFamily: FontFamliyM.ROBOTOBLACK),
                     ),
                     TextSpan(
-                      text: 'Buddy',
+                      text: AppLocalization.of(context)!.translate('buddy'),
                       style: TextStyle(
                           color: CustomColor.secondaryColor,
                           fontWeight: FontWeight.w800,

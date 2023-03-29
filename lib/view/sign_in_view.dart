@@ -10,6 +10,7 @@ import 'package:location_buddy/utils/validation/validation.dart';
 
 import 'package:provider/provider.dart';
 
+import '../localization/app_localization.dart';
 import '../provider/sign_in_provider.dart';
 import '../utils/font/font_family.dart';
 import '../utils/routes/routes_name.dart';
@@ -34,13 +35,13 @@ class _SignInViewState extends State<SignInView> {
             context: context,
             builder: (BuildContext context) {
               return CustomDialogBox(
-                heading: "Exit App",
+                heading: AppLocalization.of(context)!.translate('exit-app'),
                 icon: const Icon(Icons.exit_to_app),
                 backgroundColor: CustomColor.primaryColor,
-                title: "Are you sure you want to exit app ?",
+                title: AppLocalization.of(context)!.translate('dialog-title'),
                 descriptions: "", //
-                btn1Text: "Exit",
-                btn2Text: "Cancel",
+                btn1Text: AppLocalization.of(context)!.translate('btn-exit'),
+                btn2Text: AppLocalization.of(context)!.translate('btn-cancel'),
                 onClicked: () {
                   SystemNavigator.pop();
                 },
@@ -119,7 +120,8 @@ class _SignInViewState extends State<SignInView> {
                   controller: provider.emailController,
                   size: size,
                   isObserve: false,
-                  txtHint: "Enter Email",
+                  txtHint:
+                      AppLocalization.of(context)!.translate('txt-email-hint'),
                   leftIcon: Icon(
                     Icons.email,
                     color: provider.emailController.text.isEmpty
@@ -136,7 +138,8 @@ class _SignInViewState extends State<SignInView> {
                   validation: passwordValidator,
                   size: size,
                   isObserve: true,
-                  txtHint: "Enter Password",
+                  txtHint: AppLocalization.of(context)!
+                      .translate('txt-password-hint'),
                   leftIcon: Icon(
                     Icons.lock,
                     color: provider.passController.text.isEmpty
@@ -203,13 +206,13 @@ class _SignInViewState extends State<SignInView> {
         ),
         children: [
           TextSpan(
-            text: 'Welcome ',
+            text: AppLocalization.of(context)!.translate('welcome'),
             style: TextStyle(
                 fontWeight: FontWeight.w800,
                 fontFamily: FontFamliyM.ROBOTOBOLD),
           ),
           TextSpan(
-            text: 'Back',
+            text: AppLocalization.of(context)!.translate('back'),
             style: TextStyle(
                 color: const Color(0xFFFE9879),
                 fontWeight: FontWeight.w800,
@@ -233,7 +236,7 @@ class _SignInViewState extends State<SignInView> {
               Navigator.pushNamed(context, RoutesName.forgetPasswordView);
             },
             child: Text(
-              'Forgot password?',
+              AppLocalization.of(context)!.translate('forgot-password'),
               style: TextStyle(
                   fontSize: 16.sp,
                   color: const Color(0xFF21899C),
@@ -269,7 +272,7 @@ class _SignInViewState extends State<SignInView> {
           ],
         ),
         child: Text(
-          'Sign in',
+          AppLocalization.of(context)!.translate('sign-in'),
           style: TextStyle(
             fontSize: 16.0,
             color: Colors.white,
@@ -297,7 +300,7 @@ class _SignInViewState extends State<SignInView> {
         Expanded(
           flex: 3,
           child: Text(
-            'Continue ',
+            AppLocalization.of(context)!.translate('continue'),
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 12.0,
@@ -359,7 +362,7 @@ class _SignInViewState extends State<SignInView> {
                   width: 16,
                 ),
                 Text(
-                  'Google',
+                  AppLocalization.of(context)!.translate('google'),
                   style: TextStyle(
                     fontSize: 14.0,
                     fontFamily: FontFamliyM.ROBOTOBOLD,
@@ -388,7 +391,7 @@ class _SignInViewState extends State<SignInView> {
           ),
           children: [
             TextSpan(
-              text: 'Don’t have an account ? ',
+              text: AppLocalization.of(context)!.translate('dont-account'),
               style: TextStyle(
                 fontWeight: FontWeight.w500,
                 fontFamily: FontFamliyM.ROBOTOBOLD,
@@ -399,7 +402,7 @@ class _SignInViewState extends State<SignInView> {
                 ..onTap = () {
                   Navigator.pushNamed(context, RoutesName.sigupView);
                 },
-              text: 'Sign Up here',
+              text: AppLocalization.of(context)!.translate('sign-up'),
               style: TextStyle(
                 color: const Color(0xFFFF7248),
                 fontWeight: FontWeight.w500,

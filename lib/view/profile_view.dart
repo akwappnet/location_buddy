@@ -200,12 +200,17 @@ class _ProfileViewState extends State<ProfileView> {
                   context: context,
                   builder: (BuildContext context) {
                     return CustomDialogBox(
-                        heading: "Logout",
-                        title: "Are you sure you want to logout ?",
+                        backgroundColor: CustomColor.primaryColor,
+                        heading:
+                            AppLocalization.of(context)!.translate('logout'),
+                        title: AppLocalization.of(context)!
+                            .translate('logout-desc'),
                         descriptions: "",
-                        btn1Text: "Logout",
+                        btn1Text:
+                            AppLocalization.of(context)!.translate('logout'),
                         icon: const Icon(Icons.login_outlined),
-                        btn2Text: "Cancel",
+                        btn2Text: AppLocalization.of(context)!
+                            .translate('btn-cancel'),
                         onClicked: () {
                           final provider = Provider.of<SignInProvider>(context,
                               listen: false);
@@ -234,10 +239,12 @@ class _ProfileViewState extends State<ProfileView> {
                   context: context,
                   builder: (BuildContext context) {
                     return CustomDialogBox(
-                        heading: "Delete",
-                        title: "Are you sure you want to delete your account ?",
+                        heading:
+                            AppLocalization.of(context)!.translate('delete'),
+                        title: AppLocalization.of(context)!.translate('delete'),
                         descriptions: "",
-                        btn1Text: "Delete",
+                        btn1Text: AppLocalization.of(context)!
+                            .translate('delete-account-msg'),
                         icon: const Icon(Icons.delete_outline),
                         btn2Text: "Cancel",
                         onClicked: () {

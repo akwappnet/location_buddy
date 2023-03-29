@@ -43,8 +43,8 @@ class _SaveLocationViewState extends State<SaveLocationView> {
         port.sendPort, LocationServiceRepository.isolateName);
     port.listen(
       (dynamic data) {
-        Provider.of<SaveLocationViewProvider>(context, listen: false)
-            .updateUI(data);
+        // Provider.of<SaveLocationViewProvider>(context, listen: false)
+        //     .updateUI(data);
       },
     );
     Provider.of<SaveLocationViewProvider>(context, listen: false)
@@ -53,7 +53,7 @@ class _SaveLocationViewState extends State<SaveLocationView> {
         .onStart(context);
   }
 
-  @override
+  /*  @override
   void dispose() {
     final saveLocationViewProvider =
         Provider.of<SaveLocationViewProvider>(context, listen: false);
@@ -61,7 +61,7 @@ class _SaveLocationViewState extends State<SaveLocationView> {
     saveLocationViewProvider.destinationController.clear();
     saveLocationViewProvider.sourceController.clear();
     super.dispose();
-  }
+  } */
 
   @override
   Widget build(BuildContext context) {
