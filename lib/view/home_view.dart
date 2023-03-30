@@ -293,19 +293,27 @@ class _HomeViewState extends State<HomeView> {
                                                                 backgroundColor:
                                                                     CustomColor
                                                                         .primaryColor,
-                                                                heading:
-                                                                    "Delete",
-                                                                title:
-                                                                    "Are you sure you want to delete ?",
+                                                                heading: AppLocalization.of(
+                                                                        context)!
+                                                                    .translate(
+                                                                        'delete-account'),
+                                                                title: AppLocalization.of(
+                                                                        context)!
+                                                                    .translate(
+                                                                        'delete-account-msg'),
                                                                 descriptions:
                                                                     "",
-                                                                btn1Text:
-                                                                    "Delete",
+                                                                btn1Text: AppLocalization.of(
+                                                                        context)!
+                                                                    .translate(
+                                                                        'btn-exit'),
                                                                 icon: const Icon(
                                                                     Icons
                                                                         .delete_outline),
-                                                                btn2Text:
-                                                                    "Cancel",
+                                                                btn2Text: AppLocalization.of(
+                                                                        context)!
+                                                                    .translate(
+                                                                        'btn-cancel'),
                                                                 onClicked: () {
                                                                   locationInfoProvider.deleteLocationInformation(
                                                                       locationInfo

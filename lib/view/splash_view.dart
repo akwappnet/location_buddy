@@ -8,8 +8,11 @@ import 'package:location_buddy/utils/assets/assets_utils.dart';
 import 'package:location_buddy/utils/colors/colors.dart';
 import 'package:location_buddy/utils/font/font_family.dart';
 import 'package:location_buddy/utils/routes/routes_name.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../localization/app_localization.dart';
+import '../provider/current_data_provider.dart';
 
 class SplashView extends StatefulWidget {
   const SplashView({super.key});
@@ -22,10 +25,19 @@ class _SplashViewState extends State<SplashView> {
   @override
   void initState() {
     super.initState();
-
-    Timer(const Duration(seconds: 3), () {
+    getLanguage();
+    Timer(const Duration(seconds: 3), () async {
       checkIfUserIsLoggedIn();
     });
+  }
+
+  Future<void> getLanguage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String lan = prefs.getString("dateFormat") ?? "English";
+    print(lan);
+    // ignore: use_build_context_synchronously
+    final provider = Provider.of<CurrentData>(context, listen: false);
+    provider.changeLocale(lan);
   }
 
   Future<void> checkIfUserIsLoggedIn() async {
