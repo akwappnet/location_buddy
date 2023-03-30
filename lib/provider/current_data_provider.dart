@@ -14,7 +14,7 @@ class CurrentData with ChangeNotifier {
   Locale get getlocale => locale;
 
   void changeLocale(String newLocale) {
-    print("--------------->${newLocale}");
+    log("--------------->$newLocale");
     Locale convertedLocale;
 
     currentLanguage = newLocale;

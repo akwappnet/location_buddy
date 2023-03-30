@@ -34,7 +34,7 @@ class _SplashViewState extends State<SplashView> {
   Future<void> getLanguage() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String lan = prefs.getString("dateFormat") ?? "English";
-    print(lan);
+    log(lan);
     // ignore: use_build_context_synchronously
     final provider = Provider.of<CurrentData>(context, listen: false);
     provider.changeLocale(lan);

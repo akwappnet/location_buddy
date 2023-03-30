@@ -237,7 +237,7 @@ class _HomeViewState extends State<HomeView> {
                                               width: MediaQuery.of(context)
                                                       .size
                                                       .height /
-                                                  3,
+                                                  2.5,
                                               child: Text(
                                                 '${locationInfo.sourceLocation}',
                                                 style: TextStyle(

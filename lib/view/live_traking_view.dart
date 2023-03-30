@@ -1,4 +1,4 @@
-// ignore_for_file: unused_element
+// ignore_for_file: unused_element, avoid_print, duplicate_ignore
 
 import 'dart:math';
 
@@ -11,12 +11,14 @@ import 'package:background_locator_2/location_dto.dart';
 
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location_buddy/provider/live_traking_view_provider.dart';
 import 'package:location_buddy/provider/save_location_view_provider.dart';
 import 'package:location_buddy/utils/colors/colors.dart';
 import 'package:location_buddy/utils/constants.dart';
 import 'package:location_buddy/utils/font/font_family.dart';
+import 'package:location_buddy/utils/routes/routes_name.dart';
 import 'package:location_buddy/widgets/loading_map.dart';
 import 'package:provider/provider.dart';
 import '../localization/app_localization.dart';
@@ -46,6 +48,11 @@ class _LiveTrackingPageState extends State<LiveTrackingPage> {
   String? length;
 
   PolylineId? _polylineId;
+  double totalDistance = 0;
+  double estimatedTimeInMinutes = 0;
+  var count = 0;
+  bool val = true;
+  dynamic result = '';
 
   @override
   void initState() {
@@ -86,171 +93,70 @@ class _LiveTrackingPageState extends State<LiveTrackingPage> {
   }
 
   Future<void> updateUI(dynamic data) async {
-    LocationDto? locationDto =
-        (data != null) ? LocationDto.fromJson(data) : null;
-
-    setState(() {
-      if (data != null) {
-        currentLocation = locationDto;
-      }
-    });
-
-    GoogleMapController googleMapController = await _controller.future;
-    _updatePolyline(googleMapController);
-
-    LatLngBounds bounds = LatLngBounds(
-      southwest: LatLng(min(currentLocation!.latitude, _destination!.latitude),
-          min(currentLocation!.longitude, _destination!.longitude)),
-      northeast: LatLng(max(currentLocation!.latitude, _destination!.latitude),
-          max(currentLocation!.longitude, _destination!.longitude)),
-    );
-
-    googleMapController.animateCamera(CameraUpdate.newLatLngBounds(bounds, 50));
-  }
-
-//   // Function to calculate the distance between two LatLng points using Haversine formula
-
-  double _distanceBetween(LatLng point1, LatLng point2) {
-    const int earthRadius = 6371000; // in meters
-    double lat1 = point1.latitude * (pi / 180);
-    double lon1 = point1.longitude * (pi / 180);
-    double lat2 = point2.latitude * (pi / 180);
-    double lon2 = point2.longitude * (pi / 180);
-    double dLat = lat2 - lat1;
-    double dLon = lon2 - lon1;
-    double a =
-        pow(sin(dLat / 2), 2) + cos(lat1) * cos(lat2) * pow(sin(dLon / 2), 2);
-    double c = 2 * atan2(sqrt(a), sqrt(1 - a));
-    double distance = earthRadius * c;
-    return distance;
-  }
-
-/* 
-
-Future<List<LatLng>> getShortestPath(
-    LatLng start,
-    LatLng destination,
-    Function(Map<LatLng, List<LatLng>>) onGraphCreated,
-) async {
-  PolylinePoints polylinePoints = PolylinePoints();
-  PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-    google_api_key,
-    PointLatLng(start.latitude, start.longitude),
-    PointLatLng(destination.latitude, destination.longitude),
-  );
-  print('Retrieved polyline with ${result.points.length} points');
-
-  Map<LatLng, List<LatLng>> graph = {};
-  for (int i = 0; i < result.points.length - 1; i++) {
-    LatLng node = LatLng(result.points[i].latitude, result.points[i].longitude);
-    if (!graph.containsKey(node)) {
-      graph[node] = [];
+    if (count == 1) {
+      val = false;
     }
-    for (int j = i + 1; j < result.points.length; j++) {
-      LatLng neighbor = LatLng(result.points[j].latitude, result.points[j].longitude);
-      double distance = _distanceBetween(node, neighbor);
-      print('Distance between $node and $neighbor: $distance');
-      if (distance <= 3000) {
-        if (!graph.containsKey(node)) {
-          graph[node] = [];
+    // ignore: duplicate_ignore, duplicate_ignore
+    if (count <= 1) {
+      LocationDto? locationDto =
+          (data != null) ? LocationDto.fromJson(data) : null;
+
+      setState(() {
+        if (data != null) {
+          currentLocation = locationDto;
         }
-        graph[node]!.add(neighbor);
-        if (!graph.containsKey(neighbor)) {
-          graph[neighbor] = [];
+      });
+
+      GoogleMapController googleMapController = await _controller.future;
+      _updatePolyline(googleMapController);
+
+      LatLngBounds bounds = LatLngBounds(
+        southwest: LatLng(
+            min(currentLocation!.latitude, _destination!.latitude),
+            min(currentLocation!.longitude, _destination!.longitude)),
+        northeast: LatLng(
+            max(currentLocation!.latitude, _destination!.latitude),
+            max(currentLocation!.longitude, _destination!.longitude)),
+      );
+
+      googleMapController
+          .animateCamera(CameraUpdate.newLatLngBounds(bounds, 50));
+      calculateDistanceAndTime();
+      // ignore: avoid_print
+      print('======$count');
+      count++;
+    }
+  }
+
+  void calculateDistanceAndTime() {
+    if (count == 1) {
+      setState(() {
+        for (int i = 0; i < _polylineCoordinates.length - 1; i++) {
+          LatLng start = _polylineCoordinates[i];
+          LatLng end = _polylineCoordinates[i + 1];
+          double distance = Geolocator.distanceBetween(
+              start.latitude, start.longitude, end.latitude, end.longitude);
+          totalDistance += distance;
         }
-        graph[neighbor]!.add(node);
-      }
-    }
-  }
+        // ignore: avoid_print
+        print(
+            'Total Distance: ${(totalDistance / 1000).toStringAsFixed(2)} km');
+        double walkingSpeed = 1.2; // m/s
+        double totalDistanceInMeters = totalDistance;
+        estimatedTimeInMinutes = (totalDistanceInMeters / walkingSpeed) / 60;
 
-  // Add start and destination nodes to graph if they are not already present
-  if (!graph.containsKey(start)) {
-    graph[start] = [];
-  }
-  if (!graph.containsKey(destination)) {
-    graph[destination] = [];
-  }
-
-  print('Created graph with ${graph.length} nodes');
-  onGraphCreated(graph);
-
-  Map<LatLng, double> distances = {};
-  Map<LatLng, LatLng> previous = {};
-  PriorityQueue<LatLng> queue = PriorityQueue(
-    (a, b) => (distances[a] ?? double.infinity).compareTo((distances[b] ?? double.infinity)),
-  );
-
-  // Set initial distances and add start node to queue
-  distances[start] = 0;
-  queue.add(start);
-
-  while (queue.isNotEmpty) {
-    LatLng current = queue.removeFirst();
-    if (current == destination) {
-      break;
-    }
-    for (LatLng neighbor in graph[current]!) {
-      double distance = _distanceBetween(current, neighbor);
-      double tentativeDistance = (distances[current] ?? double.infinity) +
-          distance +
-          _distanceBetween(neighbor, destination);
-      if ((distances[neighbor] ?? double.infinity) > tentativeDistance) {
-        distances[neighbor] = tentativeDistance;
-        previous[neighbor] = current;
-        if (queue.contains(neighbor)) {
-          queue.remove(neighbor);
-          queue.add(neighbor);
+        if (estimatedTimeInMinutes < 60) {
+          print(
+              'Estimated Time: ${estimatedTimeInMinutes.toStringAsFixed(0)} min');
         } else {
-          queue.add(neighbor);
+          int hours = estimatedTimeInMinutes ~/ 60;
+          int minutes = estimatedTimeInMinutes.toInt() % 60;
+          result = '${hours}h ${minutes}m';
+          print('Estimated Time: $result');
         }
-      }
+      });
     }
   }
-
-  // Build the path by following the previous nodes from the destination to the start
-  List<LatLng> path = [destination];
-  LatLng current = destination;
-  while (previous[current] != null) {
-    path.insert(0, previous[current]!);
-    current = previous[current]!;
-  }
-
-  print('Found shortest path with ${path.length} points');
-  return path;
-}
- */
-
-  // void _updatePolyline(GoogleMapController controller) async {
-  //   if (currentLocation != null && _destination != null) {
-  //     List<LatLng> path = await getShortestPath(
-  //         LatLng(currentLocation!.latitude, currentLocation!.longitude),
-  //         LatLng(_destination!.latitude, _destination!.longitude), (graph) {
-  //       // You can use this optional callback to access the graph if needed
-  //     });
-  //     if (path.isNotEmpty) {
-  //       _polylineCoordinates.clear();
-  //       for (var point in path) {
-  //         _polylineCoordinates.add(LatLng(point.latitude, point.longitude));
-  //       }
-  //       print('Polyline Coordinates: $_polylineCoordinates');
-  //     }
-  //     setState(() {
-  //       if (_polylineId != null) {
-  //         _polylines.removeWhere(
-  //             (Polyline polyline) => polyline.polylineId == _polylineId);
-  //       }
-  //       _polylineId = const PolylineId('route');
-  //       _polylines.add(Polyline(
-  //         width: 5,
-  //         polylineId: _polylineId!,
-  //         color: CustomColor.Violet,
-  //         points: path,
-  //         visible: true,
-  //       ));
-  //       print('Polylines: $_polylineCoordinates');
-  //     });
-  //   }
-  // }
 
   void _updatePolyline(GoogleMapController controller) async {
     if (currentLocation != null) {
@@ -258,7 +164,10 @@ Future<List<LatLng>> getShortestPath(
       PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
           google_api_key,
           PointLatLng(currentLocation!.latitude, currentLocation!.longitude),
-          PointLatLng(_destination!.latitude, _destination!.longitude));
+          PointLatLng(_destination!.latitude, _destination!.longitude),
+          optimizeWaypoints: false,
+          travelMode: TravelMode.walking);
+
       if (result.points.isNotEmpty) {
         _polylineCoordinates.clear();
         for (var point in result.points) {
@@ -287,18 +196,18 @@ Future<List<LatLng>> getShortestPath(
   Widget build(BuildContext context) {
     final liveTrackingViewProvider =
         Provider.of<LiveTrackingViewProvider>(context);
-    final stop = GestureDetector(
+    /* final stop = GestureDetector(
       onTap: () {
         Provider.of<SaveLocationViewProvider>(context, listen: false)
             .onStop(context);
-      },
-      child: AppButton(
+      }, */
+    /* child: AppButton(
         height: 50.sp,
         sizes: 20.sp,
         text: AppLocalization.of(context)!.translate('stop-tracking'),
         mycolor: CustomColor.primaryColor,
-      ),
-    );
+      ), */
+    //  );
     final size = SizedBox(height: 40.h);
     final map = currentLocation == null
         ? SizedBox(
@@ -328,37 +237,42 @@ Future<List<LatLng>> getShortestPath(
               ],
             ),
           )
-        : SizedBox(
-            height: 500,
-            width: MediaQuery.of(context).size.width,
-            child: GoogleMap(
-              //myLocationEnabled: true,
-              myLocationButtonEnabled: true,
-              mapType: MapType.terrain,
-              initialCameraPosition: CameraPosition(
-                  target: LatLng(
-                      currentLocation!.latitude, currentLocation!.longitude),
-                  zoom: 16),
-              polylines: _polylines,
-              markers: {
-                Marker(
-                    icon: BitmapDescriptor.fromBytes(
-                        liveTrackingViewProvider.currentLocationIcon),
-                    markerId: const MarkerId("currentLocation"),
-                    position: LatLng(
-                        currentLocation!.latitude, currentLocation!.longitude)),
-                Marker(
-                    icon: BitmapDescriptor.fromBytes(
-                        liveTrackingViewProvider.destinationIcon),
-                    markerId: const MarkerId("destination"),
-                    position:
-                        LatLng(_destination!.latitude, _destination!.longitude))
-              },
-              onMapCreated: (mapController) {
-                _controller.complete(mapController);
-              },
-            ),
-          );
+        : FutureBuilder(
+            future: Future.delayed(const Duration(seconds: 1)),
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              return SizedBox(
+                height: MediaQuery.of(context).size.height / 1.5,
+                width: MediaQuery.of(context).size.width,
+                child: GoogleMap(
+                  //myLocationEnabled: true,
+                  myLocationButtonEnabled: true,
+                  mapType: MapType.terrain,
+
+                  initialCameraPosition: CameraPosition(
+                      target: LatLng(currentLocation!.latitude,
+                          currentLocation!.longitude),
+                      zoom: 16),
+                  polylines: _polylines,
+                  markers: {
+                    Marker(
+                        icon: BitmapDescriptor.fromBytes(
+                            liveTrackingViewProvider.currentLocationIcon),
+                        markerId: const MarkerId("currentLocation"),
+                        position: LatLng(currentLocation!.latitude,
+                            currentLocation!.longitude)),
+                    Marker(
+                        icon: BitmapDescriptor.fromBytes(
+                            liveTrackingViewProvider.destinationIcon),
+                        markerId: const MarkerId("destination"),
+                        position: LatLng(
+                            _destination!.latitude, _destination!.longitude))
+                  },
+                  onMapCreated: (mapController) {
+                    _controller.complete(mapController);
+                  },
+                ),
+              );
+            });
     return Scaffold(
       appBar: AppBar(
         backgroundColor: CustomColor.primaryColor,
@@ -366,100 +280,75 @@ Future<List<LatLng>> getShortestPath(
           AppLocalization.of(context)!.translate('live-tracking'),
         ),
       ),
-      body: Container(
-        color: CustomColor.white,
-        width: double.maxFinite,
-        height: MediaQuery.of(context).size.height,
-        padding: EdgeInsets.all(22.sp),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[map, size, stop],
-          ),
-        ),
-      ),
+      body: FutureBuilder(
+          future: Future.delayed(const Duration(seconds: 1)),
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            return Container(
+              color: CustomColor.white,
+              width: double.maxFinite,
+              height: MediaQuery.of(context).size.height,
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    map,
+                    size,
+                    val
+                        ? const SizedBox()
+                        : Container(
+                            padding: EdgeInsets.symmetric(horizontal: 20.sp),
+                            height: 150,
+                            decoration: const BoxDecoration(
+                                color: CustomColor.primaryColor,
+                                borderRadius: BorderRadius.only(
+                                    topRight: Radius.circular(31),
+                                    topLeft: Radius.circular(31))),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Distance: ${(totalDistance / 1000).toStringAsFixed(2)} km',
+                                  style: TextStyle(
+                                      color: CustomColor.white,
+                                      fontFamily: FontFamliyM.ROBOTOREGULAR,
+                                      fontSize: 18.sp,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                        estimatedTimeInMinutes < 60
+                                            ? 'Estimated Time: ${estimatedTimeInMinutes.toStringAsFixed(0)} min'
+                                            : 'Estimated Time: $result',
+                                        style: TextStyle(
+                                            color: CustomColor.white,
+                                            fontFamily:
+                                                FontFamliyM.ROBOTOREGULAR,
+                                            fontSize: 18.sp,
+                                            fontWeight: FontWeight.bold)),
+                                    GestureDetector(
+                                      onTap: () {
+                                        Navigator.pushNamed(
+                                            context, RoutesName.livetracking);
+                                      },
+                                      child: AppButton(
+                                          mycolor: CustomColor.secondaryColor,
+                                          width: 100.w,
+                                          height: 30.h,
+                                          text: 'Start'),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ))
+                  ],
+                ),
+              ),
+            );
+          }),
     );
   }
-}
-
-class PriorityQueue<T> {
-  final _heap = <_PriorityQueueEntry<T>>[];
-
-  void add(T value, double priority) {
-    final entry = _PriorityQueueEntry(value, priority);
-    _heap.add(entry);
-    _bubbleUp(_heap.length - 1);
-  }
-
-  T removeFirst() {
-    final first = _heap.first;
-    final last = _heap.removeLast();
-    if (_heap.isNotEmpty) {
-      _heap[0] = last;
-      _bubbleDown(0);
-    }
-    return first.value;
-  }
-
-  bool get isEmpty => _heap.isEmpty;
-
-  void updatePriority(T value, double priority) {
-    final index = _heap.indexWhere((entry) => entry.value == value);
-    if (index != -1) {
-      final entry = _heap[index];
-      final newEntry = _PriorityQueueEntry(entry.value, priority);
-      _heap[index] = newEntry;
-      if (priority < entry.priority) {
-        _bubbleUp(index);
-      } else {
-        _bubbleDown(index);
-      }
-    }
-  }
-
-  void _bubbleUp(int index) {
-    final entry = _heap[index];
-    while (index > 0) {
-      final parentIndex = (index - 1) ~/ 2;
-      final parent = _heap[parentIndex];
-      if (entry.priority < parent.priority) {
-        _heap[index] = parent;
-        index = parentIndex;
-      } else {
-        break;
-      }
-    }
-    _heap[index] = entry;
-  }
-
-  void _bubbleDown(int index) {
-    final entry = _heap[index];
-    final endIndex = _heap.length - 1;
-    while (true) {
-      final leftChildIndex = 2 * index + 1;
-      final rightChildIndex = 2 * index + 2;
-      int minChildIndex = leftChildIndex;
-      if (minChildIndex > endIndex) {
-        break;
-      }
-      if (rightChildIndex <= endIndex &&
-          _heap[rightChildIndex].priority < _heap[leftChildIndex].priority) {
-        minChildIndex = rightChildIndex;
-      }
-      if (_heap[minChildIndex].priority < entry.priority) {
-        _heap[index] = _heap[minChildIndex];
-        index = minChildIndex;
-      } else {
-        break;
-      }
-    }
-    _heap[index] = entry;
-  }
-}
-
-class _PriorityQueueEntry<T> {
-  final T value;
-  final double priority;
-
-  _PriorityQueueEntry(this.value, this.priority);
 }

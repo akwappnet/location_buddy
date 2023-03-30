@@ -5,7 +5,6 @@ import 'package:background_locator_2/settings/ios_settings.dart';
 import 'package:background_locator_2/settings/locator_settings.dart';
 
 import 'package:background_locator_2/background_locator.dart';
-import 'package:background_locator_2/location_dto.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
@@ -42,7 +41,8 @@ class SaveLocationViewProvider extends ChangeNotifier {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   String? _currentAddress;
-  LocationDto? _currentLocation;
+  geo.Position? _currentPosition;
+
   bool? _isRunningSerives;
 
   String? _destinationLocationlongitude;
@@ -50,7 +50,7 @@ class SaveLocationViewProvider extends ChangeNotifier {
 
   bool? get isRunningSerives => _isRunningSerives;
   String? get currentAddress => _currentAddress;
-  LocationDto? get currentLocation => _currentLocation;
+  geo.Position? get currentPosition => _currentPosition;
   String? get destinationLocationlongitude => _destinationLocationlongitude;
   String? get destinationLocationLatitude => _destinationLocationLatitude;
 
@@ -69,8 +69,8 @@ class SaveLocationViewProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setCurretLocation(LocationDto currentLocation) {
-    _currentLocation = currentLocation;
+  void setCurrentPosition(geo.Position currentPosition) {
+    _currentPosition = currentPosition;
     notifyListeners();
   }
 
@@ -146,12 +146,12 @@ class SaveLocationViewProvider extends ChangeNotifier {
         'sourceLocation': sourceLocation,
         'destinationLocation': destinationLocation,
         'createdAt': DateTime.now().toString(),
-        'sourceLocationLatitude': currentLocation!.latitude.toString(),
-        'sourceLocationlongitude': currentLocation!.longitude.toString(),
-        'destinationLocationLatitude':
-            destinationLocationLatitude ?? currentLocation!.latitude.toString(),
+        'sourceLocationLatitude': _currentPosition!.latitude.toString(),
+        'sourceLocationlongitude': _currentPosition!.longitude.toString(),
+        'destinationLocationLatitude': destinationLocationLatitude ??
+            _currentPosition!.latitude.toString(),
         'destinationLocationlongitude': destinationLocationlongitude ??
-            currentLocation!.longitude.toString(),
+            _currentPosition!.longitude.toString(),
         'id': docRef.id,
         'userId': _auth.currentUser?.uid ?? "",
       }).then(
@@ -237,6 +237,11 @@ class SaveLocationViewProvider extends ChangeNotifier {
         desiredAccuracy: geo.LocationAccuracy.high);
     double latitude = position.latitude;
     double longitude = position.longitude;
+
+    setCurrentPosition(position);
+
+    log(_currentPosition!.latitude.toString());
+    log(_currentPosition!.longitude.toString());
 
     List<Placemark> placemarks =
         await placemarkFromCoordinates(latitude, longitude);

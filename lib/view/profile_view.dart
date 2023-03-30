@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:babstrap_settings_screen/babstrap_settings_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -122,7 +124,7 @@ class _ProfileViewState extends State<ProfileView> {
                   SharedPreferences prefs =
                       await SharedPreferences.getInstance();
                   await prefs.setString('dateFormat', newValue ?? "English");
-                  print(prefs.getString("dateFormat"));
+                  log(prefs.getString("dateFormat").toString());
                   currentData.changeLocale(newValue!);
                 },
                 items: defaultData.languagesListDefault

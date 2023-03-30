@@ -90,7 +90,7 @@ class _BuildTextFormFieldNewState extends State<BuildTextFormFieldNew> {
               )),
           disabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(40.sp),
-              borderSide: BorderSide(
+              borderSide: const BorderSide(
                 color: Color.fromRGBO(44, 185, 176, 1),
               )),
           prefixIcon: widget.leftIcon,
