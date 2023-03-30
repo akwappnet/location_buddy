@@ -455,6 +455,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.6.4"
+  json_annotation:
+    dependency: transitive
+    description:
+      name: json_annotation
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.8.0"
   lints:
     dependency: transitive
     description:
@@ -754,6 +761,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.4.12"
+  turf:
+    dependency: "direct main"
+    description:
+      name: turf
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.7"
+  turf_equality:
+    dependency: transitive
+    description:
+      name: turf_equality
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.2"
   typed_data:
     dependency: transitive
     description:

@@ -321,7 +321,7 @@ class SaveLocationViewProvider extends ChangeNotifier {
         androidSettings: const AndroidSettings(
             accuracy: LocationAccuracy.NAVIGATION,
             interval: 5,
-            distanceFilter: 0,
+            distanceFilter: 5,
             client: LocationClient.google,
             androidNotificationSettings: AndroidNotificationSettings(
                 notificationChannelName: 'Location tracking',
