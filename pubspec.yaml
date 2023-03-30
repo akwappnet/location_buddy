@@ -61,6 +61,8 @@ dependencies:
   firebase_auth: ^4.3.0
   simple_fontellico_progress_dialog: ^0.3.0
   babstrap_settings_screen: ^0.1.5+1
+  shared_preferences: ^2.0.20
+  turf: ^0.0.7
 
 dev_dependencies:
   flutter_test:

@@ -1,8 +1,11 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
+
+import '../provider/save_location_view_provider.dart';
+import '../utils/colors/colors.dart';
 
 Future<void> requestLocationPermission(BuildContext context) async {
   // If location services are already enabled, check for location permissions
@@ -21,9 +24,21 @@ Future<void> requestLocationPermission(BuildContext context) async {
 
     // Check if permission is granted
     if (status.isGranted) {
-      trunOnLocation(context);
+      final saveLocationViewProvider =
+          Provider.of<SaveLocationViewProvider>(context, listen: false);
+      saveLocationViewProvider.getCurrentLocation(context);
+
       return;
     }
+  } else {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        backgroundColor: CustomColor.redColor,
+        content:
+            Text("Please allow the app to access your location all the time"),
+        duration: Duration(seconds: 3),
+      ),
+    );
   }
 
   // If permission is not granted, show a pop-up message with option to open settings
@@ -50,10 +65,12 @@ Future<void> requestLocationPermission(BuildContext context) async {
   );
 }
 
-Future<void> trunOnLocation(BuildContext context) async {
+/* Future<void> trunOnLocation(BuildContext context) async {
+  Geolocator.requestPermission();
   // Check if location services are enabled
   bool locationEnabled = await Geolocator.isLocationServiceEnabled();
   if (!locationEnabled) {
+    Geolocator.checkPermission();
     // If location services are not enabled, prompt the user to turn them on
     showDialog(
       context: context,
@@ -76,4 +93,4 @@ Future<void> trunOnLocation(BuildContext context) async {
       ),
     );
   } else {}
-}
+} */

@@ -237,7 +237,7 @@ class _HomeViewState extends State<HomeView> {
                                               width: MediaQuery.of(context)
                                                       .size
                                                       .height /
-                                                  3,
+                                                  2.5,
                                               child: Text(
                                                 '${locationInfo.sourceLocation}',
                                                 style: TextStyle(
@@ -293,19 +293,27 @@ class _HomeViewState extends State<HomeView> {
                                                                 backgroundColor:
                                                                     CustomColor
                                                                         .primaryColor,
-                                                                heading:
-                                                                    "Delete",
-                                                                title:
-                                                                    "Are you sure you want to delete ?",
+                                                                heading: AppLocalization.of(
+                                                                        context)!
+                                                                    .translate(
+                                                                        'delete-data'),
+                                                                title: AppLocalization.of(
+                                                                        context)!
+                                                                    .translate(
+                                                                        'delete-data-info'),
                                                                 descriptions:
                                                                     "",
-                                                                btn1Text:
-                                                                    "Delete",
+                                                                btn1Text: AppLocalization.of(
+                                                                        context)!
+                                                                    .translate(
+                                                                        'delete-data'),
                                                                 icon: const Icon(
                                                                     Icons
                                                                         .delete_outline),
-                                                                btn2Text:
-                                                                    "Cancel",
+                                                                btn2Text: AppLocalization.of(
+                                                                        context)!
+                                                                    .translate(
+                                                                        'btn-cancel'),
                                                                 onClicked: () {
                                                                   locationInfoProvider.deleteLocationInformation(
                                                                       locationInfo

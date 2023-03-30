@@ -49,7 +49,7 @@ class AppButton extends StatelessWidget {
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: sizes ?? 20.sp,
-                      fontFamily: FontFamliyM.REGULAR,
+                      fontFamily: FontFamliyM.ROBOTOREGULAR,
                     ),
                   ),
                 )

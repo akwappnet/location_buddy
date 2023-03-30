@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:babstrap_settings_screen/babstrap_settings_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +9,7 @@ import 'package:location_buddy/localization/app_localization.dart';
 import 'package:location_buddy/utils/colors/colors.dart';
 import 'package:location_buddy/utils/font/font_family.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../provider/current_data_provider.dart';
 import '../provider/sign_in_provider.dart';
 import '../widgets/custom_dialog_box.dart';
@@ -117,7 +120,11 @@ class _ProfileViewState extends State<ProfileView> {
                   height: 1,
                 ),
                 dropdownColor: CustomColor.white,
-                onChanged: (String? newValue) {
+                onChanged: (String? newValue) async {
+                  SharedPreferences prefs =
+                      await SharedPreferences.getInstance();
+                  await prefs.setString('dateFormat', newValue ?? "English");
+                  log(prefs.getString("dateFormat").toString());
                   currentData.changeLocale(newValue!);
                 },
                 items: defaultData.languagesListDefault
@@ -239,12 +246,14 @@ class _ProfileViewState extends State<ProfileView> {
                   context: context,
                   builder: (BuildContext context) {
                     return CustomDialogBox(
+                        backgroundColor: CustomColor.secondaryColor,
                         heading:
                             AppLocalization.of(context)!.translate('delete'),
-                        title: AppLocalization.of(context)!.translate('delete'),
-                        descriptions: "",
-                        btn1Text: AppLocalization.of(context)!
+                        title: AppLocalization.of(context)!
                             .translate('delete-account-msg'),
+                        descriptions: "",
+                        btn1Text:
+                            AppLocalization.of(context)!.translate('delete'),
                         icon: const Icon(Icons.delete_outline),
                         btn2Text: "Cancel",
                         onClicked: () {
