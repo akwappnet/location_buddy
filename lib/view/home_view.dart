@@ -296,17 +296,17 @@ class _HomeViewState extends State<HomeView> {
                                                                 heading: AppLocalization.of(
                                                                         context)!
                                                                     .translate(
-                                                                        'delete-account'),
+                                                                        'delete-data'),
                                                                 title: AppLocalization.of(
                                                                         context)!
                                                                     .translate(
-                                                                        'delete-account-msg'),
+                                                                        'delete-data-info'),
                                                                 descriptions:
                                                                     "",
                                                                 btn1Text: AppLocalization.of(
                                                                         context)!
                                                                     .translate(
-                                                                        'btn-exit'),
+                                                                        'delete-data'),
                                                                 icon: const Icon(
                                                                     Icons
                                                                         .delete_outline),

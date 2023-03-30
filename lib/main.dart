@@ -15,7 +15,6 @@ import 'package:location_buddy/utils/routes/routes.dart';
 import 'package:location_buddy/utils/routes/routes_name.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,10 +27,6 @@ class MyApp extends StatelessWidget {
   MyApp({super.key});
 
   final CurrentData currentData = CurrentData();
-
-  void initState() {
-    print("@@@@@@@@@@@@@@@@@@@2");
-  }
 
   // This widget is the root of your application.
   @override

@@ -6,6 +6,8 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_places_flutter/google_places_flutter.dart';
 import 'package:google_places_flutter/model/prediction.dart';
 import 'package:location_buddy/localization/app_localization.dart';
@@ -19,6 +21,7 @@ import 'package:r_dotted_line_border/r_dotted_line_border.dart';
 
 import '../provider/save_location_view_provider.dart';
 import '../services/location_service_repository.dart';
+import '../services/take_location_permission.dart';
 import '../utils/font/font_family.dart';
 
 class SaveLocationView extends StatefulWidget {
@@ -33,24 +36,9 @@ class _SaveLocationViewState extends State<SaveLocationView> {
   @override
   void initState() {
     super.initState();
-    if (IsolateNameServer.lookupPortByName(
-            LocationServiceRepository.isolateName) !=
-        null) {
-      IsolateNameServer.removePortNameMapping(
-          LocationServiceRepository.isolateName);
-    }
-    IsolateNameServer.registerPortWithName(
-        port.sendPort, LocationServiceRepository.isolateName);
-    port.listen(
-      (dynamic data) {
-        Provider.of<SaveLocationViewProvider>(context, listen: false)
-            .updateUI(data);
-      },
-    );
-    Provider.of<SaveLocationViewProvider>(context, listen: false)
-        .initPlatformState();
-    Provider.of<SaveLocationViewProvider>(context, listen: false)
-        .onStart(context);
+    final saveLocationViewProvider =
+        Provider.of<SaveLocationViewProvider>(context, listen: false);
+    saveLocationViewProvider.getCurrentLocation(context);
   }
 
   @override
@@ -63,6 +51,22 @@ class _SaveLocationViewState extends State<SaveLocationView> {
     super.dispose();
   }
 
+  /*  Future<void> _getCurrentLocation() async {
+    await requestLocationPermission(context);
+
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    double latitude = position.latitude;
+    double longitude = position.longitude;
+
+    List<Placemark> placemarks =
+        await placemarkFromCoordinates(latitude, longitude);
+    Placemark placemark = placemarks[0];
+    String address =
+        '${placemark.street},${placemark.name}, ${placemark.locality}, ${placemark.administrativeArea} ${placemark.postalCode}, ${placemark.country}';
+    log("----currentAddress----->${address.toString()}");
+  }
+ */
   @override
   Widget build(BuildContext context) {
     return Consumer<SaveLocationViewProvider>(

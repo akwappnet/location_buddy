@@ -244,12 +244,14 @@ class _ProfileViewState extends State<ProfileView> {
                   context: context,
                   builder: (BuildContext context) {
                     return CustomDialogBox(
+                        backgroundColor: CustomColor.secondaryColor,
                         heading:
                             AppLocalization.of(context)!.translate('delete'),
-                        title: AppLocalization.of(context)!.translate('delete'),
-                        descriptions: "",
-                        btn1Text: AppLocalization.of(context)!
+                        title: AppLocalization.of(context)!
                             .translate('delete-account-msg'),
+                        descriptions: "",
+                        btn1Text:
+                            AppLocalization.of(context)!.translate('delete'),
                         icon: const Icon(Icons.delete_outline),
                         btn2Text: "Cancel",
                         onClicked: () {

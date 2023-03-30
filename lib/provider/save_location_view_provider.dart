@@ -9,6 +9,7 @@ import 'package:background_locator_2/location_dto.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart' as geo;
 import 'package:location_buddy/helper/loading_dialog.dart';
 import 'package:location_buddy/localization/app_localization.dart';
 import 'package:location_buddy/utils/colors/colors.dart';
@@ -227,49 +228,24 @@ class SaveLocationViewProvider extends ChangeNotifier {
       log('Error deleting account: $e');
     }
   }
+//get current location and convert to address
 
-  Future<void> _getAddressFromLatLng(LocationDto position) async {
-    await placemarkFromCoordinates(position.latitude, position.longitude)
-        .then((List<Placemark> placemarks) {
-      Placemark place = placemarks[0];
-      setCurretAddress(
-          ' ${place.street} ${place.name} ${place.country} ${place.postalCode}');
-      log("----currentAddress----->${_currentAddress.toString()}");
-      sourceController.text = _currentAddress.toString();
-    }).catchError((e) {
-      debugPrint(e);
-    });
-  }
+  Future<void> getCurrentLocation(BuildContext context) async {
+    await requestLocationPermission(context);
 
-  Future<void> updateUI(dynamic data) async {
-    LocationDto? locationDto =
-        (data != null) ? LocationDto.fromJson(data) : null;
-    await updateNotificationText(locationDto!);
-    setCurretLocation(locationDto);
-    _getAddressFromLatLng(locationDto);
+    geo.Position position = await geo.Geolocator.getCurrentPosition(
+        desiredAccuracy: geo.LocationAccuracy.high);
+    double latitude = position.latitude;
+    double longitude = position.longitude;
 
-    try {
-      FirebaseFirestore.instance.collection('location').doc('user1').set({
-        'latitude': currentLocation!.latitude,
-        'longitude': currentLocation!.longitude,
-        'name': 'Ram Ghumaliya',
-        'datetime': DateTime.now(),
-      }, SetOptions(merge: false));
-    } catch (e) {
-      log(e.toString());
-    }
-  }
+    List<Placemark> placemarks =
+        await placemarkFromCoordinates(latitude, longitude);
+    Placemark placemark = placemarks[0];
+    String address =
+        '${placemark.street},${placemark.name}, ${placemark.locality}, ${placemark.administrativeArea} ${placemark.postalCode}, ${placemark.country}';
+    log("----currentAddress----->${address.toString()}");
 
-  Future<void> updateNotificationText(LocationDto data) async {
-    // ignore: unnecessary_null_comparison
-    if (data == null) {
-      return;
-    }
-
-    await BackgroundLocator.updateNotificationText(
-        title: "new location received",
-        msg: "${DateTime.now()}",
-        bigMsg: "${data.latitude}, ${data.longitude}");
+    sourceController.text = address;
   }
 
   Future<void> initPlatformState() async {
@@ -286,7 +262,7 @@ class SaveLocationViewProvider extends ChangeNotifier {
     log("------onStart----->");
     await requestLocationPermission(context);
     // ignore: use_build_context_synchronously
-    await trunOnLocation(context);
+    await getCurrentLocation(context);
     await startLocator();
     final isRunning = await BackgroundLocator.isServiceRunning();
     log("------Stat----->$isRunning");
