@@ -61,7 +61,6 @@ dependencies:
   babstrap_settings_screen: ^0.1.5+1
   shared_preferences: ^2.0.20
   url_launcher: ^6.1.10
-  confetti: ^0.7.0
 
 dev_dependencies:
   flutter_test:

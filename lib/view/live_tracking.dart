@@ -122,24 +122,8 @@ class _LiveTrackingState extends State<LiveTracking> {
         // show pop-up when distance is less than or equal to 10 meters
 
         // ignore: use_build_context_synchronously
-        showDialog(
-            barrierDismissible: false,
-            context: context,
-            builder: (BuildContext context) {
-              return CustomDialogBox(
-                heading: "Location Buddy",
-                icon: const Icon(Icons.done),
-                backgroundColor: CustomColor.primaryColor,
-                title: "You have reached your destination!",
-                descriptions: "", //
-                btn1Text: "Ok",
-                onClicked: () {
-                  Navigator.popAndPushNamed(context, RoutesName.bottomBar);
-                },
-              );
-            });
 
-        /*  showDialog(
+        showDialog(
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
@@ -152,7 +136,7 @@ class _LiveTrackingState extends State<LiveTracking> {
               ],
             );
           },
-        ); */
+        );
       }
 
       if (result.points.isNotEmpty) {

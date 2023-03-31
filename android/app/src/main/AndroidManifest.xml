@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.location_buddy">
+    package="com.wappnet.location_buddy">
         <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -51,6 +51,6 @@
             android:name="flutterEmbedding"
             android:value="2" />
              <meta-data android:name="com.google.android.geo.API_KEY"
-               android:value="AIzaSyAERKSFYMxdSR6mrMmgyesmQOr8miAFd4c"/>
+               android:value="AIzaSyDJbqVkRb6llQczHvPN_WnK4pGUGt30ykM"/>
     </application>
 </manifest>
