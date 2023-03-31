@@ -137,11 +137,13 @@ class _LiveTrackingState extends State<LiveTracking> {
           }
           _polylineId = const PolylineId('route');
           _polylines.add(Polyline(
-            width: 3,
+            geodesic: true,
+            width: 10,
             polylineId: _polylineId!,
             color: CustomColor.primaryColor,
             points: _polylineCoordinates,
             visible: true,
+            patterns: [PatternItem.dot, PatternItem.gap(15)],
           ));
         });
       }
@@ -200,7 +202,7 @@ class _LiveTrackingState extends State<LiveTracking> {
               onCameraMove: (position) {},
               //myLocationEnabled: true,
               myLocationButtonEnabled: true,
-              mapType: MapType.terrain,
+              mapType: MapType.hybrid,
               initialCameraPosition: CameraPosition(
                   target: LatLng(
                       currentLocation!.latitude, currentLocation!.longitude),

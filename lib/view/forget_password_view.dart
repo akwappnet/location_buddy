@@ -88,7 +88,6 @@ class ForgetPasswordView extends StatelessWidget {
                   child: BuildTextFormFieldNew(
                     controller: emailController,
                     validation: emailValidator,
-                    size: size,
                     isObserve: false,
                     txtHint: AppLocalization.of(context)!
                         .translate('txt-email-hint'),

@@ -80,12 +80,18 @@ class _ProfileViewState extends State<ProfileView> {
                                 fontFamily: FontFamliyM.ROBOTOBOLD,
                               ),
                             ),
-                            Text(auth.currentUser?.email ?? "",
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 20.sp,
-                                    fontFamily: FontFamliyM.ROBOTOBOLD,
-                                    fontWeight: FontWeight.w600))
+                            SizedBox(
+                              width: MediaQuery.of(context).size.height / 4,
+                              child: Text(auth.currentUser?.email ?? "",
+                                  softWrap: false,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 20.sp,
+                                      fontFamily: FontFamliyM.ROBOTOBOLD,
+                                      fontWeight: FontWeight.w600)),
+                            )
                           ],
                         ),
                       ),

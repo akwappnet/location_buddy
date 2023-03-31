@@ -162,7 +162,7 @@ class _LiveTrackingPageState extends State<LiveTrackingPage> {
           google_api_key,
           PointLatLng(currentLocation!.latitude, currentLocation!.longitude),
           PointLatLng(_destination!.latitude, _destination!.longitude),
-          optimizeWaypoints: false,
+          optimizeWaypoints: true,
           travelMode: TravelMode.walking);
 
       if (result.points.isNotEmpty) {
@@ -176,13 +176,16 @@ class _LiveTrackingPageState extends State<LiveTrackingPage> {
             _polylines.removeWhere(
                 (Polyline polyline) => polyline.polylineId == _polylineId);
           }
+
           _polylineId = const PolylineId('route');
           _polylines.add(Polyline(
-            width: 3,
+            geodesic: true,
+            width: 10,
             polylineId: _polylineId!,
             color: CustomColor.primaryColor,
             points: _polylineCoordinates,
             visible: true,
+            patterns: [PatternItem.dot, PatternItem.gap(15)],
           ));
         });
       }
@@ -193,18 +196,7 @@ class _LiveTrackingPageState extends State<LiveTrackingPage> {
   Widget build(BuildContext context) {
     final liveTrackingViewProvider =
         Provider.of<LiveTrackingViewProvider>(context);
-    /* final stop = GestureDetector(
-      onTap: () {
-        Provider.of<SaveLocationViewProvider>(context, listen: false)
-            .onStop(context);
-      }, */
-    /* child: AppButton(
-        height: 50.sp,
-        sizes: 20.sp,
-        text: AppLocalization.of(context)!.translate('stop-tracking'),
-        mycolor: CustomColor.primaryColor,
-      ), */
-    //  );
+
     final size = SizedBox(height: 40.h);
     final map = currentLocation == null
         ? SizedBox(
@@ -235,7 +227,7 @@ class _LiveTrackingPageState extends State<LiveTrackingPage> {
             ),
           )
         : FutureBuilder(
-            future: Future.delayed(Duration(seconds: 1)),
+            future: Future.delayed(Duration(seconds: 0)),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               return SizedBox(
                 height: MediaQuery.of(context).size.height / 1.5,
@@ -278,7 +270,7 @@ class _LiveTrackingPageState extends State<LiveTrackingPage> {
         ),
       ),
       body: FutureBuilder(
-          future: Future.delayed(Duration(seconds: 1)),
+          future: Future.delayed(Duration(seconds: 0)),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             return Container(
               color: CustomColor.white,

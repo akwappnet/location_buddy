@@ -65,6 +65,8 @@ class _SignUpViewState extends State<SignUpView> {
   }
 
   Widget buildCard(Size size) {
+    ValueNotifier<bool> obsecurePassword = ValueNotifier<bool>(true);
+    final provider = Provider.of<SignInProvider>(context, listen: false);
     return Container(
       alignment: Alignment.center,
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -101,7 +103,6 @@ class _SignUpViewState extends State<SignUpView> {
               children: [
                 BuildTextFormFieldNew(
                   controller: nameController,
-                  size: size,
                   isObserve: false,
                   textType: TextInputType.name,
                   txtHint:
@@ -120,7 +121,6 @@ class _SignUpViewState extends State<SignUpView> {
                 BuildTextFormFieldNew(
                   controller: emailController,
                   validation: emailValidator,
-                  size: size,
                   isObserve: false,
                   textType: TextInputType.emailAddress,
                   txtHint:
@@ -136,21 +136,38 @@ class _SignUpViewState extends State<SignUpView> {
                 SizedBox(
                   height: size.height * 0.02,
                 ),
-                BuildTextFormFieldNew(
-                  controller: passController,
-                  validation: passwordValidator,
-                  size: size,
-                  isObserve: true,
-                  txtHint: AppLocalization.of(context)!
-                      .translate('txt-password-hint'),
-                  textType: TextInputType.visiblePassword,
-                  leftIcon: Icon(
-                    Icons.lock,
-                    color: passController.text.isEmpty
-                        ? const Color(0xFF151624).withOpacity(0.5)
-                        : const Color.fromRGBO(44, 185, 176, 1),
-                    size: 24,
-                  ),
+                ValueListenableBuilder(
+                  valueListenable: obsecurePassword,
+                  builder: (context, value, child) {
+                    return BuildTextFormFieldNew(
+                      controller: provider.passController,
+                      validation: passwordValidator,
+                      isObserve: obsecurePassword.value,
+                      suffixIcon: GestureDetector(
+                        onTap: (() {
+                          obsecurePassword.value = !obsecurePassword.value;
+                        }),
+                        child: Icon(
+                          obsecurePassword.value
+                              ? Icons.visibility_off
+                              : Icons.visibility,
+                          size: 24,
+                          color: provider.emailController.text.isEmpty
+                              ? const Color(0xFF151624).withOpacity(0.5)
+                              : const Color.fromRGBO(44, 185, 176, 1),
+                        ),
+                      ),
+                      txtHint: AppLocalization.of(context)!
+                          .translate('txt-password-hint'),
+                      leftIcon: Icon(
+                        Icons.lock,
+                        color: provider.passController.text.isEmpty
+                            ? const Color(0xFF151624).withOpacity(0.5)
+                            : const Color.fromRGBO(44, 185, 176, 1),
+                        size: 24,
+                      ),
+                    );
+                  },
                 ),
                 //emailTextField(size),
                 SizedBox(
