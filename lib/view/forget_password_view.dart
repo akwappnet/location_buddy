@@ -22,7 +22,6 @@ class ForgetPasswordView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     final provider = Provider.of<ForgetPassword>(context, listen: false);
     return GestureDetector(
       onTap: () {
@@ -88,7 +87,6 @@ class ForgetPasswordView extends StatelessWidget {
                   child: BuildTextFormFieldNew(
                     controller: emailController,
                     validation: emailValidator,
-                    size: size,
                     isObserve: false,
                     txtHint: AppLocalization.of(context)!
                         .translate('txt-email-hint'),

@@ -154,6 +154,8 @@ class SaveLocationViewProvider extends ChangeNotifier {
             _currentPosition!.longitude.toString(),
         'id': docRef.id,
         'userId': _auth.currentUser?.uid ?? "",
+        'userName': _auth.currentUser?.displayName ?? "",
+        'userEmail': _auth.currentUser?.email ?? "",
       }).then(
         (value) {
           showDialog(
@@ -177,11 +179,12 @@ class SaveLocationViewProvider extends ChangeNotifier {
               Navigator.popAndPushNamed(context, RoutesName.bottomBar));
         },
       );
-      setSaving(false);
-      fetchLocationInformation();
+
       savePointDestinationController.clear();
       sourceController.clear();
       destinationController.clear();
+      await fetchLocationInformation();
+      setSaving(false);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -307,10 +310,7 @@ class SaveLocationViewProvider extends ChangeNotifier {
             androidNotificationSettings: AndroidNotificationSettings(
                 notificationChannelName: 'Location tracking',
                 notificationTitle: 'Start Location Tracking',
-                notificationMsg: 'Track location in background',
-                notificationBigMsg:
-                    'Background location is on to keep the app up-tp-date with your location. This is required for main features to work properly when the app is not running.',
-                notificationIconColor: Color(0xFF08957D),
+                notificationMsg: 'Tracking location in background',
                 notificationTapCallback:
                     LocationCallbackHandler.notificationCallback)));
   }

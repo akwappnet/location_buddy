@@ -5,8 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:location_buddy/localization/app_localization.dart';
-
-import 'package:location_buddy/provider/home_view_provider.dart';
 import 'package:location_buddy/provider/live_traking_view_provider.dart';
 import 'package:location_buddy/utils/assets/assets_utils.dart';
 import 'package:location_buddy/utils/colors/colors.dart';
@@ -48,110 +46,124 @@ class _HomeViewState extends State<HomeView> {
   Widget build(BuildContext context) {
     final locationInfoProvider = Provider.of<SaveLocationViewProvider>(context);
 
-    return Consumer<HomeViewProvider>(builder: (context, remoteConfig, _) {
-      return Scaffold(
-        backgroundColor: CustomColor.primaryColor,
-        body: Column(
-          children: [
-            SizedBox(
-              height: 50.h,
-            ),
-            Row(
-              children: [
-                AvatarGlow(
-                  endRadius: 30,
-                  glowColor: Colors.red,
-                  duration: const Duration(seconds: 5),
-                  child: Icon(
-                    Icons.location_on_outlined,
-                    size: 35.h,
-                    color: Colors.white,
-                  ),
+    return Scaffold(
+      backgroundColor: CustomColor.primaryColor,
+      body: Column(
+        children: [
+          SizedBox(
+            height: 50.h,
+          ),
+          Row(
+            children: [
+              AvatarGlow(
+                endRadius: 30,
+                glowColor: Colors.red,
+                duration: const Duration(seconds: 5),
+                child: Icon(
+                  Icons.location_on_outlined,
+                  size: 35.h,
+                  color: Colors.white,
                 ),
-                Text(
-                  AppLocalization.of(context)!.translate('app-name'),
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 25.sp,
-                    fontFamily: FontFamliyM.SEMIBOLD,
-                  ),
+              ),
+              Text(
+                AppLocalization.of(context)!.translate('app-name'),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 25.sp,
+                  fontFamily: FontFamliyM.SEMIBOLD,
                 ),
-              ],
-            ),
-            Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                    color: CustomColor.white,
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(30.sp),
-                        topRight: Radius.circular(30.sp))),
-                child: SingleChildScrollView(
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  child: Container(
-                    padding:
-                        EdgeInsets.only(left: 20.sp, right: 20.sp, top: 10.sp),
-                    width: MediaQuery.of(context).size.width,
-                    child: locationInfoProvider.isLoading
-                        ? Column(
-                            children: [
-                              SizedBox(
-                                height: 250.h,
-                              ),
-                              Center(
-                                child: Lottie.asset(AssetsUtils.loadinghome,
+              ),
+            ],
+          ),
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                  color: CustomColor.white,
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(30.sp),
+                      topRight: Radius.circular(30.sp))),
+              child: SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                child: Container(
+                  padding:
+                      EdgeInsets.only(left: 20.sp, right: 20.sp, top: 10.sp),
+                  width: MediaQuery.of(context).size.width,
+                  child: locationInfoProvider.isLoading
+                      ? Column(
+                          children: [
+                            SizedBox(
+                              height: 250.h,
+                            ),
+                            Center(
+                              child: Lottie.asset(AssetsUtils.loadinghome,
+                                  height: 250.h, width: 250.w, animate: true),
+                            ),
+                          ],
+                        )
+                      : locationInfoProvider.locationInfo.isEmpty
+                          ? Column(
+                              children: [
+                                SizedBox(
+                                  height: 60.h,
+                                ),
+                                Lottie.asset(AssetsUtils.noRoute,
                                     height: 250.h, width: 250.w, animate: true),
-                              ),
-                            ],
-                          )
-                        : locationInfoProvider.locationInfo.isEmpty
-                            ? Column(
-                                children: [
-                                  SizedBox(
-                                    height: 60.h,
-                                  ),
-                                  Lottie.asset(AssetsUtils.noRoute,
-                                      height: 250.h,
-                                      width: 250.w,
-                                      animate: true),
-                                  SizedBox(
-                                    height: 50.h,
-                                  ),
-                                  Text(
-                                    AppLocalization.of(context)!
-                                        .translate('no-record'),
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        fontSize: 28.sp,
-                                        fontFamily: FontFamliyM.SEMIBOLD,
-                                        color: CustomColor.primaryColor,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                  SizedBox(
-                                    height: 20.h,
-                                  ),
-                                  Text(
-                                    AppLocalization.of(context)!
-                                        .translate('no-record2'),
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        fontSize: 20.sp,
-                                        fontFamily: FontFamliyM.SEMIBOLD,
-                                        color: CustomColor.black,
-                                        fontWeight: FontWeight.w200),
-                                  ),
-                                ],
-                              )
-                            : ListView.builder(
-                                scrollDirection: Axis.vertical,
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemCount:
-                                    locationInfoProvider.locationInfo.length,
-                                itemBuilder: (context, index) {
-                                  final locationInfo =
-                                      locationInfoProvider.locationInfo[index];
+                                SizedBox(
+                                  height: 50.h,
+                                ),
+                                Text(
+                                  AppLocalization.of(context)!
+                                      .translate('no-record'),
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontSize: 28.sp,
+                                      fontFamily: FontFamliyM.SEMIBOLD,
+                                      color: CustomColor.primaryColor,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                                SizedBox(
+                                  height: 20.h,
+                                ),
+                                Text(
+                                  AppLocalization.of(context)!
+                                      .translate('no-record2'),
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontSize: 20.sp,
+                                      fontFamily: FontFamliyM.SEMIBOLD,
+                                      color: CustomColor.black,
+                                      fontWeight: FontWeight.w200),
+                                ),
+                              ],
+                            )
+                          : ListView.builder(
+                              scrollDirection: Axis.vertical,
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount:
+                                  locationInfoProvider.locationInfo.length,
+                              itemBuilder: (context, index) {
+                                final locationInfo =
+                                    locationInfoProvider.locationInfo[index];
 
-                                  return Card(
+                                return GestureDetector(
+                                  onTap: () {
+                                    double latitude = double.parse(locationInfo
+                                        .destinationLocationLatitude
+                                        .toString());
+                                    double longitude = double.parse(locationInfo
+                                        .destinationLocationlongitude
+                                        .toString());
+                                    Provider.of<LiveTrackingViewProvider>(
+                                            context,
+                                            listen: false)
+                                        .setLocationData(latitude, longitude);
+                                    Navigator.pushNamed(
+                                      context,
+                                      RoutesName.livetrakingpage,
+                                    );
+                                  },
+                                  child: Card(
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(15.0),
                                       side: const BorderSide(
@@ -333,15 +345,15 @@ class _HomeViewState extends State<HomeView> {
                                         ),
                                       ),
                                     ),
-                                  );
-                                }),
-                  ),
+                                  ),
+                                );
+                              }),
                 ),
               ),
             ),
-          ],
-        ),
-      );
-    });
+          ),
+        ],
+      ),
+    );
   }
 }

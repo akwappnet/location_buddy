@@ -2,6 +2,7 @@
 
 import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -17,8 +18,8 @@ class SignInProvider with ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   late User? _user;
 
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passController = TextEditingController();
+  TextEditingController signemailController = TextEditingController();
+  TextEditingController signpassController = TextEditingController();
 
   SignInProvider() {
     _checkCurrentUser();
@@ -32,8 +33,8 @@ class SignInProvider with ChangeNotifier {
   }
 
   void clearText() {
-    emailController.clear();
-    passController.clear();
+    signemailController.clear();
+    signpassController.clear();
   }
 
   Future<void> signInWithGoogle(BuildContext context) async {
@@ -176,6 +177,31 @@ class SignInProvider with ChangeNotifier {
           ),
         );
         log('Wrong password provided for that user.');
+      } else if (e.code == 'invalid-email') {
+        clearText();
+        closeCustomLoadingDialog(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          // ignore: prefer_const_constructors
+          SnackBar(
+            backgroundColor: CustomColor.redColor,
+            content: const Text("Invalid email format "),
+            duration: const Duration(seconds: 3),
+          ),
+        );
+        log('Wrong password provided for that user.');
+      } else {
+        clearText();
+        closeCustomLoadingDialog(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          // ignore: prefer_const_constructors
+          SnackBar(
+            backgroundColor: CustomColor.redColor,
+            content: Text(
+              AppLocalization.of(context)!.translate('error-somthing'),
+            ),
+            duration: const Duration(seconds: 3),
+          ),
+        );
       }
     }
   }
@@ -189,6 +215,18 @@ class SignInProvider with ChangeNotifier {
             .createUserWithEmailAndPassword(email: email, password: password);
         _user = userCredential.user;
         notifyListeners();
+        try {
+          final FirebaseFirestore firestore = FirebaseFirestore.instance;
+          final docRef = firestore.collection('usersInfo').doc();
+          await docRef.set({
+            'id': docRef.id,
+            'name': name,
+            'email': email,
+            'password': password,
+          });
+        } catch (e) {
+          log(e.toString());
+        }
         showDialog(
             context: context,
             builder: (BuildContext context) {
@@ -243,8 +281,34 @@ class SignInProvider with ChangeNotifier {
           ),
         );
         log('The account already exists for that email.');
+      } else if (e.code == 'invalid-email') {
+        clearText();
+        closeCustomLoadingDialog(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          // ignore: prefer_const_constructors
+          SnackBar(
+            backgroundColor: CustomColor.redColor,
+            content: const Text("Invalid email format "),
+            duration: const Duration(seconds: 3),
+          ),
+        );
+        log('Wrong password provided for that user.');
+      } else {
+        clearText();
+        closeCustomLoadingDialog(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          // ignore: prefer_const_constructors
+          SnackBar(
+            backgroundColor: CustomColor.redColor,
+            content: Text(
+              AppLocalization.of(context)!.translate('error-somthing'),
+            ),
+            duration: const Duration(seconds: 3),
+          ),
+        );
       }
     } catch (e) {
+      closeCustomLoadingDialog(context);
       log(e.toString());
     }
   }
