@@ -37,32 +37,6 @@ class _SaveLocationViewState extends State<SaveLocationView> {
   }
 
   @override
-  void dispose() {
-    final saveLocationViewProvider =
-        Provider.of<SaveLocationViewProvider>(context, listen: false);
-    saveLocationViewProvider.savePointDestinationController.clear();
-    saveLocationViewProvider.destinationController.clear();
-    saveLocationViewProvider.sourceController.clear();
-    super.dispose();
-  }
-
-  /*  Future<void> _getCurrentLocation() async {
-    await requestLocationPermission(context);
-
-    Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
-    double latitude = position.latitude;
-    double longitude = position.longitude;
-
-    List<Placemark> placemarks =
-        await placemarkFromCoordinates(latitude, longitude);
-    Placemark placemark = placemarks[0];
-    String address =
-        '${placemark.street},${placemark.name}, ${placemark.locality}, ${placemark.administrativeArea} ${placemark.postalCode}, ${placemark.country}';
-    log("----currentAddress----->${address.toString()}");
-  }
- */
-  @override
   Widget build(BuildContext context) {
     return Consumer<SaveLocationViewProvider>(
         builder: (context, saveLocationViewProvider, _) {

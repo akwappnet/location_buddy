@@ -37,14 +37,12 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
-  firebase_remote_config: ^3.0.15
   firebase_core: ^2.8.0
   provider: ^6.0.5
   flutter_screenutil: ^5.7.0
   r_dotted_line_border: ^0.1.1
   lottie: ^2.3.0
   avatar_glow: ^2.0.2
-  expansion_card: ^0.1.0
   salomon_bottom_bar: ^3.3.1
   font_awesome_flutter: ^10.4.0
   auto_direction: ^0.0.6
@@ -62,7 +60,8 @@ dependencies:
   simple_fontellico_progress_dialog: ^0.3.0
   babstrap_settings_screen: ^0.1.5+1
   shared_preferences: ^2.0.20
-  turf: ^0.0.7
+  url_launcher: ^6.1.10
+  confetti: ^0.7.0
 
 dev_dependencies:
   flutter_test:

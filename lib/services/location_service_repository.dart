@@ -4,8 +4,6 @@ import 'dart:isolate';
 import 'dart:ui';
 
 import 'package:background_locator_2/location_dto.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 
 class LocationServiceRepository {
   static final LocationServiceRepository _instance =
@@ -37,20 +35,7 @@ class LocationServiceRepository {
 
   Future<void> callback(LocationDto locationDto) async {
     log('$_count location in dart----->: ${locationDto.toString()}');
-    try {
-      Firebase.initializeApp();
-      FirebaseFirestore.instance
-          .collection('location_from_services')
-          .doc('user1')
-          .set({
-        'latitude': locationDto.latitude,
-        'longitude': locationDto.longitude,
-        'name': 'Ram Ghumaliya',
-        'datetime': DateTime.now(),
-      }, SetOptions(merge: false));
-    } catch (e) {
-      log(e.toString());
-    }
+
     final SendPort? send = IsolateNameServer.lookupPortByName(isolateName);
     send?.send(locationDto.toJson());
     _count++;

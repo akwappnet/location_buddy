@@ -2,15 +2,15 @@
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:location_buddy/localization/app_localization.dart';
 import 'package:location_buddy/provider/current_data_provider.dart';
 import 'package:location_buddy/provider/forget_password_provider.dart';
-
-import 'package:location_buddy/provider/home_view_provider.dart';
 import 'package:location_buddy/provider/live_traking_view_provider.dart';
 import 'package:location_buddy/provider/save_location_view_provider.dart';
 import 'package:location_buddy/provider/sign_in_provider.dart';
+import 'package:location_buddy/provider/splash_view_provider.dart';
 import 'package:location_buddy/utils/routes/routes.dart';
 import 'package:location_buddy/utils/routes/routes_name.dart';
 import 'package:provider/provider.dart';
@@ -19,7 +19,10 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
   runApp(MyApp());
 }
 
@@ -34,10 +37,10 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (_) => HomeViewProvider(),
+          create: (_) => SaveLocationViewProvider(),
         ),
         ChangeNotifierProvider(
-          create: (_) => SaveLocationViewProvider(),
+          create: (_) => SplashViewProvider(),
         ),
         ChangeNotifierProvider(
           create: (_) => LiveTrackingViewProvider(),
@@ -66,6 +69,7 @@ class MyApp extends StatelessWidget {
                   AppLocalizationDelegate(),
                   GlobalMaterialLocalizations.delegate,
                   GlobalWidgetsLocalizations.delegate,
+                  GlobalCupertinoLocalizations.delegate,
                 ],
                 supportedLocales: [
                   const Locale('en'),
