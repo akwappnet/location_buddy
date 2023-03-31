@@ -114,6 +114,11 @@ class _LiveTrackingState extends State<LiveTracking> {
                 currentLocation!.latitude, currentLocation!.longitude))));
   }
 
+  double calculateDistance(LatLng start, LatLng end) {
+    return Geolocator.distanceBetween(
+        start.latitude, start.longitude, end.latitude, end.longitude);
+  }
+
   void _updatePolyline(GoogleMapController controller) async {
     if (currentLocation != null) {
       PolylinePoints polylinePoints = PolylinePoints();
@@ -123,6 +128,28 @@ class _LiveTrackingState extends State<LiveTracking> {
           PointLatLng(_destination!.latitude, _destination!.longitude),
           optimizeWaypoints: true,
           travelMode: TravelMode.walking);
+
+      double distance = calculateDistance(
+        LatLng(currentLocation!.latitude, currentLocation!.longitude),
+        LatLng(_destination!.latitude, _destination!.longitude),
+      );
+      if (distance <= 10) {
+        // show pop-up when distance is less than or equal to 10 meters
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("You have reached your destination!"),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text("OK"),
+                ),
+              ],
+            );
+          },
+        );
+      }
 
       if (result.points.isNotEmpty) {
         _polylineCoordinates.clear();
