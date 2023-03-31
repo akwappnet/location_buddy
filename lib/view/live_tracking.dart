@@ -6,7 +6,6 @@ import 'dart:isolate';
 import 'dart:ui';
 
 import 'package:background_locator_2/location_dto.dart';
-import 'package:flutter/services.dart';
 
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -16,7 +15,6 @@ import 'package:location_buddy/provider/live_traking_view_provider.dart';
 import 'package:location_buddy/provider/save_location_view_provider.dart';
 import 'package:location_buddy/utils/colors/colors.dart';
 import 'package:location_buddy/utils/constants.dart';
-import 'package:location_buddy/utils/font/font_family.dart';
 import 'package:location_buddy/widgets/loading_map.dart';
 import 'package:provider/provider.dart';
 import '../localization/app_localization.dart';
