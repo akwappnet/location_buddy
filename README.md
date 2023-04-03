@@ -14,7 +14,7 @@ To get started with Location Buddy, download the app from the App Store or Googl
 To use Location Buddy, simply enter the name or address of the location you need to visit and save it. You can then use the app's satellite view maps to guide you to your destination. If you need to search for a location, you can do so using the app's search feature.
 
 # Support
-If you encounter any issues while using Location Buddy, please contact our support team at support@locationbuddy.com.
+If you encounter any issues while using Location Buddy, please contact our support team at dev.locationbuddy@gmail.com
 
 # Conclusion
 Whether you're traveling for business or pleasure, Location Buddy is the perfect app for anyone who needs help finding their way around. With its user-friendly interface and satellite view maps, Location Buddy makes it easy to navigate even in unfamiliar areas. Download the app today and start exploring the world with confidence.
