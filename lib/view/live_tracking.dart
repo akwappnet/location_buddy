@@ -22,7 +22,6 @@ import '../models/location_data_navigate.dart';
 import '../services/location_service_repository.dart';
 import '../utils/routes/routes_name.dart';
 import '../widgets/custom_button_widget.dart';
-import '../widgets/custom_dialog_box.dart';
 
 class LiveTracking extends StatefulWidget {
   const LiveTracking({super.key});
@@ -123,15 +122,16 @@ class _LiveTrackingState extends State<LiveTracking> {
 
         // ignore: use_build_context_synchronously
 
+        // ignore: use_build_context_synchronously
         showDialog(
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: Text("You have reached your destination!"),
+              title: const Text("You have reached your destination!"),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(),
-                  child: Text("OK"),
+                  child: const Text("OK"),
                 ),
               ],
             );
