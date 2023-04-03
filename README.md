@@ -21,11 +21,11 @@ Whether you're traveling for business or pleasure, Location Buddy is the perfect
 
 # Location Buddy Credential
 
-****Gmail****
+****Gmail***
 Email : dev.locationbuddy@gmail.com
 Password : Locationbuddy@8797
 
-****Google map api****
+****Google map api****-
 Google Location API Key : AIzaSyDJbqVkRb6llQczHvPN_WnK4pGUGt30ykM
 
 **** App bundle ****	
