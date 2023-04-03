@@ -1,5 +1,7 @@
 // ignore_for_file: unused_element
 
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:isolate';
@@ -20,7 +22,6 @@ import 'package:provider/provider.dart';
 import '../localization/app_localization.dart';
 import '../models/location_data_navigate.dart';
 import '../services/location_service_repository.dart';
-import '../utils/routes/routes_name.dart';
 import '../widgets/custom_button_widget.dart';
 
 class LiveTracking extends StatefulWidget {
@@ -78,6 +79,13 @@ class _LiveTrackingState extends State<LiveTracking> {
         .setCustomMarkerIcon();
   }
 
+  @override
+  void dispose() {
+    Provider.of<SaveLocationViewProvider>(context, listen: false)
+        .onStop(context);
+    super.dispose();
+  }
+
   Future<void> updateUI(dynamic data) async {
     LocationDto? locationDto =
         (data != null) ? LocationDto.fromJson(data) : null;
@@ -90,6 +98,13 @@ class _LiveTrackingState extends State<LiveTracking> {
 
     GoogleMapController googleMapController = await _controller.future;
     _updatePolyline(googleMapController);
+
+    LatLngBounds bounds = LatLngBounds(
+      southwest: LatLng(min(currentLocation!.latitude, _destination!.latitude),
+          min(currentLocation!.longitude, _destination!.longitude)),
+      northeast: LatLng(max(currentLocation!.latitude, _destination!.latitude),
+          max(currentLocation!.longitude, _destination!.longitude)),
+    );
 
     googleMapController.animateCamera(CameraUpdate.newCameraPosition(
         CameraPosition(
@@ -120,9 +135,11 @@ class _LiveTrackingState extends State<LiveTracking> {
       if (distance <= 10) {
         // show pop-up when distance is less than or equal to 10 meters
 
+
         // ignore: use_build_context_synchronously
 
         // ignore: use_build_context_synchronously
+
         showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -173,7 +190,6 @@ class _LiveTrackingState extends State<LiveTracking> {
       onTap: () {
         Provider.of<SaveLocationViewProvider>(context, listen: false)
             .onStop(context);
-        Navigator.popAndPushNamed(context, RoutesName.bottomBar);
       },
       child: AppButton(
         height: 50.sp,
@@ -185,9 +201,31 @@ class _LiveTrackingState extends State<LiveTracking> {
     final size = SizedBox(height: 40.h);
     final map = currentLocation == null
         ? SizedBox(
-            height: MediaQuery.of(context).size.height,
+            height: 600.h,
             width: MediaQuery.of(context).size.width,
-            child: const Center(child: Maploading()),
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 60.h,
+                ),
+                const Center(child: Maploading()),
+                SizedBox(
+                  height: 50.h,
+                ),
+                Text(
+                  AppLocalization.of(context)!.translate('save-button2'),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontSize: 28.sp,
+                      fontFamily: FontFamliyM.SEMIBOLD,
+                      color: CustomColor.primaryColor,
+                      fontWeight: FontWeight.w600),
+                ),
+                SizedBox(
+                  height: 20.h,
+                ),
+              ],
+            ),
           )
         : SizedBox(
             height: MediaQuery.of(context).size.height / 1.4,

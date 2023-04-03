@@ -5,10 +5,10 @@ import 'package:background_locator_2/settings/ios_settings.dart';
 import 'package:background_locator_2/settings/locator_settings.dart';
 
 import 'package:background_locator_2/background_locator.dart';
+import 'package:background_locator_2/location_dto.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
-import 'package:geolocator/geolocator.dart' as geo;
 import 'package:location_buddy/helper/loading_dialog.dart';
 import 'package:location_buddy/localization/app_localization.dart';
 import 'package:location_buddy/utils/colors/colors.dart';
@@ -41,8 +41,7 @@ class SaveLocationViewProvider extends ChangeNotifier {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   String? _currentAddress;
-  geo.Position? _currentPosition;
-
+  LocationDto? _currentLocation;
   bool? _isRunningSerives;
 
   String? _destinationLocationlongitude;
@@ -50,7 +49,7 @@ class SaveLocationViewProvider extends ChangeNotifier {
 
   bool? get isRunningSerives => _isRunningSerives;
   String? get currentAddress => _currentAddress;
-  geo.Position? get currentPosition => _currentPosition;
+  LocationDto? get currentLocation => _currentLocation;
   String? get destinationLocationlongitude => _destinationLocationlongitude;
   String? get destinationLocationLatitude => _destinationLocationLatitude;
 
@@ -69,8 +68,8 @@ class SaveLocationViewProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setCurrentPosition(geo.Position currentPosition) {
-    _currentPosition = currentPosition;
+  void setCurretLocation(LocationDto currentLocation) {
+    _currentLocation = currentLocation;
     notifyListeners();
   }
 
@@ -146,16 +145,14 @@ class SaveLocationViewProvider extends ChangeNotifier {
         'sourceLocation': sourceLocation,
         'destinationLocation': destinationLocation,
         'createdAt': DateTime.now().toString(),
-        'sourceLocationLatitude': _currentPosition!.latitude.toString(),
-        'sourceLocationlongitude': _currentPosition!.longitude.toString(),
-        'destinationLocationLatitude': destinationLocationLatitude ??
-            _currentPosition!.latitude.toString(),
+        'sourceLocationLatitude': currentLocation!.latitude.toString(),
+        'sourceLocationlongitude': currentLocation!.longitude.toString(),
+        'destinationLocationLatitude':
+            destinationLocationLatitude ?? currentLocation!.latitude.toString(),
         'destinationLocationlongitude': destinationLocationlongitude ??
-            _currentPosition!.longitude.toString(),
+            currentLocation!.longitude.toString(),
         'id': docRef.id,
         'userId': _auth.currentUser?.uid ?? "",
-        'userName': _auth.currentUser?.displayName ?? "",
-        'userEmail': _auth.currentUser?.email ?? "",
       }).then(
         (value) {
           showDialog(
@@ -179,12 +176,11 @@ class SaveLocationViewProvider extends ChangeNotifier {
               Navigator.popAndPushNamed(context, RoutesName.bottomBar));
         },
       );
-
+      setSaving(false);
+      fetchLocationInformation();
       savePointDestinationController.clear();
       sourceController.clear();
       destinationController.clear();
-      await fetchLocationInformation();
-      setSaving(false);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -231,29 +227,49 @@ class SaveLocationViewProvider extends ChangeNotifier {
       log('Error deleting account: $e');
     }
   }
-//get current location and convert to address
 
-  Future<void> getCurrentLocation(BuildContext context) async {
-    await requestLocationPermission(context);
+  Future<void> _getAddressFromLatLng(LocationDto position) async {
+    await placemarkFromCoordinates(position.latitude, position.longitude)
+        .then((List<Placemark> placemarks) {
+      Placemark place = placemarks[0];
+      setCurretAddress(
+          ' ${place.street} ${place.name} ${place.country} ${place.postalCode}');
+      log("----currentAddress----->${_currentAddress.toString()}");
+      sourceController.text = _currentAddress.toString();
+    }).catchError((e) {
+      debugPrint(e);
+    });
+  }
 
-    geo.Position position = await geo.Geolocator.getCurrentPosition(
-        desiredAccuracy: geo.LocationAccuracy.high);
-    double latitude = position.latitude;
-    double longitude = position.longitude;
+  Future<void> updateUI(dynamic data) async {
+    LocationDto? locationDto =
+        (data != null) ? LocationDto.fromJson(data) : null;
+    await updateNotificationText(locationDto!);
+    setCurretLocation(locationDto);
+    _getAddressFromLatLng(locationDto);
 
-    setCurrentPosition(position);
+    try {
+      FirebaseFirestore.instance.collection('location').doc('user1').set({
+        'latitude': currentLocation!.latitude,
+        'longitude': currentLocation!.longitude,
+        'name': 'Ram Ghumaliya',
+        'datetime': DateTime.now(),
+      }, SetOptions(merge: false));
+    } catch (e) {
+      log(e.toString());
+    }
+  }
 
-    log(_currentPosition!.latitude.toString());
-    log(_currentPosition!.longitude.toString());
+  Future<void> updateNotificationText(LocationDto data) async {
+    // ignore: unnecessary_null_comparison
+    if (data == null) {
+      return;
+    }
 
-    List<Placemark> placemarks =
-        await placemarkFromCoordinates(latitude, longitude);
-    Placemark placemark = placemarks[0];
-    String address =
-        '${placemark.street},${placemark.name}, ${placemark.locality}, ${placemark.administrativeArea} ${placemark.postalCode}, ${placemark.country}';
-    log("----currentAddress----->${address.toString()}");
-
-    sourceController.text = address;
+    await BackgroundLocator.updateNotificationText(
+        title: "new location received",
+        msg: "${DateTime.now()}",
+        bigMsg: "${data.latitude}, ${data.longitude}");
   }
 
   Future<void> initPlatformState() async {
@@ -270,7 +286,7 @@ class SaveLocationViewProvider extends ChangeNotifier {
     log("------onStart----->");
     await requestLocationPermission(context);
     // ignore: use_build_context_synchronously
-    await getCurrentLocation(context);
+    await trunOnLocation(context);
     await startLocator();
     final isRunning = await BackgroundLocator.isServiceRunning();
     log("------Stat----->$isRunning");
@@ -305,12 +321,15 @@ class SaveLocationViewProvider extends ChangeNotifier {
         androidSettings: const AndroidSettings(
             accuracy: LocationAccuracy.NAVIGATION,
             interval: 5,
-            distanceFilter: 0,
+            distanceFilter: 5,
             client: LocationClient.google,
             androidNotificationSettings: AndroidNotificationSettings(
                 notificationChannelName: 'Location tracking',
                 notificationTitle: 'Start Location Tracking',
-                notificationMsg: 'Tracking location in background',
+                notificationMsg: 'Track location in background',
+                notificationBigMsg:
+                    'Background location is on to keep the app up-tp-date with your location. This is required for main features to work properly when the app is not running.',
+                notificationIconColor: Color(0xFF08957D),
                 notificationTapCallback:
                     LocationCallbackHandler.notificationCallback)));
   }

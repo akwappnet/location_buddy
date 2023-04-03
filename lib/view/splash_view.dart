@@ -1,13 +1,18 @@
 import 'dart:async';
+import 'dart:developer';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:location_buddy/utils/assets/assets_utils.dart';
 import 'package:location_buddy/utils/colors/colors.dart';
 import 'package:location_buddy/utils/font/font_family.dart';
+import 'package:location_buddy/utils/routes/routes_name.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../localization/app_localization.dart';
-import '../provider/splash_view_provider.dart';
+import '../provider/current_data_provider.dart';
 
 class SplashView extends StatefulWidget {
   const SplashView({super.key});
@@ -20,11 +25,29 @@ class _SplashViewState extends State<SplashView> {
   @override
   void initState() {
     super.initState();
-    final provider = Provider.of<SplashViewProvider>(context, listen: false);
-    provider.getLanguage(context);
+    getLanguage();
     Timer(const Duration(seconds: 3), () async {
-      provider.checkIfUserIsLoggedIn(context);
+      checkIfUserIsLoggedIn();
     });
+  }
+
+  Future<void> getLanguage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String lan = prefs.getString("dateFormat") ?? "English";
+    print(lan);
+    // ignore: use_build_context_synchronously
+    final provider = Provider.of<CurrentData>(context, listen: false);
+    provider.changeLocale(lan);
+  }
+
+  Future<void> checkIfUserIsLoggedIn() async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    if (auth.currentUser != null) {
+      log(auth.currentUser?.displayName ?? "No name");
+      Navigator.popAndPushNamed(context, RoutesName.bottomBar);
+    } else {
+      Navigator.popAndPushNamed(context, RoutesName.siginView);
+    }
   }
 
   @override

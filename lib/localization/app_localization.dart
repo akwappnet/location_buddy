@@ -95,8 +95,6 @@ class AppLocalization {
       'error-data-delete': 'Error while deleting data',
       'live-tracking': 'Live Tracking',
       'stop-tracking': 'Stop Tracking',
-      'delete-data': 'Delete',
-      'delete-data-info': 'Are you sure you want to delete',
     },
     'ar': {
       //bottom bar language translate
@@ -179,8 +177,6 @@ class AppLocalization {
       'error-data-delete': 'خطأ أثناء حذف البيانات',
       'live-tracking': 'تتبع مباشر',
       'stop-tracking': 'توقف عن التعقب',
-      'delete-data': 'يمسح',
-      'delete-data-info': 'هل أنت متأكد أنك تريد حذف',
     },
   };
 

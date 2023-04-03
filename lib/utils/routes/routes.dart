@@ -4,6 +4,7 @@ import 'package:location_buddy/view/forget_password_view.dart';
 import 'package:location_buddy/view/home_view.dart';
 import 'package:location_buddy/view/live_tracking.dart';
 import 'package:location_buddy/view/live_traking_view.dart';
+import 'package:location_buddy/view/route_view.dart';
 import 'package:location_buddy/view/save_location_view.dart';
 import 'package:location_buddy/view/sign_in_view.dart';
 import 'package:location_buddy/view/splash_view.dart';
@@ -22,7 +23,11 @@ class Routes {
             builder: (BuildContext context) => Directionality(
                 textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
                 child: HomeView()));
-
+      case RoutesName.routeView:
+        return MaterialPageRoute(
+            builder: (BuildContext context) => Directionality(
+                textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
+                child: const MapScreen()));
       case RoutesName.splashView:
         return MaterialPageRoute(
             builder: (BuildContext context) => const SplashView());

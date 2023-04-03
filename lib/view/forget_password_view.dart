@@ -22,6 +22,7 @@ class ForgetPasswordView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     final provider = Provider.of<ForgetPassword>(context, listen: false);
     return GestureDetector(
       onTap: () {

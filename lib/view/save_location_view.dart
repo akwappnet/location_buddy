@@ -2,6 +2,7 @@
 
 import 'dart:developer';
 import 'dart:isolate';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -17,7 +18,11 @@ import 'package:provider/provider.dart';
 import 'package:r_dotted_line_border/r_dotted_line_border.dart';
 
 import '../provider/save_location_view_provider.dart';
+
 import '../utils/constants.dart';
+
+import '../services/location_service_repository.dart';
+
 import '../utils/font/font_family.dart';
 
 class SaveLocationView extends StatefulWidget {
@@ -32,9 +37,34 @@ class _SaveLocationViewState extends State<SaveLocationView> {
   @override
   void initState() {
     super.initState();
+    if (IsolateNameServer.lookupPortByName(
+            LocationServiceRepository.isolateName) !=
+        null) {
+      IsolateNameServer.removePortNameMapping(
+          LocationServiceRepository.isolateName);
+    }
+    IsolateNameServer.registerPortWithName(
+        port.sendPort, LocationServiceRepository.isolateName);
+    port.listen(
+      (dynamic data) {
+        Provider.of<SaveLocationViewProvider>(context, listen: false)
+            .updateUI(data);
+      },
+    );
+    Provider.of<SaveLocationViewProvider>(context, listen: false)
+        .initPlatformState();
+    Provider.of<SaveLocationViewProvider>(context, listen: false)
+        .onStart(context);
+  }
+
+  @override
+  void dispose() {
     final saveLocationViewProvider =
         Provider.of<SaveLocationViewProvider>(context, listen: false);
-    saveLocationViewProvider.getCurrentLocation(context);
+    saveLocationViewProvider.savePointDestinationController.clear();
+    saveLocationViewProvider.destinationController.clear();
+    saveLocationViewProvider.sourceController.clear();
+    super.dispose();
   }
 
   @override
@@ -64,7 +94,7 @@ class _SaveLocationViewState extends State<SaveLocationView> {
                   top: 150.h,
                   child: Center(
                     child: SingleChildScrollView(
-                      physics: const AlwaysScrollableScrollPhysics(),
+                      physics: AlwaysScrollableScrollPhysics(),
                       child: Container(
                         padding: EdgeInsets.only(
                             left: 30.sp, right: 20.sp, top: 20.sp),

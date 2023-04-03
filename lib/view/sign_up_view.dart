@@ -66,7 +66,7 @@ class _SignUpViewState extends State<SignUpView> {
 
   Widget buildCard(Size size) {
     ValueNotifier<bool> obsecurePassword = ValueNotifier<bool>(true);
-    // final provider = Provider.of<SignInProvider>(context, listen: false);
+    final provider = Provider.of<SignInProvider>(context, listen: false);
     return Container(
       alignment: Alignment.center,
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -140,7 +140,7 @@ class _SignUpViewState extends State<SignUpView> {
                   valueListenable: obsecurePassword,
                   builder: (context, value, child) {
                     return BuildTextFormFieldNew(
-                      controller: passController,
+                      controller: provider.passController,
                       validation: passwordValidator,
                       isObserve: obsecurePassword.value,
                       suffixIcon: GestureDetector(
@@ -152,7 +152,7 @@ class _SignUpViewState extends State<SignUpView> {
                               ? Icons.visibility_off
                               : Icons.visibility,
                           size: 24,
-                          color: emailController.text.isEmpty
+                          color: provider.emailController.text.isEmpty
                               ? const Color(0xFF151624).withOpacity(0.5)
                               : const Color.fromRGBO(44, 185, 176, 1),
                         ),
@@ -161,7 +161,7 @@ class _SignUpViewState extends State<SignUpView> {
                           .translate('txt-password-hint'),
                       leftIcon: Icon(
                         Icons.lock,
-                        color: passController.text.isEmpty
+                        color: provider.passController.text.isEmpty
                             ? const Color(0xFF151624).withOpacity(0.5)
                             : const Color.fromRGBO(44, 185, 176, 1),
                         size: 24,

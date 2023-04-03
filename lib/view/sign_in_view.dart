@@ -118,13 +118,13 @@ class _SignInViewState extends State<SignInView> {
               children: [
                 BuildTextFormFieldNew(
                   validation: emailValidator,
-                  controller: provider.signemailController,
+                  controller: provider.emailController,
                   isObserve: false,
                   txtHint:
                       AppLocalization.of(context)!.translate('txt-email-hint'),
                   leftIcon: Icon(
                     Icons.email,
-                    color: provider.signemailController.text.isEmpty
+                    color: provider.emailController.text.isEmpty
                         ? const Color(0xFF151624).withOpacity(0.5)
                         : const Color.fromRGBO(44, 185, 176, 1),
                     size: 24,
@@ -135,7 +135,7 @@ class _SignInViewState extends State<SignInView> {
                   valueListenable: obsecurePassword,
                   builder: (context, value, child) {
                     return BuildTextFormFieldNew(
-                      controller: provider.signpassController,
+                      controller: provider.passController,
                       validation: passwordValidator,
                       isObserve: obsecurePassword.value,
                       suffixIcon: GestureDetector(
@@ -147,7 +147,7 @@ class _SignInViewState extends State<SignInView> {
                               ? Icons.visibility_off
                               : Icons.visibility,
                           size: 24,
-                          color: provider.signemailController.text.isEmpty
+                          color: provider.emailController.text.isEmpty
                               ? const Color(0xFF151624).withOpacity(0.5)
                               : const Color.fromRGBO(44, 185, 176, 1),
                         ),
@@ -156,7 +156,7 @@ class _SignInViewState extends State<SignInView> {
                           .translate('txt-password-hint'),
                       leftIcon: Icon(
                         Icons.lock,
-                        color: provider.signpassController.text.isEmpty
+                        color: provider.passController.text.isEmpty
                             ? const Color(0xFF151624).withOpacity(0.5)
                             : const Color.fromRGBO(44, 185, 176, 1),
                         size: 24,
@@ -270,8 +270,8 @@ class _SignInViewState extends State<SignInView> {
     return GestureDetector(
       onTap: () {
         final provider = Provider.of<SignInProvider>(context, listen: false);
-        provider.signInWithEmailAndPassword(provider.signemailController.text,
-            provider.signpassController.text, context);
+        provider.signInWithEmailAndPassword(provider.emailController.text,
+            provider.passController.text, context);
       },
       child: Container(
         alignment: Alignment.center,

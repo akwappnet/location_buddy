@@ -7,8 +7,6 @@ import 'dart:async';
 import 'dart:isolate';
 import 'dart:ui';
 
-import 'dart:developer' as dev;
-
 import 'package:background_locator_2/location_dto.dart';
 
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
@@ -42,7 +40,7 @@ class _LiveTrackingPageState extends State<LiveTrackingPage> {
   LocationData? _destination;
   final Completer<GoogleMapController> _controller = Completer();
 
-  //  static const LatLng destination = LatLng(23.0802, 72.5244);
+//  static const LatLng destination = LatLng(23.0802, 72.5244);
   //store sourceLocation to destination location point to draw line
 
   final Set<Polyline> _polylines = {};
@@ -87,6 +85,13 @@ class _LiveTrackingPageState extends State<LiveTrackingPage> {
         .setCustomMarkerIcon();
   }
 
+  @override
+  void dispose() {
+    Provider.of<SaveLocationViewProvider>(context, listen: false)
+        .onStop(context);
+    super.dispose();
+  }
+
   Future<void> updateUI(dynamic data) async {
     if (count == 1) {
       val = false;
@@ -116,7 +121,7 @@ class _LiveTrackingPageState extends State<LiveTrackingPage> {
       googleMapController
           .animateCamera(CameraUpdate.newLatLngBounds(bounds, 50));
       calculateDistanceAndTime();
-      dev.log('======$count');
+      print('======${count}');
       count++;
     }
   }
@@ -131,20 +136,20 @@ class _LiveTrackingPageState extends State<LiveTrackingPage> {
               start.latitude, start.longitude, end.latitude, end.longitude);
           totalDistance += distance;
         }
-        dev.log(
+        print(
             'Total Distance: ${(totalDistance / 1000).toStringAsFixed(2)} km');
         double walkingSpeed = 1.2; // m/s
         double totalDistanceInMeters = totalDistance;
         estimatedTimeInMinutes = (totalDistanceInMeters / walkingSpeed) / 60;
 
         if (estimatedTimeInMinutes < 60) {
-          dev.log(
+          print(
               'Estimated Time: ${estimatedTimeInMinutes.toStringAsFixed(0)} min');
         } else {
           int hours = estimatedTimeInMinutes ~/ 60;
           int minutes = estimatedTimeInMinutes.toInt() % 60;
           result = '${hours}h ${minutes}m';
-          dev.log('Estimated Time: $result');
+          print('Estimated Time: $result');
         }
       });
     }
@@ -195,148 +200,144 @@ class _LiveTrackingPageState extends State<LiveTrackingPage> {
     final size = SizedBox(height: 40.h);
     final map = currentLocation == null
         ? SizedBox(
-            height: MediaQuery.of(context).size.height,
+            height: 600.h,
             width: MediaQuery.of(context).size.width,
-            child: const Center(child: Maploading()),
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 60.h,
+                ),
+                const Center(child: Maploading()),
+                SizedBox(
+                  height: 50.h,
+                ),
+                Text(
+                  AppLocalization.of(context)!.translate('save-button2'),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontSize: 28.sp,
+                      fontFamily: FontFamliyM.SEMIBOLD,
+                      color: CustomColor.primaryColor,
+                      fontWeight: FontWeight.w600),
+                ),
+                SizedBox(
+                  height: 20.h,
+                ),
+              ],
+            ),
           )
-        : SizedBox(
-            height: MediaQuery.of(context).size.height / 1.5,
-            width: MediaQuery.of(context).size.width,
-            child: GoogleMap(
-              //myLocationEnabled: true,
-              myLocationButtonEnabled: true,
-              mapType: MapType.terrain,
+        : FutureBuilder(
+            future: Future.delayed(Duration(seconds: 0)),
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              return SizedBox(
+                height: MediaQuery.of(context).size.height / 1.5,
+                width: MediaQuery.of(context).size.width,
+                child: GoogleMap(
+                  //myLocationEnabled: true,
+                  myLocationButtonEnabled: true,
+                  mapType: MapType.terrain,
 
-              initialCameraPosition: CameraPosition(
-                  target: LatLng(
-                      currentLocation!.latitude, currentLocation!.longitude),
-                  zoom: 16),
-              polylines: _polylines,
-              markers: {
-                Marker(
-                    icon: BitmapDescriptor.fromBytes(
-                        liveTrackingViewProvider.currentLocationIcon),
-                    markerId: const MarkerId("currentLocation"),
-                    position: LatLng(
-                        currentLocation!.latitude, currentLocation!.longitude)),
-                Marker(
-                    icon: BitmapDescriptor.fromBytes(
-                        liveTrackingViewProvider.destinationIcon),
-                    markerId: const MarkerId("destination"),
-                    position:
-                        LatLng(_destination!.latitude, _destination!.longitude))
-              },
-              onMapCreated: (mapController) {
-                _controller.complete(mapController);
-              },
-            ),
-          );
-
-    return WillPopScope(
-      onWillPop: () {
-        Provider.of<SaveLocationViewProvider>(context, listen: false)
-            .onStop(context);
-        return Future.value(true);
-      },
-      child: Scaffold(
-          appBar: AppBar(
-            leading: IconButton(
-                onPressed: () {
-                  Provider.of<SaveLocationViewProvider>(context, listen: false)
-                      .onStop(context);
-                  Navigator.pop(context);
-                },
-                icon: const Icon(
-                  Icons.arrow_back,
-                  color: CustomColor.white,
-                )),
-            backgroundColor: CustomColor.primaryColor,
-            title: Text(
-              AppLocalization.of(context)!.translate('live-tracking'),
-            ),
-          ),
-          body: Container(
-            color: CustomColor.white,
-            width: double.maxFinite,
-            height: MediaQuery.of(context).size.height,
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  map,
-                  size,
-                  val
-                      ? Container(
-                          padding: EdgeInsets.symmetric(horizontal: 20.sp),
-                          height: 150,
-                          decoration: const BoxDecoration(
-                              color: CustomColor.primaryColor,
-                              borderRadius: BorderRadius.only(
-                                  topRight: Radius.circular(31),
-                                  topLeft: Radius.circular(31))),
-                          child: Center(
-                            child: Text(
-                              "Please Wait.....",
-                              style: TextStyle(
-                                  color: CustomColor.white,
-                                  fontFamily: FontFamliyM.ROBOTOREGULAR,
-                                  fontSize: 18.sp,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        )
-                      : Container(
-                          padding: EdgeInsets.symmetric(horizontal: 20.sp),
-                          height: 150,
-                          decoration: const BoxDecoration(
-                              color: CustomColor.primaryColor,
-                              borderRadius: BorderRadius.only(
-                                  topRight: Radius.circular(31),
-                                  topLeft: Radius.circular(31))),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Distance: ${(totalDistance / 1000).toStringAsFixed(2)} km',
-                                style: TextStyle(
-                                    color: CustomColor.white,
-                                    fontFamily: FontFamliyM.ROBOTOREGULAR,
-                                    fontSize: 18.sp,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                      estimatedTimeInMinutes < 60
-                                          ? 'Estimated Time: ${estimatedTimeInMinutes.toStringAsFixed(0)} min'
-                                          : 'Estimated Time: $result',
-                                      style: TextStyle(
-                                          color: CustomColor.white,
-                                          fontFamily: FontFamliyM.ROBOTOREGULAR,
-                                          fontSize: 18.sp,
-                                          fontWeight: FontWeight.bold)),
-                                  GestureDetector(
-                                    onTap: () {
-                                      Navigator.pushNamed(
-                                          context, RoutesName.livetracking);
-                                    },
-                                    child: AppButton(
-                                        mycolor: CustomColor.secondaryColor,
-                                        width: 100.w,
-                                        height: 30.h,
-                                        text: 'Start'),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ))
-                ],
+                  initialCameraPosition: CameraPosition(
+                      target: LatLng(currentLocation!.latitude,
+                          currentLocation!.longitude),
+                      zoom: 16),
+                  polylines: _polylines,
+                  markers: {
+                    Marker(
+                        icon: BitmapDescriptor.fromBytes(
+                            liveTrackingViewProvider.currentLocationIcon),
+                        markerId: const MarkerId("currentLocation"),
+                        position: LatLng(currentLocation!.latitude,
+                            currentLocation!.longitude)),
+                    Marker(
+                        icon: BitmapDescriptor.fromBytes(
+                            liveTrackingViewProvider.destinationIcon),
+                        markerId: const MarkerId("destination"),
+                        position: LatLng(
+                            _destination!.latitude, _destination!.longitude))
+                  },
+                  onMapCreated: (mapController) {
+                    _controller.complete(mapController);
+                  },
+                ),
+              );
+            });
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: CustomColor.primaryColor,
+        title: Text(
+          AppLocalization.of(context)!.translate('live-tracking'),
+        ),
+      ),
+      body: FutureBuilder(
+          future: Future.delayed(Duration(seconds: 0)),
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            return Container(
+              color: CustomColor.white,
+              width: double.maxFinite,
+              height: MediaQuery.of(context).size.height,
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    map,
+                    size,
+                    val
+                        ? SizedBox()
+                        : Container(
+                            padding: EdgeInsets.symmetric(horizontal: 20.sp),
+                            height: 150,
+                            decoration: const BoxDecoration(
+                                color: CustomColor.primaryColor,
+                                borderRadius: BorderRadius.only(
+                                    topRight: Radius.circular(31),
+                                    topLeft: Radius.circular(31))),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Distance: ${(totalDistance / 1000).toStringAsFixed(2)} km',
+                                  style: TextStyle(
+                                      color: CustomColor.white,
+                                      fontFamily: FontFamliyM.ROBOTOREGULAR,
+                                      fontSize: 18.sp,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                        estimatedTimeInMinutes < 60
+                                            ? 'Estimated Time: ${estimatedTimeInMinutes.toStringAsFixed(0)} min'
+                                            : 'Estimated Time: $result',
+                                        style: TextStyle(
+                                            color: CustomColor.white,
+                                            fontFamily:
+                                                FontFamliyM.ROBOTOREGULAR,
+                                            fontSize: 18.sp,
+                                            fontWeight: FontWeight.bold)),
+                                    GestureDetector(
+                                      onTap: () {
+                                        Navigator.pushNamed(
+                                            context, RoutesName.livetracking);
+                                      },
+                                      child: AppButton(
+                                          mycolor: CustomColor.secondaryColor,
+                                          width: 100.w,
+                                          height: 30.h,
+                                          text: 'Start'),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ))
+                  ],
+                ),
               ),
-            ),
-          )),
+            );
+          }),
     );
   }
 }
