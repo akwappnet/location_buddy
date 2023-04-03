@@ -21,7 +21,6 @@ Whether you're traveling for business or pleasure, Location Buddy is the perfect
 
 # Location Buddy Credential
 
-****Gmail***
 Email : dev.locationbuddy@gmail.com
 Password : Locationbuddy@8797
 
