@@ -102,7 +102,21 @@ class SignInProvider with ChangeNotifier {
     } catch (e) {
       closeCustomLoadingDialog(context);
       clearText();
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            // ignore: prefer_const_constructors
+            return CustomDialogBox(
+              heading: AppLocalization.of(context)!.translate('error'),
+              icon: const Icon(Icons.clear),
+              backgroundColor: CustomColor.redColor,
+              title: AppLocalization.of(context)!.translate('error-somthing'),
 
+              descriptions: "$e", //
+              btn1Text: "",
+              btn2Text: AppLocalization.of(context)!.translate('ok'),
+            );
+          });
       log("------------->$e");
     }
   }

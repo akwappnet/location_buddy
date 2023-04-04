@@ -118,6 +118,9 @@ class _LiveTrackingState extends State<LiveTracking> {
         LatLng(_destination!.latitude, _destination!.longitude),
       );
       if (distance <= 10) {
+        // ignore: use_build_context_synchronously
+        Provider.of<SaveLocationViewProvider>(context, listen: false)
+            .onStop(context);
         // show pop-up when distance is less than or equal to 10 meters
 
         // ignore: use_build_context_synchronously
@@ -130,7 +133,12 @@ class _LiveTrackingState extends State<LiveTracking> {
               title: const Text("You have reached your destination!"),
               actions: [
                 TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
+                  onPressed: () {
+                    Provider.of<SaveLocationViewProvider>(context,
+                            listen: false)
+                        .onStop(context);
+                    Navigator.popAndPushNamed(context, RoutesName.bottomBar);
+                  },
                   child: const Text("OK"),
                 ),
               ],

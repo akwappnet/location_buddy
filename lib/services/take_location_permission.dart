@@ -7,6 +7,32 @@ import 'package:provider/provider.dart';
 import '../provider/save_location_view_provider.dart';
 import '../utils/colors/colors.dart';
 import '../widgets/custom_dialog_box.dart';
+import '../widgets/location_disclosure_dialog.dart';
+
+Future<void> locationPermission(BuildContext context) async {
+  PermissionStatus permission = await Permission.location.status;
+  if (permission == PermissionStatus.denied ||
+      permission == PermissionStatus.denied) {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          return LocationDisclosureDialog(
+            heading: "Location Permission Request",
+
+            backgroundColor: CustomColor.primaryColor,
+            descriptions:
+                "Location Buddy collects location data to show walk , run and bike rides on map even when app is closed or not in use.", //
+            btn1Text: "Accept",
+            btn2Text: "Cancel",
+            onClicked: () {
+              Navigator.of(context, rootNavigator: true).pop();
+              requestLocationPermission(context);
+            },
+          );
+        });
+  }
+}
 
 Future<void> requestLocationPermission(BuildContext context) async {
   // If location services are already enabled, check for location permissions
@@ -35,8 +61,8 @@ Future<void> requestLocationPermission(BuildContext context) async {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         backgroundColor: CustomColor.redColor,
-        content:
-            Text("Please allow the app to access your location all the time"),
+        content: Text(
+            "Location Buddy collect location data to enable show walk,run and bike rides on map even when app is closed or not in use"),
         duration: Duration(seconds: 3),
       ),
     );
@@ -49,12 +75,12 @@ Future<void> requestLocationPermission(BuildContext context) async {
       context: context,
       builder: (BuildContext context) {
         return CustomDialogBox(
-          heading: "Give Permission",
+          heading: "Use Your Location",
           icon: const Icon(Icons.info),
           backgroundColor: CustomColor.primaryColor,
           title: "Location Permission Required",
           descriptions:
-              "Please allow the app to access your location all the time.", //
+              "Please allow the app to access your location all the time enable show walk,run and bike rides on map even when app is closed or not in use", //
           btn1Text: "Setting",
           btn2Text: "Cancel",
           onClicked: () {

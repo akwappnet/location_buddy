@@ -13,6 +13,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../provider/current_data_provider.dart';
 import '../provider/sign_in_provider.dart';
+import '../utils/routes/routes_name.dart';
 import '../widgets/custom_dialog_box.dart';
 
 class ProfileView extends StatefulWidget {
@@ -33,7 +34,7 @@ class _ProfileViewState extends State<ProfileView> {
   FirebaseAuth auth = FirebaseAuth.instance;
   Future<void> _launchUrl(String url) async {
     final Uri uri = Uri.parse(url);
-    if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+    if (!await launchUrl(uri, mode: LaunchMode.inAppWebView)) {
       throw Exception('Could not launch url');
     }
   }
@@ -169,8 +170,7 @@ class _ProfileViewState extends State<ProfileView> {
             trailing: Icon(Icons.arrow_forward_ios_rounded,
                 color: SecondaryColor.greyIconColor),
             onTap: () {
-              _launchUrl(
-                  "https://docs.google.com/document/d/e/2PACX-1vRV2_tsyabP8K5mSYRgxT-1VRXQQ9Ipiepv5TwxxrAsj-UHhH1Bh7jcOYGHWnKytG-uI7OaTtwNYlN3/pub");
+              Navigator.pushNamed(context, RoutesName.privacypolicy);
             },
             icons: Icons.lock_open_sharp,
             iconStyle: IconStyle(
