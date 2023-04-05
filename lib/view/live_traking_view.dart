@@ -1,22 +1,23 @@
 // ignore_for_file: unused_element
 
+import 'dart:developer' as logdev;
+
 import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'dart:isolate';
-import 'dart:ui';
-
+import 'dart:ui' as ui;
+import 'dart:typed_data';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'dart:developer' as dev;
-
-import 'package:background_locator_2/location_dto.dart';
 
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location/location.dart';
 import 'package:location_buddy/provider/live_traking_view_provider.dart';
-import 'package:location_buddy/provider/save_location_view_provider.dart';
+import 'package:location_buddy/utils/assets/assets_utils.dart';
 import 'package:location_buddy/utils/colors/colors.dart';
 import 'package:location_buddy/utils/constants.dart';
 import 'package:location_buddy/utils/font/font_family.dart';
@@ -25,7 +26,6 @@ import 'package:location_buddy/widgets/loading_map.dart';
 import 'package:provider/provider.dart';
 import '../localization/app_localization.dart';
 import '../models/location_data_navigate.dart';
-import '../services/location_service_repository.dart';
 import '../widgets/custom_button_widget.dart';
 
 class LiveTrackingPage extends StatefulWidget {
@@ -36,10 +36,15 @@ class LiveTrackingPage extends StatefulWidget {
 }
 
 class _LiveTrackingPageState extends State<LiveTrackingPage> {
-  ReceivePort port = ReceivePort();
-  LocationDto? currentLocation;
+  BitmapDescriptor destinationIcon = BitmapDescriptor.defaultMarker;
+  BitmapDescriptor currentLocationIcon = BitmapDescriptor.defaultMarker;
+  Location location = Location();
+  bool isLoading = true;
 
-  LocationData? _destination;
+  //location of device
+  LocationData? currentLocation;
+
+  LocationDataNavigate? _destination;
   final Completer<GoogleMapController> _controller = Completer();
 
   //  static const LatLng destination = LatLng(23.0802, 72.5244);
@@ -59,12 +64,17 @@ class _LiveTrackingPageState extends State<LiveTrackingPage> {
   @override
   void initState() {
     super.initState();
-
+    getCurrentLocation();
+    // setCustomMarker();
+    //setCustomMarkerIcon();
     _destination = Provider.of<LiveTrackingViewProvider>(context, listen: false)
         .locationData;
-    // log('Latitude: ${_destination!.latitude}');
-    // log('Longitude: ${_destination!.longitude}');
-    if (IsolateNameServer.lookupPortByName(
+    logdev.log('Latitude: ${_destination!.latitude}');
+    logdev.log('Longitude: ${_destination!.longitude}');
+/*     Provider.of<LiveTrackingViewProvider>(context, listen: false)
+        .setCustomMarkerIcon(); */
+
+    /* if (IsolateNameServer.lookupPortByName(
             LocationServiceRepository.isolateName) !=
         null) {
       IsolateNameServer.removePortNameMapping(
@@ -81,12 +91,90 @@ class _LiveTrackingPageState extends State<LiveTrackingPage> {
         .initPlatformState();
 
     Provider.of<SaveLocationViewProvider>(context, listen: false)
-        .onStart(context);
-
-    Provider.of<LiveTrackingViewProvider>(context, listen: false)
-        .setCustomMarkerIcon();
+        .onStart(context); */
   }
 
+  /*  Future<void> setCustomMarkerIcon() async {
+    /*   final Uint8List markerIcon1 =
+        await getBytesFromAsset(AssetsUtils.destination); */
+    BitmapDescriptor.fromAssetImage(
+            const ImageConfiguration(size: Size(100, 100)),
+            AssetsUtils.destination)
+        .then(
+      (icon) {
+        destinationIcon = icon;
+      },
+    );
+    BitmapDescriptor.fromAssetImage(
+            const ImageConfiguration(size: Size(10, 100)), AssetsUtils.delete)
+        .then(
+      (icon) {
+        currentLocationIcon = icon;
+      },
+    );
+  }
+
+  Future<Uint8List> getBytesFromAsset(String path) async {
+    double pixelRatio = MediaQuery.of(context).devicePixelRatio;
+    ByteData data = await rootBundle.load(path);
+    ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(),
+        targetWidth: pixelRatio.round() * 30);
+    ui.FrameInfo fi = await codec.getNextFrame();
+    return (await fi.image.toByteData(format: ui.ImageByteFormat.png))!
+        .buffer
+        .asUint8List();
+  }
+ */
+
+  //get the current location of the device and animate the camera to the current location
+  Future<void> getCurrentLocation() async {
+    print("------->$isLoading");
+    location.getLocation().then((location) {
+      currentLocation = location;
+      setState(() {});
+      logdev.log("oldLoc latitude--->${currentLocation!.latitude}");
+      logdev.log(" oldLoc longitude--->${currentLocation!.longitude}");
+    });
+
+    location.changeSettings(accuracy: LocationAccuracy.high);
+    location.changeNotificationOptions(
+      title: "Location tracking",
+      channelName: "Location service",
+      description: "Tracking your location in the background",
+    );
+    // location.startForegroundService(
+    //     interval: 1000,
+    // notificationTitle: "Location tracking",
+    // notificationMsg: "Tracking your location in the background",
+    // notificationIcon: "mipmap/ic_launcher",
+    //     notificationChannelName: "Location service");
+    location.onLocationChanged.listen((newLoc) async {
+      //update the current location of the device and update the polyline
+      dev.log("newLoc latitude--->${newLoc.latitude!}");
+      dev.log(" newLoc longitude--->${newLoc.longitude}");
+      currentLocation = newLoc;
+
+      setState(() {});
+      isLoading = false;
+      print("------->$isLoading");
+      GoogleMapController googleMapController = await _controller.future;
+      _updatePolyline(googleMapController);
+
+      LatLngBounds bounds = LatLngBounds(
+        southwest: LatLng(
+            min(currentLocation!.latitude!, _destination!.latitude),
+            min(currentLocation!.longitude!, _destination!.longitude)),
+        northeast: LatLng(
+            max(currentLocation!.latitude!, _destination!.latitude),
+            max(currentLocation!.longitude!, _destination!.longitude)),
+      );
+
+      googleMapController
+          .animateCamera(CameraUpdate.newLatLngBounds(bounds, 50));
+      calculateDistanceAndTime();
+    });
+  }
+/* 
   Future<void> updateUI(dynamic data) async {
     if (count == 1) {
       val = false;
@@ -106,11 +194,11 @@ class _LiveTrackingPageState extends State<LiveTrackingPage> {
 
       LatLngBounds bounds = LatLngBounds(
         southwest: LatLng(
-            min(currentLocation!.latitude, _destination!.latitude),
-            min(currentLocation!.longitude, _destination!.longitude)),
+            min(currentLocation!.latitude!, _destination!.latitude),
+            min(currentLocation!.longitude!, _destination!.longitude)),
         northeast: LatLng(
-            max(currentLocation!.latitude, _destination!.latitude),
-            max(currentLocation!.longitude, _destination!.longitude)),
+            max(currentLocation!.latitude!, _destination!.latitude),
+            max(currentLocation!.longitude!, _destination!.longitude)),
       );
 
       googleMapController
@@ -119,7 +207,7 @@ class _LiveTrackingPageState extends State<LiveTrackingPage> {
       dev.log('======$count');
       count++;
     }
-  }
+  } */
 
   void calculateDistanceAndTime() {
     if (count == 1) {
@@ -127,9 +215,9 @@ class _LiveTrackingPageState extends State<LiveTrackingPage> {
         for (int i = 0; i < _polylineCoordinates.length - 1; i++) {
           LatLng start = _polylineCoordinates[i];
           LatLng end = _polylineCoordinates[i + 1];
-          double distance = Geolocator.distanceBetween(
+          /*   double distance = Geolocator.distanceBetween(
               start.latitude, start.longitude, end.latitude, end.longitude);
-          totalDistance += distance;
+          totalDistance += distance; */
         }
         dev.log(
             'Total Distance: ${(totalDistance / 1000).toStringAsFixed(2)} km');
@@ -155,7 +243,7 @@ class _LiveTrackingPageState extends State<LiveTrackingPage> {
       PolylinePoints polylinePoints = PolylinePoints();
       PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
           google_api_key,
-          PointLatLng(currentLocation!.latitude, currentLocation!.longitude),
+          PointLatLng(currentLocation!.latitude!, currentLocation!.longitude!),
           PointLatLng(_destination!.latitude, _destination!.longitude),
           optimizeWaypoints: true,
           travelMode: TravelMode.walking);
@@ -193,7 +281,7 @@ class _LiveTrackingPageState extends State<LiveTrackingPage> {
         Provider.of<LiveTrackingViewProvider>(context);
 
     final size = SizedBox(height: 40.h);
-    final map = currentLocation == null
+    final map = isLoading
         ? SizedBox(
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
@@ -209,22 +297,32 @@ class _LiveTrackingPageState extends State<LiveTrackingPage> {
 
               initialCameraPosition: CameraPosition(
                   target: LatLng(
-                      currentLocation!.latitude, currentLocation!.longitude),
+                      currentLocation!.latitude!, currentLocation!.longitude!),
                   zoom: 16),
               polylines: _polylines,
               markers: {
+                /*  Marker(
+                    icon: customIcon!,
+                    markerId: const MarkerId("destination"),
+                    position: LatLng(
+                        _destination!.latitude, _destination!.longitude)), */
+                Marker(
+                    icon: currentLocationIcon,
+                    markerId: const MarkerId("currentLocation"),
+                    position: LatLng(currentLocation!.latitude!,
+                        currentLocation!.longitude!)),
+                /*  Marker(
+                    icon: BitmapDescriptor.fromBytes(
+                        liveTrackingViewProvider.destinationIcon ?? null),
+                    markerId: const MarkerId("destination"),
+                    position: LatLng(
+                        _destination!.latitude, _destination!.longitude)),
                 Marker(
                     icon: BitmapDescriptor.fromBytes(
                         liveTrackingViewProvider.currentLocationIcon),
                     markerId: const MarkerId("currentLocation"),
-                    position: LatLng(
-                        currentLocation!.latitude, currentLocation!.longitude)),
-                Marker(
-                    icon: BitmapDescriptor.fromBytes(
-                        liveTrackingViewProvider.destinationIcon),
-                    markerId: const MarkerId("destination"),
-                    position:
-                        LatLng(_destination!.latitude, _destination!.longitude))
+                    position: LatLng(currentLocation!.latitude!,
+                        currentLocation!.longitude!)), */
               },
               onMapCreated: (mapController) {
                 _controller.complete(mapController);
@@ -232,111 +330,101 @@ class _LiveTrackingPageState extends State<LiveTrackingPage> {
             ),
           );
 
-    return WillPopScope(
-      onWillPop: () {
-        Provider.of<SaveLocationViewProvider>(context, listen: false)
-            .onStop(context);
-        return Future.value(true);
-      },
-      child: Scaffold(
-          appBar: AppBar(
-            leading: IconButton(
-                onPressed: () {
-                  Provider.of<SaveLocationViewProvider>(context, listen: false)
-                      .onStop(context);
-                  Navigator.pop(context);
-                },
-                icon: const Icon(
-                  Icons.arrow_back,
-                  color: CustomColor.white,
-                )),
-            backgroundColor: CustomColor.primaryColor,
-            title: Text(
-              AppLocalization.of(context)!.translate('live-tracking'),
-            ),
+    return Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: const Icon(
+                Icons.arrow_back,
+                color: CustomColor.white,
+              )),
+          backgroundColor: CustomColor.primaryColor,
+          title: Text(
+            AppLocalization.of(context)!.translate('live-tracking'),
           ),
-          body: Container(
-            color: CustomColor.white,
-            width: double.maxFinite,
-            height: MediaQuery.of(context).size.height,
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  map,
-                  size,
-                  val
-                      ? Container(
-                          padding: EdgeInsets.symmetric(horizontal: 20.sp),
-                          height: 150,
-                          decoration: const BoxDecoration(
-                              color: CustomColor.primaryColor,
-                              borderRadius: BorderRadius.only(
-                                  topRight: Radius.circular(31),
-                                  topLeft: Radius.circular(31))),
-                          child: Center(
-                            child: Text(
-                              "Please Wait.....",
+        ),
+        body: Container(
+          color: CustomColor.white,
+          width: double.maxFinite,
+          height: MediaQuery.of(context).size.height,
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                map,
+                size,
+                val
+                    ? Container(
+                        padding: EdgeInsets.symmetric(horizontal: 20.sp),
+                        height: 150,
+                        decoration: const BoxDecoration(
+                            color: CustomColor.primaryColor,
+                            borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(31),
+                                topLeft: Radius.circular(31))),
+                        child: Center(
+                          child: Text(
+                            "Please Wait.....",
+                            style: TextStyle(
+                                color: CustomColor.white,
+                                fontFamily: FontFamliyM.ROBOTOREGULAR,
+                                fontSize: 18.sp,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      )
+                    : Container(
+                        padding: EdgeInsets.symmetric(horizontal: 20.sp),
+                        height: 150,
+                        decoration: const BoxDecoration(
+                            color: CustomColor.primaryColor,
+                            borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(31),
+                                topLeft: Radius.circular(31))),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Distance: ${(totalDistance / 1000).toStringAsFixed(2)} km',
                               style: TextStyle(
                                   color: CustomColor.white,
                                   fontFamily: FontFamliyM.ROBOTOREGULAR,
                                   fontSize: 18.sp,
                                   fontWeight: FontWeight.bold),
                             ),
-                          ),
-                        )
-                      : Container(
-                          padding: EdgeInsets.symmetric(horizontal: 20.sp),
-                          height: 150,
-                          decoration: const BoxDecoration(
-                              color: CustomColor.primaryColor,
-                              borderRadius: BorderRadius.only(
-                                  topRight: Radius.circular(31),
-                                  topLeft: Radius.circular(31))),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Distance: ${(totalDistance / 1000).toStringAsFixed(2)} km',
-                                style: TextStyle(
-                                    color: CustomColor.white,
-                                    fontFamily: FontFamliyM.ROBOTOREGULAR,
-                                    fontSize: 18.sp,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                      estimatedTimeInMinutes < 60
-                                          ? 'Estimated Time: ${estimatedTimeInMinutes.toStringAsFixed(0)} min'
-                                          : 'Estimated Time: $result',
-                                      style: TextStyle(
-                                          color: CustomColor.white,
-                                          fontFamily: FontFamliyM.ROBOTOREGULAR,
-                                          fontSize: 18.sp,
-                                          fontWeight: FontWeight.bold)),
-                                  GestureDetector(
-                                    onTap: () {
-                                      Navigator.pushNamed(
-                                          context, RoutesName.livetracking);
-                                    },
-                                    child: AppButton(
-                                        mycolor: CustomColor.secondaryColor,
-                                        width: 100.w,
-                                        height: 30.h,
-                                        text: 'Start'),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ))
-                ],
-              ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                    estimatedTimeInMinutes < 60
+                                        ? 'Estimated Time: ${estimatedTimeInMinutes.toStringAsFixed(0)} min'
+                                        : 'Estimated Time: $result',
+                                    style: TextStyle(
+                                        color: CustomColor.white,
+                                        fontFamily: FontFamliyM.ROBOTOREGULAR,
+                                        fontSize: 18.sp,
+                                        fontWeight: FontWeight.bold)),
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.pushNamed(
+                                        context, RoutesName.livetracking);
+                                  },
+                                  child: AppButton(
+                                      mycolor: CustomColor.secondaryColor,
+                                      width: 100.w,
+                                      height: 30.h,
+                                      text: 'Start'),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ))
+              ],
             ),
-          )),
-    );
+          ),
+        ));
   }
 }

@@ -1,4 +1,4 @@
-import 'dart:async';
+/* import 'dart:async';
 import 'dart:developer';
 
 import 'package:background_locator_2/location_dto.dart';
@@ -33,3 +33,4 @@ class LocationCallbackHandler {
     log('***notificationCallback');
   }
 }
+ */

@@ -3,23 +3,17 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:isolate';
-import 'dart:ui';
-
-import 'package:background_locator_2/location_dto.dart';
 
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location_buddy/provider/live_traking_view_provider.dart';
-import 'package:location_buddy/provider/save_location_view_provider.dart';
 import 'package:location_buddy/utils/colors/colors.dart';
 import 'package:location_buddy/utils/constants.dart';
 import 'package:location_buddy/widgets/loading_map.dart';
 import 'package:provider/provider.dart';
 import '../localization/app_localization.dart';
 import '../models/location_data_navigate.dart';
-import '../services/location_service_repository.dart';
 import '../utils/routes/routes_name.dart';
 import '../widgets/custom_button_widget.dart';
 
@@ -31,10 +25,10 @@ class LiveTracking extends StatefulWidget {
 }
 
 class _LiveTrackingState extends State<LiveTracking> {
-  ReceivePort port = ReceivePort();
-  LocationDto? currentLocation;
+  //ReceivePort port = ReceivePort();
+  //LocationDto? currentLocation;
 
-  LocationData? _destination;
+  LocationDataNavigate? _destination;
   final Completer<GoogleMapController> _controller = Completer();
 
 //  static const LatLng destination = LatLng(23.0802, 72.5244);
@@ -55,7 +49,7 @@ class _LiveTrackingState extends State<LiveTracking> {
         .locationData;
     // log('Latitude: ${_destination!.latitude}');
     // log('Longitude: ${_destination!.longitude}');
-    if (IsolateNameServer.lookupPortByName(
+    /*  if (IsolateNameServer.lookupPortByName(
             LocationServiceRepository.isolateName) !=
         null) {
       IsolateNameServer.removePortNameMapping(
@@ -73,12 +67,12 @@ class _LiveTrackingState extends State<LiveTracking> {
 
     Provider.of<SaveLocationViewProvider>(context, listen: false)
         .onStart(context);
-
+ */
     Provider.of<LiveTrackingViewProvider>(context, listen: false)
         .setCustomMarkerIcon();
   }
 
-  Future<void> updateUI(dynamic data) async {
+  /* Future<void> updateUI(dynamic data) async {
     LocationDto? locationDto =
         (data != null) ? LocationDto.fromJson(data) : null;
 
@@ -96,9 +90,9 @@ class _LiveTrackingState extends State<LiveTracking> {
             zoom: 18,
             target: LatLng(
                 currentLocation!.latitude, currentLocation!.longitude))));
-  }
+  } */
 
-  double calculateDistance(LatLng start, LatLng end) {
+  /* double calculateDistance(LatLng start, LatLng end) {
     return Geolocator.distanceBetween(
         start.latitude, start.longitude, end.latitude, end.longitude);
   }
@@ -119,8 +113,8 @@ class _LiveTrackingState extends State<LiveTracking> {
       );
       if (distance <= 10) {
         // ignore: use_build_context_synchronously
-        Provider.of<SaveLocationViewProvider>(context, listen: false)
-            .onStop(context);
+        /*   Provider.of<SaveLocationViewProvider>(context, listen: false)
+            .onStop(context); */
         // show pop-up when distance is less than or equal to 10 meters
 
         // ignore: use_build_context_synchronously
@@ -134,9 +128,9 @@ class _LiveTrackingState extends State<LiveTracking> {
               actions: [
                 TextButton(
                   onPressed: () {
-                    Provider.of<SaveLocationViewProvider>(context,
+                    /*   Provider.of<SaveLocationViewProvider>(context,
                             listen: false)
-                        .onStop(context);
+                        .onStop(context); */
                     Navigator.popAndPushNamed(context, RoutesName.bottomBar);
                   },
                   child: const Text("OK"),
@@ -172,15 +166,15 @@ class _LiveTrackingState extends State<LiveTracking> {
       }
     }
   }
-
+ */
   @override
   Widget build(BuildContext context) {
     final liveTrackingViewProvider =
         Provider.of<LiveTrackingViewProvider>(context);
     final stop = GestureDetector(
       onTap: () {
-        Provider.of<SaveLocationViewProvider>(context, listen: false)
-            .onStop(context);
+        /*  Provider.of<SaveLocationViewProvider>(context, listen: false)
+            .onStop(context); */
         Navigator.popAndPushNamed(context, RoutesName.bottomBar);
       },
       child: AppButton(
@@ -191,7 +185,7 @@ class _LiveTrackingState extends State<LiveTracking> {
       ),
     );
     final size = SizedBox(height: 40.h);
-    final map = currentLocation == null
+    /*  final map = currentLocation == null
         ? SizedBox(
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
@@ -228,7 +222,7 @@ class _LiveTrackingState extends State<LiveTracking> {
                 _controller.complete(mapController);
               },
             ),
-          );
+          ); */
     return Scaffold(
       appBar: AppBar(
         backgroundColor: CustomColor.primaryColor,
@@ -244,7 +238,7 @@ class _LiveTrackingState extends State<LiveTracking> {
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[map, size, stop],
+            //   children: <Widget>[map, size, stop],
           ),
         ),
       ),

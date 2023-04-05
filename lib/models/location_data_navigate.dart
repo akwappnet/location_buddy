@@ -1,6 +1,6 @@
-class LocationData {
+class LocationDataNavigate {
   final double latitude;
   final double longitude;
 
-  LocationData(this.latitude, this.longitude);
+  LocationDataNavigate(this.latitude, this.longitude);
 }

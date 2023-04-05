@@ -13,4 +13,5 @@ class RoutesName {
   static const String profileView = "/profile_view";
   static const String livetracking = "/live_tracking_view";
   static const String privacypolicy = "/privacy_policy_view";
+  static const String livetrakingpageextra = "/live_traking_page";
 }

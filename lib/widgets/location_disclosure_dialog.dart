@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:location_buddy/utils/colors/colors.dart';
-import 'package:lottie/lottie.dart';
 
 import '../utils/assets/assets_utils.dart';
 import '../utils/font/font_family.dart';
-import '../utils/font/font_style.dart';
 
 class LocationDisclosureDialog extends StatefulWidget {
   final String? heading, title, descriptions, btn1Text, btn2Text;

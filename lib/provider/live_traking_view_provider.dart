@@ -6,33 +6,32 @@ import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:location_buddy/models/location_data_navigate.dart';
 
-import '../models/location_data_navigate.dart';
 import '../utils/assets/assets_utils.dart';
 
 class LiveTrackingViewProvider extends ChangeNotifier {
-  late final Uint8List currentLocationIcon, destinationIcon;
+  LocationDataNavigate? _locationData;
 
-  LocationData? _locationData;
-
-  LocationData get locationData => _locationData!;
+  LocationDataNavigate get locationData => _locationData!;
 
   void setLocationData(double latitude, double longitude) {
-    _locationData = LocationData(latitude, longitude);
+    _locationData = LocationDataNavigate(latitude, longitude);
     notifyListeners();
   }
 
+  Uint8List? destinationIcon, currentLocationIcon;
 //set Custom Marker Icon
   void setCustomMarkerIcon() async {
-    currentLocationIcon = await getBytesFromAsset(
-        path: AssetsUtils.source, //paste the custom image path
-        width: 60 // size of custom image as marker
-        );
-
     destinationIcon = await getBytesFromAsset(
         path: AssetsUtils
             .destination, //paste the custom image path//paste the custom image path
         width: 70 // size of custom image as marker
+        );
+
+    currentLocationIcon = await getBytesFromAsset(
+        path: AssetsUtils.source, //paste the custom image path
+        width: 60 // size of custom image as marker
         );
   }
 

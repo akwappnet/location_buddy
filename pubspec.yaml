@@ -47,8 +47,6 @@ dependencies:
   font_awesome_flutter: ^10.4.0
   auto_direction: ^0.0.6
   cloud_firestore: ^4.4.5
-  background_locator_2: ^2.0.6
-  geolocator: ^9.0.2
   geocoding: ^2.1.0
   permission_handler: ^10.2.0
   google_places_flutter: ^2.0.5
@@ -60,9 +58,8 @@ dependencies:
   simple_fontellico_progress_dialog: ^0.3.0
   babstrap_settings_screen: ^0.1.5+1
   shared_preferences: ^2.0.20
-  url_launcher: ^6.1.10
-  blurry: ^1.4.2
   flutter_inappwebview: ^5.7.2+3
+  location: ^4.4.0
 
 dev_dependencies:
   flutter_test:

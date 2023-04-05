@@ -10,7 +10,6 @@ import 'package:location_buddy/utils/assets/assets_utils.dart';
 import 'package:location_buddy/utils/colors/colors.dart';
 import 'package:location_buddy/utils/font/font_family.dart';
 import 'package:location_buddy/utils/routes/routes_name.dart';
-import 'package:location_buddy/widgets/location_disclosure_dialog.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
@@ -225,7 +224,7 @@ class _HomeViewState extends State<HomeView> {
                                                       Navigator.pushNamed(
                                                         context,
                                                         RoutesName
-                                                            .livetrakingpage,
+                                                            .livetrakingpageextra,
                                                       );
                                                     },
                                                     child: Image.asset(
