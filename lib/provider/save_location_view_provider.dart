@@ -234,7 +234,7 @@ class SaveLocationViewProvider extends ChangeNotifier {
 //get current location and convert to address
 
   Future<void> getCurrentLocation(BuildContext context) async {
-    await requestLocationPermission(context);
+    await locationPermission(context);
 
     geo.Position position = await geo.Geolocator.getCurrentPosition(
         desiredAccuracy: geo.LocationAccuracy.high);
@@ -268,7 +268,7 @@ class SaveLocationViewProvider extends ChangeNotifier {
 
   Future<void> onStart(BuildContext context) async {
     log("------onStart----->");
-    await requestLocationPermission(context);
+    await locationPermission(context);
     // ignore: use_build_context_synchronously
     await getCurrentLocation(context);
     await startLocator();
@@ -280,13 +280,13 @@ class SaveLocationViewProvider extends ChangeNotifier {
     await BackgroundLocator.unRegisterLocationUpdate();
     final isRunning = await BackgroundLocator.isServiceRunning();
     // ignore: use_build_context_synchronously
-    ScaffoldMessenger.of(context).showSnackBar(
+    /*   ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         backgroundColor: CustomColor.primaryColor,
         content: Text('Location Services Stoped'),
         duration: Duration(seconds: 3),
       ),
-    );
+    ); */
     log("------stop----->$isRunning");
   }
 

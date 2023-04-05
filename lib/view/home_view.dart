@@ -10,6 +10,7 @@ import 'package:location_buddy/utils/assets/assets_utils.dart';
 import 'package:location_buddy/utils/colors/colors.dart';
 import 'package:location_buddy/utils/font/font_family.dart';
 import 'package:location_buddy/utils/routes/routes_name.dart';
+import 'package:location_buddy/widgets/location_disclosure_dialog.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
@@ -31,7 +32,7 @@ class _HomeViewState extends State<HomeView> {
   void initState() {
     super.initState();
 
-    requestLocationPermission(context);
+    locationPermission(context);
 
     Provider.of<SaveLocationViewProvider>(context, listen: false)
         .fetchLocationInformation();
@@ -354,6 +355,31 @@ class _HomeViewState extends State<HomeView> {
           ),
         ],
       ),
+      /*   floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: FloatingActionButton(
+        // isExtended: true,
+        child: Icon(Icons.add),
+        backgroundColor: Colors.green,
+        onPressed: () {
+          showDialog(
+              barrierDismissible: false,
+              context: context,
+              builder: (BuildContext context) {
+                return LocationDisclosureDialog(
+                  heading: "Location Permission Request",
+                  icon: const Icon(Icons.exit_to_app),
+                  backgroundColor: CustomColor.primaryColor,
+                  descriptions:
+                      "Location Buddy collects location data to show walk , run and bike rides on map even when app is closed or not in use.", //
+                  btn1Text: "Accept",
+                  btn2Text: "Cancel",
+                  onClicked: () {
+                    // SystemNavigator.pop();
+                  },
+                );
+              });
+        },
+      ), */
     );
   }
 }

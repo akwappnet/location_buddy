@@ -1,4 +1,4 @@
-package com.example.location_buddy
+package com.wappnet.location_buddy
 
 import io.flutter.embedding.android.FlutterActivity
 

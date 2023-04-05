@@ -202,15 +202,8 @@ class _SignUpViewState extends State<SignUpView> {
         ),
         children: [
           TextSpan(
-            text: AppLocalization.of(context)!.translate('welcome'),
+            text: AppLocalization.of(context)!.translate('app-name'),
             style: TextStyle(
-                fontWeight: FontWeight.w800,
-                fontFamily: FontFamliyM.ROBOTOBOLD),
-          ),
-          TextSpan(
-            text: AppLocalization.of(context)!.translate('back'),
-            style: TextStyle(
-                color: const Color(0xFFFE9879),
                 fontWeight: FontWeight.w800,
                 fontFamily: FontFamliyM.ROBOTOBOLD),
           ),

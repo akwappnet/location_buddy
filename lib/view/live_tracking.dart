@@ -22,7 +22,6 @@ import '../models/location_data_navigate.dart';
 import '../services/location_service_repository.dart';
 import '../utils/routes/routes_name.dart';
 import '../widgets/custom_button_widget.dart';
-import '../widgets/custom_dialog_box.dart';
 
 class LiveTracking extends StatefulWidget {
   const LiveTracking({super.key});
@@ -119,40 +118,33 @@ class _LiveTrackingState extends State<LiveTracking> {
         LatLng(_destination!.latitude, _destination!.longitude),
       );
       if (distance <= 10) {
+        // ignore: use_build_context_synchronously
+        Provider.of<SaveLocationViewProvider>(context, listen: false)
+            .onStop(context);
         // show pop-up when distance is less than or equal to 10 meters
 
         // ignore: use_build_context_synchronously
-        showDialog(
-            barrierDismissible: false,
-            context: context,
-            builder: (BuildContext context) {
-              return CustomDialogBox(
-                heading: "Location Buddy",
-                icon: const Icon(Icons.done),
-                backgroundColor: CustomColor.primaryColor,
-                title: "You have reached your destination!",
-                descriptions: "", //
-                btn1Text: "Ok",
-                onClicked: () {
-                  Navigator.popAndPushNamed(context, RoutesName.bottomBar);
-                },
-              );
-            });
 
-        /*  showDialog(
+        // ignore: use_build_context_synchronously
+        showDialog(
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: Text("You have reached your destination!"),
+              title: const Text("You have reached your destination!"),
               actions: [
                 TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: Text("OK"),
+                  onPressed: () {
+                    Provider.of<SaveLocationViewProvider>(context,
+                            listen: false)
+                        .onStop(context);
+                    Navigator.popAndPushNamed(context, RoutesName.bottomBar);
+                  },
+                  child: const Text("OK"),
                 ),
               ],
             );
           },
-        ); */
+        );
       }
 
       if (result.points.isNotEmpty) {

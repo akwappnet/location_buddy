@@ -17,6 +17,7 @@ import 'package:provider/provider.dart';
 import 'package:r_dotted_line_border/r_dotted_line_border.dart';
 
 import '../provider/save_location_view_provider.dart';
+import '../utils/constants.dart';
 import '../utils/font/font_family.dart';
 
 class SaveLocationView extends StatefulWidget {
@@ -227,7 +228,7 @@ class _SaveLocationViewState extends State<SaveLocationView> {
             color: CustomColor.black,
             fontSize: 16.sp,
             fontFamily: FontFamliyM.ROBOTOREGULAR),
-        googleAPIKey: "AIzaSyAERKSFYMxdSR6mrMmgyesmQOr8miAFd4c",
+        googleAPIKey: google_api_key,
         inputDecoration: InputDecoration(
           contentPadding: EdgeInsets.only(
             left: 15.sp,

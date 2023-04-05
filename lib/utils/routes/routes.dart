@@ -10,6 +10,7 @@ import 'package:location_buddy/view/splash_view.dart';
 import 'package:location_buddy/widgets/bottom_navigation_bar.dart';
 
 import '../../provider/current_data_provider.dart';
+import '../../view/privacy_policy_view.dart';
 import '../../view/profile_view.dart';
 import '../../view/sign_up_view.dart';
 
@@ -53,6 +54,9 @@ class Routes {
       case RoutesName.livetracking:
         return MaterialPageRoute(
             builder: (BuildContext context) => const LiveTracking());
+      case RoutesName.privacypolicy:
+        return MaterialPageRoute(
+            builder: (BuildContext context) => const PrivacyPolicy());
 
       default:
         // SystemNavigator.pop();
