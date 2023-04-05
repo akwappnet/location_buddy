@@ -26,6 +26,14 @@ class SignInView extends StatefulWidget {
 
 class _SignInViewState extends State<SignInView> {
   @override
+  void initState() {
+    super.initState();
+    final provider = Provider.of<SignInProvider>(context, listen: false);
+    provider.signemailController.text = "ram@gmail.com";
+    provider.signpassController.text = "Ram@1234";
+  }
+
+  @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return WillPopScope(

@@ -18,8 +18,6 @@ import 'package:provider/provider.dart';
 
 import 'dart:ui' as ui;
 
-import 'package:shared_preferences/shared_preferences.dart';
-
 import '../localization/app_localization.dart';
 import '../models/location_data_navigate.dart';
 import '../provider/live_traking_view_provider.dart';
@@ -39,6 +37,8 @@ class LiveTrackingPageExtra extends StatefulWidget {
 
 class LiveTrackingPageExtraState extends State<LiveTrackingPageExtra> {
   Location location = Location();
+
+  late StreamSubscription<LocationData> locationSubscription;
   bool isLoading = true;
 
   //location of device
@@ -55,10 +55,10 @@ class LiveTrackingPageExtraState extends State<LiveTrackingPageExtra> {
   String? length;
 
   PolylineId? _polylineId;
-  double totalDistance = 0;
+  double? totalDistance;
   double estimatedTimeInMinutes = 0;
   var count = 0;
-  bool val = true;
+//  bool val = true;
   dynamic result = '';
 
   /*  static const LatLng destination = LatLng(23.0802, 72.5244);
@@ -119,7 +119,7 @@ class LiveTrackingPageExtraState extends State<LiveTrackingPageExtra> {
       channelName: "Location service",
       description: "Tracking your location in the background",
     );
-    location.onLocationChanged.listen((newLoc) async {
+    locationSubscription = location.onLocationChanged.listen((newLoc) async {
       calculateTimeAndDis();
       //update the current location of the device and update the polyline
       dev.log("newLoc latitude--->${newLoc.latitude!}");
@@ -166,6 +166,7 @@ class LiveTrackingPageExtraState extends State<LiveTrackingPageExtra> {
   }
 
   void calculateTimeAndDis() {
+    print("object");
     setState(() {
       LatLng location1 =
           LatLng(currentLocation!.latitude!, currentLocation!.longitude!);
@@ -174,7 +175,7 @@ class LiveTrackingPageExtraState extends State<LiveTrackingPageExtra> {
       print("-------------->$totalDistance");
 
       double walkingSpeed = 1.2; // m/s
-      double totalDistanceInMeters = totalDistance;
+      double totalDistanceInMeters = totalDistance!;
       estimatedTimeInMinutes = (totalDistanceInMeters / walkingSpeed) / 60;
 
       if (estimatedTimeInMinutes < 60) {
@@ -263,6 +264,7 @@ class LiveTrackingPageExtraState extends State<LiveTrackingPageExtra> {
 
   @override
   void dispose() {
+    locationSubscription.cancel();
     super.dispose();
   }
 
@@ -332,7 +334,7 @@ class LiveTrackingPageExtraState extends State<LiveTrackingPageExtra> {
               children: <Widget>[
                 map,
                 size,
-                val
+                totalDistance == null
                     ? Container(
                         padding: EdgeInsets.symmetric(horizontal: 20.sp),
                         height: 150,
@@ -365,7 +367,7 @@ class LiveTrackingPageExtraState extends State<LiveTrackingPageExtra> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Distance: ${(totalDistance / 1000).toStringAsFixed(2)} km',
+                              'Distance: ${(totalDistance!).toStringAsFixed(2)} km',
                               style: TextStyle(
                                   color: CustomColor.white,
                                   fontFamily: FontFamliyM.ROBOTOREGULAR,

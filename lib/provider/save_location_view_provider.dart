@@ -9,6 +9,8 @@ import 'package:location_buddy/utils/colors/colors.dart';
 import 'package:location_buddy/utils/routes/routes_name.dart';
 import 'package:location_buddy/widgets/custom_dialog_box.dart';
 
+import 'package:location/location.dart' as loc;
+
 import '../models/location_model.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -20,6 +22,11 @@ class SaveLocationViewProvider extends ChangeNotifier {
   final TextEditingController sourceController = TextEditingController();
   final TextEditingController destinationController = TextEditingController();
   List<LocationInfo> _locationInfo = [];
+
+  loc.Location location = loc.Location();
+
+  //location of device
+  loc.LocationData? _currentLocation;
   bool _isLoading = false;
   bool _isSaving = false;
 
@@ -42,7 +49,7 @@ class SaveLocationViewProvider extends ChangeNotifier {
 
   bool? get isRunningSerives => _isRunningSerives;
   String? get currentAddress => _currentAddress;
-  // geo.Position? get currentPosition => _currentPosition;
+  loc.LocationData? get currentLocation => _currentLocation;
   String? get destinationLocationlongitude => _destinationLocationlongitude;
   String? get destinationLocationLatitude => _destinationLocationLatitude;
 
@@ -61,10 +68,10 @@ class SaveLocationViewProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-/*   void setCurrentPosition(geo.Position currentPosition) {
-    _currentPosition = currentPosition;
+  void setCurrentPosition(loc.LocationData? currentLocation) {
+    _currentLocation = currentLocation;
     notifyListeners();
-  } */
+  }
 
   void setCurretAddress(String currentAddress) {
     _currentAddress = currentAddress;
@@ -138,12 +145,12 @@ class SaveLocationViewProvider extends ChangeNotifier {
         'sourceLocation': sourceLocation,
         'destinationLocation': destinationLocation,
         'createdAt': DateTime.now().toString(),
-        /*  'sourceLocationLatitude': _currentPosition!.latitude.toString(),
-        'sourceLocationlongitude': _currentPosition!.longitude.toString(),
+        'sourceLocationLatitude': _currentLocation!.latitude.toString(),
+        'sourceLocationlongitude': _currentLocation!.longitude.toString(),
         'destinationLocationLatitude': destinationLocationLatitude ??
-            _currentPosition!.latitude.toString(),
+            _currentLocation!.latitude.toString(),
         'destinationLocationlongitude': destinationLocationlongitude ??
-            _currentPosition!.longitude.toString(), */
+            _currentLocation!.longitude.toString(),
         'id': docRef.id,
         'userId': _auth.currentUser?.uid ?? "",
         'userName': _auth.currentUser?.displayName ?? "",
@@ -226,85 +233,50 @@ class SaveLocationViewProvider extends ChangeNotifier {
 
 //get current location and convert to address
 
+  void getAdderss() async {
+    await location.getLocation().then((location) async {
+      setCurrentPosition(location);
+
+      log("oldLoc latitude--->${_currentLocation!.latitude}");
+      log(" oldLoc longitude--->${_currentLocation!.latitude}");
+
+      List<Placemark> placemarks = await placemarkFromCoordinates(
+          location.latitude!, location.longitude!);
+      Placemark placemark = placemarks[0];
+      String address =
+          '${placemark.street},${placemark.name}, ${placemark.locality}, ${placemark.administrativeArea} ${placemark.postalCode}, ${placemark.country}';
+      log("----currentAddress----->${address.toString()}");
+
+      sourceController.text = address;
+    });
+  }
+
   Future<void> getCurrentLocation(BuildContext context) async {
     await locationPermission(context);
-/* 
-    geo.Position position = await geo.Geolocator.getCurrentPosition(
-        desiredAccuracy: geo.LocationAccuracy.high);
-    double latitude = position.latitude;
-    double longitude = position.longitude;
 
-    setCurrentPosition(position);
+    loc.PermissionStatus permissionGranted;
+    bool serviceEnabled;
 
-    log(_currentPosition!.latitude.toString());
-    log(_currentPosition!.longitude.toString());
+    //check if location service is enabled
+    serviceEnabled = await location.serviceEnabled();
+    if (!serviceEnabled) {
+      //request to enable location service
+      serviceEnabled = await location.requestService();
+      if (serviceEnabled) {
+        getAdderss();
+      }
+    }
 
-    List<Placemark> placemarks =
-        await placemarkFromCoordinates(latitude, longitude);
-    Placemark placemark = placemarks[0];
-    String address =
-        '${placemark.street},${placemark.name}, ${placemark.locality}, ${placemark.administrativeArea} ${placemark.postalCode}, ${placemark.country}';
-    log("----currentAddress----->${address.toString()}");
-
-    sourceController.text = address; */
+    //check if location permission is granted
+    permissionGranted = await location.hasPermission();
+    if (permissionGranted == loc.PermissionStatus.denied) {
+      //request to grant location permission
+      permissionGranted = await location.requestPermission();
+      if (permissionGranted != loc.PermissionStatus.granted) {
+        log("message");
+        return;
+      }
+    }
+    getAdderss();
   }
-
-  /* Future<void> initPlatformState() async {
-    log('Initializing...');
-
-    await BackgroundLocator.initialize();
-    log('Initialization done');
-    final isRunning = await BackgroundLocator.isServiceRunning();
-    setIsRunningSerives(isRunning);
-    log('Running ${isRunningSerives.toString()}');
-  }
-
-  Future<void> onStart(BuildContext context) async {
-    log("------onStart----->");
-    await locationPermission(context);
-    // ignore: use_build_context_synchronously
-    await getCurrentLocation(context);
-    //await startLocator();
-    final isRunning = await BackgroundLocator.isServiceRunning();
-    log("------Stat----->$isRunning");
-  }
-
-  void onStop(BuildContext context) async {
-    await BackgroundLocator.unRegisterLocationUpdate();
-    final isRunning = await BackgroundLocator.isServiceRunning();
-    // ignore: use_build_context_synchronously
-    /*   ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        backgroundColor: CustomColor.primaryColor,
-        content: Text('Location Services Stoped'),
-        duration: Duration(seconds: 3),
-      ),
-    ); */
-    log("------stop----->$isRunning");
-  } */
-
-  /* Future<void> startLocator() async {
-    Map<String, dynamic> data = {'countInit': 1};
-    return await BackgroundLocator.registerLocationUpdate(
-        LocationCallbackHandler.callback,
-        initCallback: LocationCallbackHandler.initCallback,
-        initDataCallback: data,
-        disposeCallback: LocationCallbackHandler.disposeCallback,
-        iosSettings: const IOSSettings(
-            accuracy: LocationAccuracy.NAVIGATION,
-            distanceFilter: 0,
-            stopWithTerminate: false),
-        autoStop: false,
-        androidSettings: const AndroidSettings(
-            accuracy: LocationAccuracy.NAVIGATION,
-            interval: 5,
-            distanceFilter: 0,
-            client: LocationClient.google,
-            androidNotificationSettings: AndroidNotificationSettings(
-                notificationChannelName: 'Location tracking',
-                notificationTitle: 'Start Location Tracking',
-                notificationMsg: 'Tracking location in background',
-                notificationTapCallback:
-                    LocationCallbackHandler.notificationCallback)));
-  } */
 }
