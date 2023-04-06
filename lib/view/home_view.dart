@@ -160,7 +160,7 @@ class _HomeViewState extends State<HomeView> {
                                         .setLocationData(latitude, longitude);
                                     Navigator.pushNamed(
                                       context,
-                                      RoutesName.livetrakingpage,
+                                      RoutesName.livetrakingpageextra,
                                     );
                                   },
                                   child: Card(

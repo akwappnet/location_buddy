@@ -270,7 +270,6 @@ class SaveLocationViewProvider extends ChangeNotifier {
       //request to enable location service
       serviceEnabled = await location.requestService();
       if (serviceEnabled) {
-        await getAdderss();
         print("object");
         return;
       } else {
@@ -283,7 +282,6 @@ class SaveLocationViewProvider extends ChangeNotifier {
         );
       }
     }
-    await getAdderss();
 
     //  getAdderss();
     //check if location permission is granted

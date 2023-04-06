@@ -5,6 +5,7 @@ import 'dart:math';
 import 'dart:developer' as logdev;
 
 import 'dart:developer' as dev;
+import 'dart:math' as math;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -53,7 +54,7 @@ class LiveTrackingPageExtraState extends State<LiveTrackingPageExtra> {
   final Set<Polyline> _polylines = {};
   final List<LatLng> _polylineCoordinates = [];
   String? length;
-
+  double? totalDistanceInKm;
   PolylineId? _polylineId;
   double? totalDistance;
   double estimatedTimeInMinutes = 0;
@@ -66,7 +67,7 @@ class LiveTrackingPageExtraState extends State<LiveTrackingPageExtra> {
   //store sourceLocation to destination location point to draw line
 
   //store image in Uint8List
-  late final Uint8List sourceIcon, destinationIcon;
+  late final Uint8List sourceIconPage, destinationIconPage;
 
   //get the current location of the device and animate the camera to the current location
   void getCurrentLocation() async {
@@ -146,36 +147,16 @@ class LiveTrackingPageExtraState extends State<LiveTrackingPageExtra> {
     });
   }
 
-  double calculateDistance(LatLng location1, LatLng location2) {
-    const earthRadius = 6371000.0; // in meters
-    double lat1 = location1.latitude;
-    double lon1 = location1.longitude;
-    double lat2 = location2.latitude;
-    double lon2 = location2.longitude;
-    double dLat = (lat2 - lat1) * pi / 180.0;
-    double dLon = (lon2 - lon1) * pi / 180.0;
-    double a = sin(dLat / 2) * sin(dLat / 2) +
-        cos(lat1 * pi / 180.0) *
-            cos(lat2 * pi / 180.0) *
-            sin(dLon / 2) *
-            sin(dLon / 2);
-    double c = 2 * atan2(sqrt(a), sqrt(1 - a));
-    double distanceInMeters = earthRadius * c;
-    double distanceInKm = distanceInMeters / 1000.0;
-    return distanceInKm;
-  }
-
   void calculateTimeAndDis() {
-    print("object");
     setState(() {
       LatLng location1 =
           LatLng(currentLocation!.latitude!, currentLocation!.longitude!);
       LatLng location2 = LatLng(destination!.latitude, destination!.longitude);
-      totalDistance = calculateDistance(location1, location2);
-      print("-------------->$totalDistance");
+      totalDistanceInKm = calculateDistance(location1, location2);
+      print("-------------->$totalDistanceInKm km");
 
       double walkingSpeed = 1.2; // m/s
-      double totalDistanceInMeters = totalDistance!;
+      double totalDistanceInMeters = totalDistanceInKm! * 1000;
       estimatedTimeInMinutes = (totalDistanceInMeters / walkingSpeed) / 60;
 
       if (estimatedTimeInMinutes < 60) {
@@ -188,6 +169,26 @@ class LiveTrackingPageExtraState extends State<LiveTrackingPageExtra> {
         dev.log('Estimated Time: $result');
       }
     });
+  }
+
+  double calculateDistance(LatLng location1, LatLng location2) {
+    const double _earthRadius = 6371.0; // in km
+    double lat1 = location1.latitude * math.pi / 180.0;
+    double lon1 = location1.longitude * math.pi / 180.0;
+    double lat2 = location2.latitude * math.pi / 180.0;
+    double lon2 = location2.longitude * math.pi / 180.0;
+
+    double dLat = lat2 - lat1;
+    double dLon = lon2 - lon1;
+
+    double a = math.pow(math.sin(dLat / 2), 2) +
+        math.cos(lat1) * math.cos(lat2) * math.pow(math.sin(dLon / 2), 2);
+
+    double c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a));
+
+    double distanceInKm = _earthRadius * c;
+
+    return distanceInKm;
   }
 
   void _updatePolyline(GoogleMapController controller) async {
@@ -229,11 +230,11 @@ class LiveTrackingPageExtraState extends State<LiveTrackingPageExtra> {
 
 //set Custom Marker Icon
   void setCustomMarkerIcon() async {
-    sourceIcon = await getBytesFromAsset(
+    sourceIconPage = await getBytesFromAsset(
         path: AssetsUtils.source, //paste the custom image path
         width: 70 // size of custom image as marker
         );
-    destinationIcon = await getBytesFromAsset(
+    destinationIconPage = await getBytesFromAsset(
         path: AssetsUtils.destination, //paste the custom image path
         width: 70 // size of custom image as marker
         );
@@ -294,12 +295,12 @@ class LiveTrackingPageExtraState extends State<LiveTrackingPageExtra> {
               polylines: _polylines,
               markers: {
                 Marker(
-                    icon: BitmapDescriptor.fromBytes(sourceIcon),
+                    icon: BitmapDescriptor.fromBytes(sourceIconPage),
                     markerId: const MarkerId("source"),
                     position: LatLng(currentLocation!.latitude!,
                         currentLocation!.longitude!)),
                 Marker(
-                    icon: BitmapDescriptor.fromBytes(destinationIcon),
+                    icon: BitmapDescriptor.fromBytes(destinationIconPage),
                     markerId: const MarkerId("destination"),
                     position:
                         LatLng(destination!.latitude, destination!.longitude))
@@ -334,7 +335,7 @@ class LiveTrackingPageExtraState extends State<LiveTrackingPageExtra> {
               children: <Widget>[
                 map,
                 size,
-                totalDistance == null
+                totalDistanceInKm == null
                     ? Container(
                         padding: EdgeInsets.symmetric(horizontal: 20.sp),
                         height: 150,
@@ -367,7 +368,7 @@ class LiveTrackingPageExtraState extends State<LiveTrackingPageExtra> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Distance: ${(totalDistance!).toStringAsFixed(2)} km',
+                              'Distance: ${(totalDistanceInKm!).toStringAsFixed(2)} km',
                               style: TextStyle(
                                   color: CustomColor.white,
                                   fontFamily: FontFamliyM.ROBOTOREGULAR,
@@ -388,7 +389,7 @@ class LiveTrackingPageExtraState extends State<LiveTrackingPageExtra> {
                                         fontWeight: FontWeight.bold)),
                                 GestureDetector(
                                   onTap: () {
-                                    Navigator.pushNamed(
+                                    Navigator.popAndPushNamed(
                                         context, RoutesName.livetracking);
                                   },
                                   child: AppButton(
