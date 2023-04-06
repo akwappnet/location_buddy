@@ -9,7 +9,7 @@ import 'package:location_buddy/utils/font/font_family.dart';
 import 'package:location_buddy/utils/font/font_style.dart';
 
 class BuildTextFormField extends StatefulWidget {
-  final FaIcon? leftIcon;
+  final Icon? leftIcon;
   final String? txtHint;
   bool isObserve = false;
   bool? readOnly = false;
@@ -65,6 +65,7 @@ class _BuildTextFormFieldState extends State<BuildTextFormField> {
               fontFamily: FontFamliyM.ROBOTOREGULAR),
           textInputAction: TextInputAction.next,
           decoration: InputDecoration(
+            prefixIcon: widget.leftIcon,
             contentPadding: EdgeInsets.only(
               left: 15.sp,
             ),

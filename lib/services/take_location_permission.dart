@@ -4,9 +4,10 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
 
+import '../provider/save_location_view_provider.dart';
 import '../utils/colors/colors.dart';
-import '../widgets/custom_dialog_box.dart';
 import '../widgets/location_disclosure_dialog.dart';
 
 Future<void> locationPermission(BuildContext context) async {
@@ -35,7 +36,9 @@ Future<void> locationPermission(BuildContext context) async {
 }
 
 Future<void> requestLocationPermission(BuildContext context) async {
-  // If location services are already enabled, check for location permissions
+  Provider.of<SaveLocationViewProvider>(context, listen: false)
+      .getCurrentLocation(context);
+  /*  // If location services are already enabled, check for location permissions
   // Request location permission
   var status = await Permission.location.request();
   // Check if permission is granted
@@ -74,5 +77,5 @@ Future<void> requestLocationPermission(BuildContext context) async {
             },
           );
         });
-  }
+  } */
 }

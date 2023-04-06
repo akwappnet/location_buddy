@@ -127,9 +127,13 @@ class _SaveLocationViewState extends State<SaveLocationView> {
                                       SizedBox(
                                         width: 10.w,
                                       ),
-                                      SizedBox(
+
+                                      /*  SizedBox(
                                         width: 250.w,
                                         child: BuildTextFormField(
+                                          leftIcon: const Icon(
+                                              Icons.location_searching_outlined,
+                                              color: CustomColor.primaryColor),
                                           readOnly: true,
                                           controller: saveLocationViewProvider
                                               .sourceController,
@@ -137,7 +141,28 @@ class _SaveLocationViewState extends State<SaveLocationView> {
                                           txtHint: AppLocalization.of(context)!
                                               .translate('hint-source'),
                                         ),
-                                      )
+                                      ) */
+                                      SizedBox(
+                                        width: 250.w,
+                                        child: BuildTextFormField(
+                                          leftIcon: const Icon(
+                                              Icons.location_searching_outlined,
+                                              color: CustomColor.primaryColor),
+                                          txtHint: AppLocalization.of(context)!
+                                              .translate('hint-source'),
+                                          readOnly: true,
+                                          controller: saveLocationViewProvider
+                                              .sourceController,
+                                          isObserve: false,
+                                          onClicked: () async {
+                                            Provider.of<SaveLocationViewProvider>(
+                                                    context,
+                                                    listen: false)
+                                                .getCurrentLocation(context);
+                                            print("Demo");
+                                          },
+                                        ),
+                                      ),
                                     ],
                                   ),
                                   Padding(

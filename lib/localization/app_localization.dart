@@ -29,7 +29,7 @@ class AppLocalization {
       //save route page language translate
       'heading': 'SAVE ROUTE FOR YOUR DESTINATION',
       'hint-title': 'Enter Title eg.Office',
-      'hint-source': 'Source location',
+      'hint-source': 'Click To Get Current Location',
       'hint-destination': 'Destination location',
       'save-button': 'SAVE ROUTE',
       'save-button2': 'Please Wait..',

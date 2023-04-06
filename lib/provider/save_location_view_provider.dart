@@ -233,26 +233,33 @@ class SaveLocationViewProvider extends ChangeNotifier {
 
 //get current location and convert to address
 
-  void getAdderss() async {
-    await location.getLocation().then((location) async {
-      setCurrentPosition(location);
+  Future<void> getAdderss() async {
+    bool serviceEnabled;
+    serviceEnabled = await location.serviceEnabled();
+    if (serviceEnabled) {
+      await location.getLocation().then((location) async {
+        setCurrentPosition(location);
 
-      log("oldLoc latitude--->${_currentLocation!.latitude}");
-      log(" oldLoc longitude--->${_currentLocation!.latitude}");
+        log("oldLoc latitude--->${_currentLocation!.latitude}");
+        log(" oldLoc longitude--->${_currentLocation!.latitude}");
 
-      List<Placemark> placemarks = await placemarkFromCoordinates(
-          location.latitude!, location.longitude!);
-      Placemark placemark = placemarks[0];
-      String address =
-          '${placemark.street},${placemark.name}, ${placemark.locality}, ${placemark.administrativeArea} ${placemark.postalCode}, ${placemark.country}';
-      log("----currentAddress----->${address.toString()}");
+        List<Placemark> placemarks = await placemarkFromCoordinates(
+            location.latitude!, location.longitude!);
+        Placemark placemark = placemarks[0];
+        String address =
+            '${placemark.street},${placemark.name}, ${placemark.locality}, ${placemark.administrativeArea} ${placemark.postalCode}, ${placemark.country}';
+        log("----currentAddress----->${address.toString()}");
 
-      sourceController.text = address;
-    });
+        sourceController.text = address;
+      });
+      return;
+    } else {
+      return;
+    }
   }
 
   Future<void> getCurrentLocation(BuildContext context) async {
-    await locationPermission(context);
+//    await locationPermission(context);
 
     loc.PermissionStatus permissionGranted;
     bool serviceEnabled;
@@ -263,20 +270,41 @@ class SaveLocationViewProvider extends ChangeNotifier {
       //request to enable location service
       serviceEnabled = await location.requestService();
       if (serviceEnabled) {
-        getAdderss();
+        await getAdderss();
+        print("object");
+        return;
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            backgroundColor: CustomColor.redColor,
+            content: Text("Please Turn on Location"),
+            duration: Duration(seconds: 3),
+          ),
+        );
       }
     }
+    await getAdderss();
 
+    //  getAdderss();
     //check if location permission is granted
     permissionGranted = await location.hasPermission();
     if (permissionGranted == loc.PermissionStatus.denied) {
       //request to grant location permission
       permissionGranted = await location.requestPermission();
       if (permissionGranted != loc.PermissionStatus.granted) {
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            backgroundColor: CustomColor.redColor,
+            content: Text("Please Give Location Permission"),
+            duration: Duration(seconds: 3),
+          ),
+        );
         log("message");
         return;
       }
     }
-    getAdderss();
+
+    await getAdderss();
   }
 }
