@@ -8,7 +8,7 @@ import 'package:location_buddy/utils/font/font_family.dart';
 import 'package:location_buddy/utils/routes/routes_name.dart';
 import 'package:location_buddy/utils/validation/validation.dart';
 import 'package:location_buddy/widgets/custom_button_widget.dart';
-import 'package:location_buddy/widgets/custom_text_field_new.dart';
+import 'package:location_buddy/widgets/custom_text_field_auth.dart';
 import 'package:provider/provider.dart';
 
 import '../localization/app_localization.dart';

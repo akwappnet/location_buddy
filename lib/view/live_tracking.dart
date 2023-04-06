@@ -2,12 +2,10 @@
 
 import 'dart:developer' as dev;
 import 'dart:math' as math;
-import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:async';
-import 'dart:isolate';
 
 import 'dart:ui' as ui;
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
@@ -24,6 +22,7 @@ import '../models/location_data_navigate.dart';
 import '../utils/assets/assets_utils.dart';
 import '../utils/routes/routes_name.dart';
 import '../widgets/custom_button_widget.dart';
+import '../widgets/custom_dialog_box.dart';
 
 class LiveTracking extends StatefulWidget {
   const LiveTracking({super.key});
@@ -43,9 +42,6 @@ class _LiveTrackingState extends State<LiveTracking> {
   LocationDataNavigate? _destination;
   final Completer<GoogleMapController> _controller = Completer();
 
-//  static const LatLng destination = LatLng(23.0802, 72.5244);
-  //store sourceLocation to destination location point to draw line
-
   final Set<Polyline> _polylines = {};
   final List<LatLng> _polylineCoordinates = [];
   String? length;
@@ -60,31 +56,7 @@ class _LiveTrackingState extends State<LiveTracking> {
     _destination = Provider.of<LiveTrackingViewProvider>(context, listen: false)
         .locationData;
     setCustomMarkerIcon();
-
-    dev.log('Latitude: ${_destination!.latitude}');
-    dev.log('Longitude: ${_destination!.longitude}');
     updateUI();
-    /*  if (IsolateNameServer.lookupPortByName(
-            LocationServiceRepository.isolateName) !=
-        null) {
-      IsolateNameServer.removePortNameMapping(
-          LocationServiceRepository.isolateName);
-    }
-    IsolateNameServer.registerPortWithName(
-        port.sendPort, LocationServiceRepository.isolateName);
-    port.listen(
-      (dynamic data) async {
-        await updateUI(data);
-      },
-    );
-    Provider.of<SaveLocationViewProvider>(context, listen: false)
-        .initPlatformState();
-
-    Provider.of<SaveLocationViewProvider>(context, listen: false)
-        .onStart(context);
- */
-    Provider.of<LiveTrackingViewProvider>(context, listen: false)
-        .setCustomMarkerIcon();
   }
 
   @override
@@ -143,9 +115,10 @@ class _LiveTrackingState extends State<LiveTracking> {
             target: LatLng(
                 currentLocation!.latitude!, currentLocation!.longitude!))));
   }
+  // calculateDistance in km
 
   double calculateDistance(LatLng location1, LatLng location2) {
-    const double _earthRadius = 6371.0; // in km
+    const double earthRadius = 6371.0; // in km
     double lat1 = location1.latitude * math.pi / 180.0;
     double lon1 = location1.longitude * math.pi / 180.0;
     double lat2 = location2.latitude * math.pi / 180.0;
@@ -159,7 +132,7 @@ class _LiveTrackingState extends State<LiveTracking> {
 
     double c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a));
 
-    double distanceInKm = _earthRadius * c;
+    double distanceInKm = earthRadius * c;
 
     return distanceInKm;
   }
@@ -187,21 +160,24 @@ class _LiveTrackingState extends State<LiveTracking> {
 
         // ignore: use_build_context_synchronously
         showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text("You have reached your destination!"),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.popAndPushNamed(context, RoutesName.bottomBar);
-                  },
-                  child: const Text("OK"),
-                ),
-              ],
-            );
-          },
-        );
+            barrierDismissible: false,
+            context: context,
+            builder: (BuildContext context) {
+              return CustomDialogBox(
+                heading: "Location Buddy",
+                icon: const Icon(Icons.done),
+                backgroundColor: CustomColor.primaryColor,
+                title: "You have reached your destination!",
+                descriptions: "", //
+                btn1Text: "Ok",
+                btn2Text: "",
+
+                onClicked: () {
+                  locationSubscription.cancel();
+                  Navigator.popAndPushNamed(context, RoutesName.bottomBar);
+                },
+              );
+            });
       }
 
       if (result.points.isNotEmpty) {
@@ -232,10 +208,9 @@ class _LiveTrackingState extends State<LiveTracking> {
 
   @override
   Widget build(BuildContext context) {
-    /*  final liveTrackingViewProvider =
-        Provider.of<LiveTrackingViewProvider>(context); */
     final stop = GestureDetector(
       onTap: () {
+        locationSubscription.cancel();
         Navigator.popAndPushNamed(context, RoutesName.bottomBar);
       },
       child: AppButton(
@@ -276,18 +251,6 @@ class _LiveTrackingState extends State<LiveTracking> {
                     markerId: const MarkerId("destination"),
                     position:
                         LatLng(_destination!.latitude, _destination!.longitude))
-                /*   Marker(
-                    icon: BitmapDescriptor.fromBytes(
-                        liveTrackingViewProvider.currentLocationIcon),
-                    markerId: const MarkerId("currentLocation"),
-                    position: LatLng(
-                        currentLocation!.latitude, currentLocation!.longitude)),
-                Marker(
-                    icon: BitmapDescriptor.fromBytes(
-                        liveTrackingViewProvider.destinationIcon),
-                    markerId: const MarkerId("destination"),
-                    position:
-                        LatLng(_destination!.latitude, _destination!.longitude)) */
               },
               onMapCreated: (mapController) {
                 _controller.complete(mapController);

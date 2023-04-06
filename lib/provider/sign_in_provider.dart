@@ -103,6 +103,7 @@ class SignInProvider with ChangeNotifier {
       closeCustomLoadingDialog(context);
       clearText();
       showDialog(
+          barrierDismissible: false,
           context: context,
           builder: (BuildContext context) {
             // ignore: prefer_const_constructors
@@ -113,8 +114,11 @@ class SignInProvider with ChangeNotifier {
               title: AppLocalization.of(context)!.translate('error-somthing'),
 
               descriptions: "$e", //
-              btn1Text: "",
-              btn2Text: AppLocalization.of(context)!.translate('ok'),
+              btn2Text: "",
+              btn1Text: AppLocalization.of(context)!.translate('ok'),
+              onClicked: () {
+                signOut(context);
+              },
             );
           });
       log("------------->$e");
@@ -237,6 +241,7 @@ class SignInProvider with ChangeNotifier {
             'name': name,
             'email': email,
             'password': password,
+            'created_at': DateTime.now(),
           });
         } catch (e) {
           log(e.toString());

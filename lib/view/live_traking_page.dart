@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 import 'dart:math';
 
 import 'dart:developer' as logdev;
@@ -7,7 +6,6 @@ import 'dart:developer' as logdev;
 import 'dart:developer' as dev;
 import 'dart:math' as math;
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
@@ -40,7 +38,6 @@ class LiveTrackingPageExtraState extends State<LiveTrackingPageExtra> {
   Location location = Location();
 
   late StreamSubscription<LocationData> locationSubscription;
-  bool isLoading = true;
 
   //location of device
   LocationData? currentLocation;
@@ -48,26 +45,34 @@ class LiveTrackingPageExtraState extends State<LiveTrackingPageExtra> {
   LocationDataNavigate? destination;
   final Completer<GoogleMapController> _controller = Completer();
 
-  //static const LatLng destination = LatLng(23.0802, 73.5244);
-  //store sourceLocation to destination location point to draw line
-
   final Set<Polyline> _polylines = {};
   final List<LatLng> _polylineCoordinates = [];
   String? length;
   double? totalDistanceInKm;
   PolylineId? _polylineId;
-  double? totalDistance;
   double estimatedTimeInMinutes = 0;
   var count = 0;
 //  bool val = true;
   dynamic result = '';
 
-  /*  static const LatLng destination = LatLng(23.0802, 72.5244);
-  static const LatLng sourceLocation = LatLng(23.0708, 72.5177); */
-  //store sourceLocation to destination location point to draw line
-
   //store image in Uint8List
   late final Uint8List sourceIconPage, destinationIconPage;
+  @override
+  void initState() {
+    destination = Provider.of<LiveTrackingViewProvider>(context, listen: false)
+        .locationData;
+    logdev.log('Latitude: ${destination!.latitude}');
+    logdev.log('Longitude: ${destination!.longitude}');
+    getCurrentLocation();
+    setCustomMarkerIcon();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    locationSubscription.cancel();
+    super.dispose();
+  }
 
   //get the current location of the device and animate the camera to the current location
   void getCurrentLocation() async {
@@ -101,25 +106,8 @@ class LiveTrackingPageExtraState extends State<LiveTrackingPageExtra> {
 
       logdev.log("oldLoc latitude--->${currentLocation!.latitude}");
       logdev.log(" oldLoc longitude--->${currentLocation!.longitude}");
-      try {
-        FirebaseFirestore.instance.collection('location').doc('user1').set({
-          'latitude': currentLocation!.latitude,
-          'longitude': currentLocation!.longitude,
-          'name': 'Ram Ghumaliya',
-          'datetime': DateTime.now(),
-        }, SetOptions(merge: false));
-      } catch (e) {
-        logdev.log(e.toString());
-      }
     });
 
-    GoogleMapController googleMapController = await _controller.future;
-    location.changeSettings(accuracy: LocationAccuracy.high);
-    location.changeNotificationOptions(
-      title: "Location tracking",
-      channelName: "Location service",
-      description: "Tracking your location in the background",
-    );
     locationSubscription = location.onLocationChanged.listen((newLoc) async {
       calculateTimeAndDis();
       //update the current location of the device and update the polyline
@@ -128,8 +116,7 @@ class LiveTrackingPageExtraState extends State<LiveTrackingPageExtra> {
       currentLocation = newLoc;
 
       setState(() {});
-      isLoading = false;
-      print("------->$isLoading");
+
       GoogleMapController googleMapController = await _controller.future;
       _updatePolyline(googleMapController);
 
@@ -153,7 +140,7 @@ class LiveTrackingPageExtraState extends State<LiveTrackingPageExtra> {
           LatLng(currentLocation!.latitude!, currentLocation!.longitude!);
       LatLng location2 = LatLng(destination!.latitude, destination!.longitude);
       totalDistanceInKm = calculateDistance(location1, location2);
-      print("-------------->$totalDistanceInKm km");
+      dev.log("-------------->$totalDistanceInKm km");
 
       double walkingSpeed = 1.2; // m/s
       double totalDistanceInMeters = totalDistanceInKm! * 1000;
@@ -172,7 +159,7 @@ class LiveTrackingPageExtraState extends State<LiveTrackingPageExtra> {
   }
 
   double calculateDistance(LatLng location1, LatLng location2) {
-    const double _earthRadius = 6371.0; // in km
+    const double earthRadius = 6371.0; // in km
     double lat1 = location1.latitude * math.pi / 180.0;
     double lon1 = location1.longitude * math.pi / 180.0;
     double lat2 = location2.latitude * math.pi / 180.0;
@@ -186,7 +173,7 @@ class LiveTrackingPageExtraState extends State<LiveTrackingPageExtra> {
 
     double c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a));
 
-    double distanceInKm = _earthRadius * c;
+    double distanceInKm = earthRadius * c;
 
     return distanceInKm;
   }
@@ -249,24 +236,6 @@ class LiveTrackingPageExtraState extends State<LiveTrackingPageExtra> {
     return (await fi.image.toByteData(format: ui.ImageByteFormat.png))!
         .buffer
         .asUint8List();
-  }
-
-  @override
-  void initState() {
-    destination = Provider.of<LiveTrackingViewProvider>(context, listen: false)
-        .locationData;
-    logdev.log('Latitude: ${destination!.latitude}');
-    logdev.log('Longitude: ${destination!.longitude}');
-    getCurrentLocation();
-    setCustomMarkerIcon();
-
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    locationSubscription.cancel();
-    super.dispose();
   }
 
   @override

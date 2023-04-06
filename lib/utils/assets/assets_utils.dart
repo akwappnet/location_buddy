@@ -1,6 +1,5 @@
 class AssetsUtils {
   static String noRoute = "assets/lottie/route_finder.json";
-  static String mapRoute = "assets/lottie/map_route.json";
   static String saveLocation = "assets/lottie/save_location.json";
   static String loadinghome = "assets/lottie/loading_home.json";
   static String loadingmap = "assets/lottie/loading_map.json";

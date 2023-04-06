@@ -15,7 +15,7 @@ import '../provider/sign_in_provider.dart';
 import '../utils/font/font_family.dart';
 import '../utils/routes/routes_name.dart';
 import '../widgets/custom_dialog_box.dart';
-import '../widgets/custom_text_field_new.dart';
+import '../widgets/custom_text_field_auth.dart';
 
 class SignInView extends StatefulWidget {
   const SignInView({Key? key}) : super(key: key);
@@ -28,9 +28,6 @@ class _SignInViewState extends State<SignInView> {
   @override
   void initState() {
     super.initState();
-    final provider = Provider.of<SignInProvider>(context, listen: false);
-    provider.signemailController.text = "ram@gmail.com";
-    provider.signpassController.text = "Ram@1234";
   }
 
   @override

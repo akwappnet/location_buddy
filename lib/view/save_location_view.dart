@@ -159,7 +159,6 @@ class _SaveLocationViewState extends State<SaveLocationView> {
                                                     context,
                                                     listen: false)
                                                 .getCurrentLocation(context);
-                                            print("Demo");
                                           },
                                         ),
                                       ),

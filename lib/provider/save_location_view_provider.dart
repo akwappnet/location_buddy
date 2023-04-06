@@ -14,7 +14,6 @@ import 'package:location/location.dart' as loc;
 import '../models/location_model.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../services/take_location_permission.dart';
 
 class SaveLocationViewProvider extends ChangeNotifier {
   final TextEditingController savePointDestinationController =
@@ -97,7 +96,7 @@ class SaveLocationViewProvider extends ChangeNotifier {
   Future<void> fetchLocationInformation() async {
     setLoading(true);
     final snapshot = await FirebaseFirestore.instance
-        .collection('users')
+        .collection('location')
         .doc(_auth.currentUser?.uid)
         .collection('locationInfo')
         .get();
@@ -136,7 +135,7 @@ class SaveLocationViewProvider extends ChangeNotifier {
       addLocationInfo(locationInfo);
 
       final docRef = firestore
-          .collection('users')
+          .collection('location')
           .doc(_auth.currentUser?.uid)
           .collection('locationInfo')
           .doc();
@@ -201,7 +200,7 @@ class SaveLocationViewProvider extends ChangeNotifier {
     try {
       showCustomLoadingDialog(context);
       await firestore
-          .collection('users')
+          .collection('location')
           .doc(_auth.currentUser?.uid)
           .collection('locationInfo')
           .doc(id)
@@ -270,9 +269,10 @@ class SaveLocationViewProvider extends ChangeNotifier {
       //request to enable location service
       serviceEnabled = await location.requestService();
       if (serviceEnabled) {
-        print("object");
+        log("object");
         return;
       } else {
+        // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             backgroundColor: CustomColor.redColor,
