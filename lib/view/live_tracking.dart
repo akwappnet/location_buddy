@@ -102,18 +102,16 @@ class _LiveTrackingState extends State<LiveTracking> {
       dev.log("newLoc latitude--->${newLoc.latitude!}");
       dev.log(" newLoc longitude--->${newLoc.longitude}");
       currentLocation = newLoc;
-
+      GoogleMapController googleMapController = await _controller.future;
+      _updatePolyline(googleMapController);
+//
+      googleMapController.animateCamera(CameraUpdate.newCameraPosition(
+          CameraPosition(
+              zoom: 18,
+              target: LatLng(
+                  currentLocation!.latitude!, currentLocation!.longitude!))));
       setState(() {});
     });
-
-    GoogleMapController googleMapController = await _controller.future;
-    _updatePolyline(googleMapController);
-//
-    googleMapController.animateCamera(CameraUpdate.newCameraPosition(
-        CameraPosition(
-            zoom: 18,
-            target: LatLng(
-                currentLocation!.latitude!, currentLocation!.longitude!))));
   }
   // calculateDistance in km
 
