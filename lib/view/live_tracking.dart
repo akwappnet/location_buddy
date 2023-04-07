@@ -143,7 +143,7 @@ class _LiveTrackingState extends State<LiveTracking> {
           PointLatLng(currentLocation!.latitude!, currentLocation!.longitude!),
           PointLatLng(_destination!.latitude, _destination!.longitude),
           optimizeWaypoints: true,
-          travelMode: TravelMode.walking);
+          travelMode: TravelMode.driving);
 
       double distance = calculateDistance(
         LatLng(currentLocation!.latitude!, currentLocation!.longitude!),
@@ -208,7 +208,6 @@ class _LiveTrackingState extends State<LiveTracking> {
   Widget build(BuildContext context) {
     final stop = GestureDetector(
       onTap: () {
-        locationSubscription.cancel();
         Navigator.popAndPushNamed(context, RoutesName.bottomBar);
       },
       child: AppButton(
@@ -230,8 +229,7 @@ class _LiveTrackingState extends State<LiveTracking> {
             width: MediaQuery.of(context).size.width,
             child: GoogleMap(
               onCameraMove: (position) {},
-              myLocationEnabled:
-                  true, // Enables the my-location layer on the map
+
               myLocationButtonEnabled:
                   true, // Displays a button on the map that when tapped centers the camera on the user's location
               //myLocationEnabled: true,

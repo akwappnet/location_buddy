@@ -29,53 +29,57 @@ class _SplashViewState extends State<SplashView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        color: CustomColor.white,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              height: 190.h,
-              width: 190.w,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage(AssetsUtils.splash),
-                  fit: BoxFit.fill,
-                ),
-              ),
-            ),
-            SizedBox(height: 50.h),
-            Center(
-              child: Text.rich(
-                TextSpan(
-                  style: TextStyle(
-                    fontSize: 32.sp,
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        body: Container(
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          color: CustomColor.white,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                height: 190.h,
+                width: 190.w,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage(AssetsUtils.splash),
+                    fit: BoxFit.fill,
                   ),
-                  children: [
-                    TextSpan(
-                      text: AppLocalization.of(context)!.translate('location'),
-                      style: TextStyle(
-                          color: CustomColor.primaryColor,
-                          fontWeight: FontWeight.w800,
-                          fontFamily: FontFamliyM.ROBOTOBLACK),
-                    ),
-                    TextSpan(
-                      text: AppLocalization.of(context)!.translate('buddy'),
-                      style: TextStyle(
-                          color: CustomColor.secondaryColor,
-                          fontWeight: FontWeight.w800,
-                          fontFamily: FontFamliyM.ROBOTOBOLD),
-                    ),
-                  ],
                 ),
-                textAlign: TextAlign.center,
               ),
-            ),
-          ],
+              SizedBox(height: 50.h),
+              Center(
+                child: Text.rich(
+                  TextSpan(
+                    style: TextStyle(
+                      fontSize: 32.sp,
+                    ),
+                    children: [
+                      TextSpan(
+                        text:
+                            AppLocalization.of(context)!.translate('location'),
+                        style: TextStyle(
+                            color: CustomColor.primaryColor,
+                            fontWeight: FontWeight.w800,
+                            fontFamily: FontFamliyM.ROBOTOBLACK),
+                      ),
+                      TextSpan(
+                        text: AppLocalization.of(context)!.translate('buddy'),
+                        style: TextStyle(
+                            color: CustomColor.secondaryColor,
+                            fontWeight: FontWeight.w800,
+                            fontFamily: FontFamliyM.ROBOTOBOLD),
+                      ),
+                    ],
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

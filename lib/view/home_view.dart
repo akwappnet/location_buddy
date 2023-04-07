@@ -1,8 +1,12 @@
 // ignore_for_file: sized_box_for_whitespace, prefer_const_literals_to_create_immutables, must_be_immutable, prefer_const_constructors_in_immutables, prefer_final_fields
 
+import 'dart:developer';
+import 'dart:io';
+
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:in_app_review/in_app_review.dart';
 
 import 'package:location_buddy/localization/app_localization.dart';
 import 'package:location_buddy/provider/live_traking_view_provider.dart';
@@ -17,6 +21,8 @@ import '../provider/save_location_view_provider.dart';
 import '../services/take_location_permission.dart';
 import '../widgets/custom_dialog_box.dart';
 
+enum Availability { loading, available, unavailable }
+
 class HomeView extends StatefulWidget {
   HomeView({super.key});
 
@@ -27,14 +33,45 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> {
   // var length = 1;
 
+  Availability _availability = Availability.loading;
+  bool? isAvailable;
+  final InAppReview _inAppReview = InAppReview.instance;
   @override
   void initState() {
     super.initState();
-
     locationPermission(context);
 
     Provider.of<SaveLocationViewProvider>(context, listen: false)
         .fetchLocationInformation();
+    (<T>(T? o) => o!)(WidgetsBinding.instance).addPostFrameCallback((_) async {
+      try {
+        isAvailable = await _inAppReview.isAvailable();
+        print("----->$isAvailable");
+
+        setState(() {
+          // This plugin cannot be tested on Android by installing your app
+          // locally. See https://github.com/britannio/in_app_review#testing for
+          // more information.
+          _availability = isAvailable! && !Platform.isAndroid
+              ? Availability.available
+              : Availability.unavailable;
+        });
+      } catch (_) {
+        setState(() => _availability = Availability.unavailable);
+      }
+    });
+  }
+
+  Future<void> _requestReview() async {
+    try {
+      await _inAppReview.requestReview();
+    } catch (e) {
+      log("--->${e.toString()}");
+    }
+  }
+
+  Future<void> _openStoreListing() async {
+    _inAppReview.openStoreListing();
   }
 
   @override
@@ -352,6 +389,11 @@ class _HomeViewState extends State<HomeView> {
               ),
             ),
           ),
+          ElevatedButton(
+              onPressed: () async {
+                _requestReview();
+              },
+              child: Text("Click"))
         ],
       ),
     );

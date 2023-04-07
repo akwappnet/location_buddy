@@ -186,7 +186,7 @@ class LiveTrackingPageExtraState extends State<LiveTrackingPageExtra> {
           PointLatLng(currentLocation!.latitude!, currentLocation!.longitude!),
           PointLatLng(destination!.latitude, destination!.longitude),
           optimizeWaypoints: true,
-          travelMode: TravelMode.walking);
+          travelMode: TravelMode.driving);
 
       if (result.points.isNotEmpty) {
         _polylineCoordinates.clear();
@@ -250,7 +250,7 @@ class LiveTrackingPageExtraState extends State<LiveTrackingPageExtra> {
             child: const Center(child: Maploading()),
           )
         : SizedBox(
-            height: MediaQuery.of(context).size.height / 1.5,
+            height: MediaQuery.of(context).size.height / 1.6,
             width: MediaQuery.of(context).size.width,
             child: GoogleMap(
               //myLocationEnabled: true,

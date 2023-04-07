@@ -247,6 +247,7 @@ class _ProfileViewState extends State<ProfileView> {
                           final provider = Provider.of<SignInProvider>(context,
                               listen: false);
                           provider.deleteAccount(context);
+                          Navigator.pop(context);
                         });
                   });
             },

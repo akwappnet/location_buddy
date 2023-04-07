@@ -251,10 +251,11 @@ class SignInProvider with ChangeNotifier {
             builder: (BuildContext context) {
               // ignore: prefer_const_constructors
               return CustomDialogBox(
-                heading: "Success",
+                heading: AppLocalization.of(context)!.translate('success'),
                 icon: const Icon(Icons.done),
                 backgroundColor: CustomColor.primaryColor,
-                title: "Registration Successfull",
+                title: AppLocalization.of(context)!
+                    .translate('registration-successfull'),
                 descriptions: "", //
                 btn1Text: "",
                 btn2Text: "",
@@ -340,36 +341,21 @@ class SignInProvider with ChangeNotifier {
       await _auth.signOut();
       _user = null;
       await closeCustomLoadingDialog(context);
-      showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return CustomDialogBox(
-              heading: AppLocalization.of(context)!.translate('success'),
-              icon: const Icon(Icons.done),
-              backgroundColor: CustomColor.primaryColor,
-              title: AppLocalization.of(context)!
-                  .translate('account-delete-success'),
-              descriptions: "", //
-              btn1Text: "",
-              btn2Text: "",
-            );
-          });
-      await Future.delayed(const Duration(seconds: 2)).then(
-          (value) => Navigator.popAndPushNamed(context, RoutesName.siginView));
-
-      notifyListeners();
-    } catch (e) {
-      closeCustomLoadingDialog(context);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: CustomColor.redColor,
-          content: Text(
-            AppLocalization.of(context)!.translate('account-delete-error'),
+      await signOut(context);
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'requires-recent-login') {
+        closeCustomLoadingDialog(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: CustomColor.redColor,
+            content: Text(
+              AppLocalization.of(context)!.translate('account-delete-error'),
+            ),
+            duration: const Duration(seconds: 5),
           ),
-          duration: const Duration(seconds: 3),
-        ),
-      );
-      log('Error deleting account: $e');
+        );
+        print('You need reauthenticate before deleting your account.');
+      }
     }
   }
 

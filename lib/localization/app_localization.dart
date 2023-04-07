@@ -79,8 +79,8 @@ class AppLocalization {
           'Use 8 or more characters with a mix of capital & small letters, \nnumbers & symbols',
       //signin provider language translate
       'success': 'Success',
-      'login-successfull': 'Login Successfull',
-      'registration-successfull': 'Registration Successfull',
+      'login-successfull': 'Login successful',
+      'registration-successfull': 'Registration successful',
       'error': 'Error',
       'ok': 'Ok',
       'error-somthing': 'Somthing went wrong please try again...',
@@ -89,7 +89,8 @@ class AppLocalization {
       'password-weak': 'The password provided is too weak.',
       'email-already-exists': 'The account already exists for that email.',
       'account-delete-success': 'Your account deleted Successfully',
-      'account-delete-error': 'Your account deleted Successfully',
+      'account-delete-error':
+          'You need reauthenticate before deleting your account',
       //save location provider language translate
       'save-successfull': 'Location Saved successful',
       'error-data-delete': 'Error while deleting data',
@@ -173,7 +174,7 @@ class AppLocalization {
       'password-weak': 'كلمة المرور المقدمة ضعيفة للغاية.',
       'email-already-exists': 'الحساب موجود بالفعل لهذا البريد الإلكتروني.',
       'account-delete-success': 'تم حذف حسابك بنجاح',
-      'account-delete-error': 'تم حذف حسابك بنجاح',
+      'account-delete-error': 'تحتاج إلى إعادة المصادقة قبل حذف حسابك',
       //save location provider language translate
       'save-successfull': 'تم حفظ الموقع بنجاح',
       'error-data-delete': 'خطأ أثناء حذف البيانات',
