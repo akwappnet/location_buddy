@@ -4,12 +4,11 @@ import 'package:auto_direction/auto_direction.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:location_buddy/utils/font/font_family.dart';
 import 'package:location_buddy/utils/font/font_style.dart';
 
 class BuildTextFormField extends StatefulWidget {
-  final FaIcon? leftIcon;
+  final Icon? leftIcon;
   final String? txtHint;
   bool isObserve = false;
   bool? readOnly = false;
@@ -65,6 +64,7 @@ class _BuildTextFormFieldState extends State<BuildTextFormField> {
               fontFamily: FontFamliyM.ROBOTOREGULAR),
           textInputAction: TextInputAction.next,
           decoration: InputDecoration(
+            prefixIcon: widget.leftIcon,
             contentPadding: EdgeInsets.only(
               left: 15.sp,
             ),

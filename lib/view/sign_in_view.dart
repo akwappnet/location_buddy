@@ -15,7 +15,7 @@ import '../provider/sign_in_provider.dart';
 import '../utils/font/font_family.dart';
 import '../utils/routes/routes_name.dart';
 import '../widgets/custom_dialog_box.dart';
-import '../widgets/custom_text_field_new.dart';
+import '../widgets/custom_text_field_auth.dart';
 
 class SignInView extends StatefulWidget {
   const SignInView({Key? key}) : super(key: key);
@@ -25,6 +25,11 @@ class SignInView extends StatefulWidget {
 }
 
 class _SignInViewState extends State<SignInView> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;

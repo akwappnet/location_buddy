@@ -10,7 +10,6 @@ import 'package:location_buddy/utils/colors/colors.dart';
 import 'package:location_buddy/utils/font/font_family.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:url_launcher/url_launcher.dart';
 import '../provider/current_data_provider.dart';
 import '../provider/sign_in_provider.dart';
 import '../utils/routes/routes_name.dart';
@@ -32,12 +31,6 @@ class _ProfileViewState extends State<ProfileView> {
   final DefaultData defaultData = DefaultData();
 
   FirebaseAuth auth = FirebaseAuth.instance;
-  Future<void> _launchUrl(String url) async {
-    final Uri uri = Uri.parse(url);
-    if (!await launchUrl(uri, mode: LaunchMode.inAppWebView)) {
-      throw Exception('Could not launch url');
-    }
-  }
 
   @override
   Widget build(BuildContext context) {

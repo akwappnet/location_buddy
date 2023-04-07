@@ -11,7 +11,7 @@ import '../localization/app_localization.dart';
 import '../provider/sign_in_provider.dart';
 import '../utils/font/font_family.dart';
 import '../utils/routes/routes_name.dart';
-import '../widgets/custom_text_field_new.dart';
+import '../widgets/custom_text_field_auth.dart';
 
 class SignUpView extends StatefulWidget {
   const SignUpView({Key? key}) : super(key: key);

@@ -1,27 +1,28 @@
 // ignore_for_file: unused_element
 
+import 'dart:developer' as dev;
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'dart:async';
-import 'dart:isolate';
-import 'dart:ui';
 
-import 'package:background_locator_2/location_dto.dart';
-
+import 'dart:ui' as ui;
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location/location.dart';
 import 'package:location_buddy/provider/live_traking_view_provider.dart';
-import 'package:location_buddy/provider/save_location_view_provider.dart';
 import 'package:location_buddy/utils/colors/colors.dart';
 import 'package:location_buddy/utils/constants.dart';
 import 'package:location_buddy/widgets/loading_map.dart';
 import 'package:provider/provider.dart';
 import '../localization/app_localization.dart';
 import '../models/location_data_navigate.dart';
-import '../services/location_service_repository.dart';
+import '../utils/assets/assets_utils.dart';
 import '../utils/routes/routes_name.dart';
 import '../widgets/custom_button_widget.dart';
+import '../widgets/custom_dialog_box.dart';
 
 class LiveTracking extends StatefulWidget {
   const LiveTracking({super.key});
@@ -31,76 +32,107 @@ class LiveTracking extends StatefulWidget {
 }
 
 class _LiveTrackingState extends State<LiveTracking> {
-  ReceivePort port = ReceivePort();
-  LocationDto? currentLocation;
+  Location location = Location();
 
-  LocationData? _destination;
+  late StreamSubscription<LocationData> locationSubscription;
+
+  LocationDataNavigate? destination;
+  //location of device
+  LocationData? currentLocation;
+  LocationDataNavigate? _destination;
   final Completer<GoogleMapController> _controller = Completer();
-
-//  static const LatLng destination = LatLng(23.0802, 72.5244);
-  //store sourceLocation to destination location point to draw line
 
   final Set<Polyline> _polylines = {};
   final List<LatLng> _polylineCoordinates = [];
   String? length;
-
+  //store image in Uint8List
+  late final Uint8List sourceIconTracking, destinationIconTracking;
   PolylineId? _polylineId;
   double totalDistance = 0;
 
   @override
   void initState() {
     super.initState();
-
     _destination = Provider.of<LiveTrackingViewProvider>(context, listen: false)
         .locationData;
-    // log('Latitude: ${_destination!.latitude}');
-    // log('Longitude: ${_destination!.longitude}');
-    if (IsolateNameServer.lookupPortByName(
-            LocationServiceRepository.isolateName) !=
-        null) {
-      IsolateNameServer.removePortNameMapping(
-          LocationServiceRepository.isolateName);
-    }
-    IsolateNameServer.registerPortWithName(
-        port.sendPort, LocationServiceRepository.isolateName);
-    port.listen(
-      (dynamic data) async {
-        await updateUI(data);
-      },
-    );
-    Provider.of<SaveLocationViewProvider>(context, listen: false)
-        .initPlatformState();
-
-    Provider.of<SaveLocationViewProvider>(context, listen: false)
-        .onStart(context);
-
-    Provider.of<LiveTrackingViewProvider>(context, listen: false)
-        .setCustomMarkerIcon();
+    setCustomMarkerIcon();
+    updateUI();
   }
 
-  Future<void> updateUI(dynamic data) async {
-    LocationDto? locationDto =
-        (data != null) ? LocationDto.fromJson(data) : null;
+  @override
+  void dispose() {
+    locationSubscription.cancel();
+    super.dispose();
+  }
 
-    setState(() {
-      if (data != null) {
-        currentLocation = locationDto;
-      }
+//set Custom Marker Icon
+  void setCustomMarkerIcon() async {
+    sourceIconTracking = await getBytesFromAsset(
+        path: AssetsUtils.source, //paste the custom image path
+        width: 70 // size of custom image as marker
+        );
+    destinationIconTracking = await getBytesFromAsset(
+        path: AssetsUtils.destination, //paste the custom image path
+        width: 70 // size of custom image as marker
+        );
+  }
+
+//function for changing the  image size
+  Future<Uint8List> getBytesFromAsset({String? path, int? width}) async {
+    ByteData data = await rootBundle.load(path!);
+    ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(),
+        targetWidth: width);
+    ui.FrameInfo fi = await codec.getNextFrame();
+    return (await fi.image.toByteData(format: ui.ImageByteFormat.png))!
+        .buffer
+        .asUint8List();
+  }
+
+  Future<void> updateUI() async {
+    location.getLocation().then((location) {
+      currentLocation = location;
+      setState(() {});
+
+      dev.log("oldLoc latitude--->${currentLocation!.latitude}");
+      dev.log(" oldLoc longitude--->${currentLocation!.longitude}");
     });
 
-    GoogleMapController googleMapController = await _controller.future;
-    _updatePolyline(googleMapController);
-
-    googleMapController.animateCamera(CameraUpdate.newCameraPosition(
-        CameraPosition(
-            zoom: 18,
-            target: LatLng(
-                currentLocation!.latitude, currentLocation!.longitude))));
+    locationSubscription = location.onLocationChanged.listen((newLoc) async {
+      //update the current location of the device and update the polyline
+      dev.log("newLoc latitude--->${newLoc.latitude!}");
+      dev.log(" newLoc longitude--->${newLoc.longitude}");
+      currentLocation = newLoc;
+      GoogleMapController googleMapController = await _controller.future;
+      _updatePolyline(googleMapController);
+//
+      googleMapController.animateCamera(CameraUpdate.newCameraPosition(
+          CameraPosition(
+              zoom: 18,
+              target: LatLng(
+                  currentLocation!.latitude!, currentLocation!.longitude!))));
+      setState(() {});
+    });
   }
+  // calculateDistance in km
 
-  double calculateDistance(LatLng start, LatLng end) {
-    return Geolocator.distanceBetween(
-        start.latitude, start.longitude, end.latitude, end.longitude);
+  double calculateDistance(LatLng location1, LatLng location2) {
+    const double earthRadius = 6371.0; // in km
+    double lat1 = location1.latitude * math.pi / 180.0;
+    double lon1 = location1.longitude * math.pi / 180.0;
+    double lat2 = location2.latitude * math.pi / 180.0;
+    double lon2 = location2.longitude * math.pi / 180.0;
+
+    double dLat = lat2 - lat1;
+    double dLon = lon2 - lon1;
+
+    double a = math.pow(math.sin(dLat / 2), 2) +
+        math.cos(lat1) * math.cos(lat2) * math.pow(math.sin(dLon / 2), 2);
+
+    double c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a));
+
+    double distanceInKm = earthRadius * c;
+
+    return distanceInKm;
   }
 
   void _updatePolyline(GoogleMapController controller) async {
@@ -108,43 +140,42 @@ class _LiveTrackingState extends State<LiveTracking> {
       PolylinePoints polylinePoints = PolylinePoints();
       PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
           google_api_key,
-          PointLatLng(currentLocation!.latitude, currentLocation!.longitude),
+          PointLatLng(currentLocation!.latitude!, currentLocation!.longitude!),
           PointLatLng(_destination!.latitude, _destination!.longitude),
           optimizeWaypoints: true,
           travelMode: TravelMode.walking);
 
       double distance = calculateDistance(
-        LatLng(currentLocation!.latitude, currentLocation!.longitude),
+        LatLng(currentLocation!.latitude!, currentLocation!.longitude!),
         LatLng(_destination!.latitude, _destination!.longitude),
       );
-      if (distance <= 10) {
+      if (distance <= 0.10) {
         // ignore: use_build_context_synchronously
-        Provider.of<SaveLocationViewProvider>(context, listen: false)
-            .onStop(context);
+
         // show pop-up when distance is less than or equal to 10 meters
 
         // ignore: use_build_context_synchronously
 
         // ignore: use_build_context_synchronously
         showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text("You have reached your destination!"),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Provider.of<SaveLocationViewProvider>(context,
-                            listen: false)
-                        .onStop(context);
-                    Navigator.popAndPushNamed(context, RoutesName.bottomBar);
-                  },
-                  child: const Text("OK"),
-                ),
-              ],
-            );
-          },
-        );
+            barrierDismissible: false,
+            context: context,
+            builder: (BuildContext context) {
+              return CustomDialogBox(
+                heading: "Location Buddy",
+                icon: const Icon(Icons.done),
+                backgroundColor: CustomColor.primaryColor,
+                title: "You have reached your destination!",
+                descriptions: "", //
+                btn1Text: "Ok",
+                btn2Text: "",
+
+                onClicked: () {
+                  locationSubscription.cancel();
+                  Navigator.popAndPushNamed(context, RoutesName.bottomBar);
+                },
+              );
+            });
       }
 
       if (result.points.isNotEmpty) {
@@ -175,12 +206,9 @@ class _LiveTrackingState extends State<LiveTracking> {
 
   @override
   Widget build(BuildContext context) {
-    final liveTrackingViewProvider =
-        Provider.of<LiveTrackingViewProvider>(context);
     final stop = GestureDetector(
       onTap: () {
-        Provider.of<SaveLocationViewProvider>(context, listen: false)
-            .onStop(context);
+        locationSubscription.cancel();
         Navigator.popAndPushNamed(context, RoutesName.bottomBar);
       },
       child: AppButton(
@@ -207,19 +235,17 @@ class _LiveTrackingState extends State<LiveTracking> {
               mapType: MapType.hybrid,
               initialCameraPosition: CameraPosition(
                   target: LatLng(
-                      currentLocation!.latitude, currentLocation!.longitude),
+                      currentLocation!.latitude!, currentLocation!.longitude!),
                   zoom: 18),
               polylines: _polylines,
               markers: {
                 Marker(
-                    icon: BitmapDescriptor.fromBytes(
-                        liveTrackingViewProvider.currentLocationIcon),
+                    icon: BitmapDescriptor.fromBytes(sourceIconTracking),
                     markerId: const MarkerId("currentLocation"),
-                    position: LatLng(
-                        currentLocation!.latitude, currentLocation!.longitude)),
+                    position: LatLng(currentLocation!.latitude!,
+                        currentLocation!.longitude!)),
                 Marker(
-                    icon: BitmapDescriptor.fromBytes(
-                        liveTrackingViewProvider.destinationIcon),
+                    icon: BitmapDescriptor.fromBytes(destinationIconTracking),
                     markerId: const MarkerId("destination"),
                     position:
                         LatLng(_destination!.latitude, _destination!.longitude))

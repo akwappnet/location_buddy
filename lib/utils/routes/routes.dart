@@ -3,7 +3,7 @@ import 'package:location_buddy/utils/routes/routes_name.dart';
 import 'package:location_buddy/view/forget_password_view.dart';
 import 'package:location_buddy/view/home_view.dart';
 import 'package:location_buddy/view/live_tracking.dart';
-import 'package:location_buddy/view/live_traking_view.dart';
+import 'package:location_buddy/view/live_traking_page.dart';
 import 'package:location_buddy/view/save_location_view.dart';
 import 'package:location_buddy/view/sign_in_view.dart';
 import 'package:location_buddy/view/splash_view.dart';
@@ -34,9 +34,7 @@ class Routes {
       case RoutesName.saveLocationView:
         return MaterialPageRoute(
             builder: (BuildContext context) => const SaveLocationView());
-      case RoutesName.livetrakingpage:
-        return MaterialPageRoute(
-            builder: (BuildContext context) => const LiveTrackingPage());
+
       case RoutesName.siginView:
         return MaterialPageRoute(
             builder: (BuildContext context) => const SignInView());
@@ -57,6 +55,9 @@ class Routes {
       case RoutesName.privacypolicy:
         return MaterialPageRoute(
             builder: (BuildContext context) => const PrivacyPolicy());
+      case RoutesName.livetrakingpageextra:
+        return MaterialPageRoute(
+            builder: (BuildContext context) => const LiveTrackingPageExtra());
 
       default:
         // SystemNavigator.pop();
