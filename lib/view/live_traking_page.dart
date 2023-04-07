@@ -203,9 +203,9 @@ class LiveTrackingPageExtraState extends State<LiveTrackingPageExtra> {
           _polylineId = const PolylineId('route');
           _polylines.add(Polyline(
             geodesic: true,
-            width: 10,
+            width: 6,
             polylineId: _polylineId!,
-            color: CustomColor.primaryColor,
+            color: CustomColor.secondaryColor,
             points: _polylineCoordinates,
             visible: true,
             patterns: [PatternItem.dot, PatternItem.gap(15)],
@@ -219,11 +219,11 @@ class LiveTrackingPageExtraState extends State<LiveTrackingPageExtra> {
   void setCustomMarkerIcon() async {
     sourceIconPage = await getBytesFromAsset(
         path: AssetsUtils.source, //paste the custom image path
-        width: 70 // size of custom image as marker
+        width: 70.sp.toInt() // size of custom image as marker
         );
     destinationIconPage = await getBytesFromAsset(
         path: AssetsUtils.destination, //paste the custom image path
-        width: 70 // size of custom image as marker
+        width: 75.sp.toInt() // size of custom image as marker
         );
   }
 

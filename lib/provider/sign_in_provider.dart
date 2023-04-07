@@ -227,7 +227,7 @@ class SignInProvider with ChangeNotifier {
   Future<void> signUpWithEmailAndPassword(
       String email, String password, String name, BuildContext context) async {
     try {
-      if (email.isNotEmpty && password.isNotEmpty) {
+      if (email.isNotEmpty && password.isNotEmpty && name.isNotEmpty) {
         showCustomLoadingDialog(context);
         final UserCredential userCredential = await _auth
             .createUserWithEmailAndPassword(email: email, password: password);
