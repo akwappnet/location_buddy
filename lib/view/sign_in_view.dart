@@ -25,6 +25,7 @@ class SignInView extends StatefulWidget {
 }
 
 class _SignInViewState extends State<SignInView> {
+  GlobalKey<FormState> signinFormKey = GlobalKey<FormState>();
   @override
   void initState() {
     super.initState();
@@ -61,20 +62,23 @@ class _SignInViewState extends State<SignInView> {
         child: Scaffold(
           resizeToAvoidBottomInset: true,
           backgroundColor: const Color(0xFFF8F8F8),
-          body: SafeArea(
-            child: SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    SizedBox(
-                      height: 40.h,
-                    ),
-                    buildCard(size),
-                    buildFooter(size),
-                  ],
+          body: Form(
+            key: signinFormKey,
+            child: SafeArea(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      SizedBox(
+                        height: 40.h,
+                      ),
+                      buildCard(size),
+                      buildFooter(size),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -141,7 +145,7 @@ class _SignInViewState extends State<SignInView> {
                   builder: (context, value, child) {
                     return BuildTextFormFieldNew(
                       controller: provider.signpassController,
-                      validation: passwordValidator,
+                      validation: emptyFieldValidator,
                       isObserve: obsecurePassword.value,
                       suffixIcon: GestureDetector(
                         onTap: (() {
@@ -274,9 +278,11 @@ class _SignInViewState extends State<SignInView> {
   Widget signInButton(Size size) {
     return GestureDetector(
       onTap: () {
-        final provider = Provider.of<SignInProvider>(context, listen: false);
-        provider.signInWithEmailAndPassword(provider.signemailController.text,
-            provider.signpassController.text, context);
+        if (signinFormKey.currentState!.validate()) {
+          final provider = Provider.of<SignInProvider>(context, listen: false);
+          provider.signInWithEmailAndPassword(provider.signemailController.text,
+              provider.signpassController.text, context);
+        }
       },
       child: Container(
         alignment: Alignment.center,

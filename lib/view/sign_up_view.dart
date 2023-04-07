@@ -21,15 +21,16 @@ class SignUpView extends StatefulWidget {
 }
 
 class _SignUpViewState extends State<SignUpView> {
+  GlobalKey<FormState> signupFormKey = GlobalKey<FormState>();
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passController = TextEditingController();
   @override
   void dispose() {
     super.dispose();
-    emailController.clear();
-    nameController.clear();
-    passController.clear();
+    emailController.dispose();
+    nameController.dispose();
+    passController.dispose();
   }
 
   @override
@@ -42,20 +43,23 @@ class _SignUpViewState extends State<SignUpView> {
       child: Scaffold(
         resizeToAvoidBottomInset: true,
         backgroundColor: const Color(0xFFF8F8F8),
-        body: SafeArea(
-          child: SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  SizedBox(
-                    height: 40.h,
-                  ),
-                  buildCard(size),
-                  buildFooter(size),
-                ],
+        body: Form(
+          key: signupFormKey,
+          child: SafeArea(
+            child: SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    SizedBox(
+                      height: 40.h,
+                    ),
+                    buildCard(size),
+                    buildFooter(size),
+                  ],
+                ),
               ),
             ),
           ),
@@ -104,6 +108,7 @@ class _SignUpViewState extends State<SignUpView> {
                 BuildTextFormFieldNew(
                   controller: nameController,
                   isObserve: false,
+                  validation: nameValidator,
                   textType: TextInputType.name,
                   txtHint:
                       AppLocalization.of(context)!.translate('txt-name-hint'),
@@ -215,15 +220,13 @@ class _SignUpViewState extends State<SignUpView> {
   Widget signUpButton(Size size) {
     return GestureDetector(
       onTap: () {
-        final provider = Provider.of<SignInProvider>(context, listen: false);
-        provider
-            .signUpWithEmailAndPassword(emailController.text,
-                passController.text, nameController.text, context)
-            .then((value) {
-          nameController.clear();
-          emailController.clear();
-          passController.clear();
-        });
+        if (signupFormKey.currentState!.validate()) {
+          final provider = Provider.of<SignInProvider>(context, listen: false);
+          provider
+              .signUpWithEmailAndPassword(emailController.text,
+                  passController.text, nameController.text, context)
+              .then((value) {});
+        }
       },
       child: Container(
         alignment: Alignment.center,

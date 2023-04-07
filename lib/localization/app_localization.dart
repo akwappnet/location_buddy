@@ -73,7 +73,7 @@ class AppLocalization {
       'fogot-desc': 'Enter Email to contact you to reset your password',
       'email-sent': 'Password reset email sent!',
       //validation  language translate
-      'empty-field': 'This field must be filled',
+      'empty-field': 'All field must be filled',
       'validate-email': 'Please enter valid email',
       'validate-password':
           'Use 8 or more characters with a mix of capital & small letters, \nnumbers & symbols',

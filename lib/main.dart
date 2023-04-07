@@ -62,7 +62,7 @@ class MyApp extends StatelessWidget {
           builder: (context, child) {
             return Consumer(
               builder: (context, provider, child) => MaterialApp(
-                title: 'Flutter Demo',
+                title: 'Location Buddy',
                 debugShowCheckedModeBanner: false,
                 locale: Provider.of<CurrentData>(context).locale,
                 localizationsDelegates: const [

@@ -69,11 +69,11 @@ class _LiveTrackingState extends State<LiveTracking> {
   void setCustomMarkerIcon() async {
     sourceIconTracking = await getBytesFromAsset(
         path: AssetsUtils.source, //paste the custom image path
-        width: 70 // size of custom image as marker
+        width: 70.sp.toInt() // size of custom image as marker
         );
     destinationIconTracking = await getBytesFromAsset(
         path: AssetsUtils.destination, //paste the custom image path
-        width: 70 // size of custom image as marker
+        width: 70.sp.toInt() // size of custom image as marker
         );
   }
 
@@ -192,9 +192,9 @@ class _LiveTrackingState extends State<LiveTracking> {
           _polylineId = const PolylineId('route');
           _polylines.add(Polyline(
             geodesic: true,
-            width: 10,
+            width: 10.sp.toInt(),
             polylineId: _polylineId!,
-            color: CustomColor.primaryColor,
+            color: CustomColor.secondaryColor,
             points: _polylineCoordinates,
             visible: true,
             patterns: [PatternItem.dot, PatternItem.gap(15)],
@@ -230,8 +230,12 @@ class _LiveTrackingState extends State<LiveTracking> {
             width: MediaQuery.of(context).size.width,
             child: GoogleMap(
               onCameraMove: (position) {},
+              myLocationEnabled:
+                  true, // Enables the my-location layer on the map
+              myLocationButtonEnabled:
+                  true, // Displays a button on the map that when tapped centers the camera on the user's location
               //myLocationEnabled: true,
-              myLocationButtonEnabled: true,
+
               mapType: MapType.hybrid,
               initialCameraPosition: CameraPosition(
                   target: LatLng(
