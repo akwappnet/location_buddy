@@ -53,7 +53,7 @@ class _LiveTrackingState extends State<LiveTracking> {
 
   //ad
   late final RewardedAd rewardedAd;
-  var rewardedUnitId = 'ca-app-pub-3940256099942544/5224354917';
+  var rewardedUnitId = 'ca-app-pub-1728501734185497/8578636436';
 
   @override
   void initState() {
@@ -77,6 +77,7 @@ class _LiveTrackingState extends State<LiveTracking> {
           _setFullScreenContentCallback();
         }), onAdFailedToLoad: ((error) {
           print(error);
+          Navigator.popAndPushNamed(context, RoutesName.bottomBar);
         })));
   }
 

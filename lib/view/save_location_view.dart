@@ -42,7 +42,7 @@ class _SaveLocationViewState extends State<SaveLocationView> {
 
   late BannerAd bannerAd;
   bool isAdLoaded = false;
-  var adUnit = 'ca-app-pub-3940256099942544/6300978111'; //production ad unit
+  var adUnit = 'ca-app-pub-1728501734185497/4359904413'; //production ad unit
 
   initBannerAd() {
     bannerAd = BannerAd(

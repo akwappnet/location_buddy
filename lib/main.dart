@@ -18,7 +18,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() async {
-  var devices = ["DC8C1A1751E6F69C860DCD492FA1298E"];
+  //var devices = ["DC8C1A1751E6F69C860DCD492FA1298E"];
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await MobileAds.instance.initialize();
@@ -26,9 +26,9 @@ void main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
-  RequestConfiguration requestConfiguration =
+  /* RequestConfiguration requestConfiguration =
       RequestConfiguration(testDeviceIds: devices);
-  MobileAds.instance.updateRequestConfiguration(requestConfiguration);
+  MobileAds.instance.updateRequestConfiguration(requestConfiguration); */
   runApp(MyApp());
 }
 
