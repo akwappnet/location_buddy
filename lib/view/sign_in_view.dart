@@ -121,7 +121,7 @@ class _SignInViewState extends State<SignInView> {
 
           //email , password textField and rememberForget text here
           Expanded(
-            flex: 3,
+            flex: 4,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

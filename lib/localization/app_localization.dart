@@ -49,7 +49,7 @@ class AppLocalization {
       'delete-account': 'Delete Account',
       'delete-account-title': 'I want to delete account,',
       'rate-us': 'Rate us',
-      'rate-us-subtitle': 'i want to give rate',
+      'rate-us-subtitle': 'i want to give rating',
       //splash page language translate
       'location': 'Location ',
       'buddy': 'Buddy',
@@ -92,7 +92,7 @@ class AppLocalization {
       'email-already-exists': 'The account already exists for that email.',
       'account-delete-success': 'Your account deleted Successfully',
       'account-delete-error':
-          'You need reauthenticate before deleting your account',
+          'You need to reauthenticate before deleting your account',
       //save location provider language translate
       'save-successfull': 'Location Saved successful',
       'error-data-delete': 'Error while deleting data',

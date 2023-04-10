@@ -64,16 +64,20 @@ class _ProfileViewState extends State<ProfileView> {
   Future<void> showReviewPrompt(BuildContext context) async {
     if (await _inAppReview.isAvailable()) {
       // Show the prompt
-      _requestReview();
+      await _inAppReview.requestReview();
       // Check if the app was backgrounded
       // ignore: use_build_context_synchronously
       if (ModalRoute.of(context)?.isCurrent == false) {
+        log("${ModalRoute.of(context)?.isCurrent}");
         // App was backgrounded, which could mean the prompt was opened
         log('Prompt may have been opened');
+        return;
       } else {
+        log("${ModalRoute.of(context)?.isCurrent}");
         // App was not backgrounded, which could mean the prompt was not opened so go to playstore
         _openStoreListing();
         log('Prompt was not opened');
+        return;
       }
     } else {
       // Prompt is not available

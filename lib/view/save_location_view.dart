@@ -34,10 +34,11 @@ class _SaveLocationViewState extends State<SaveLocationView> {
   @override
   void initState() {
     super.initState();
-    initBannerAd();
+
     final saveLocationViewProvider =
         Provider.of<SaveLocationViewProvider>(context, listen: false);
     saveLocationViewProvider.getCurrentLocation(context);
+    initBannerAd();
   }
 
   late BannerAd bannerAd;

@@ -101,7 +101,7 @@ class _SignUpViewState extends State<SignUpView> {
 
           //email , password textField and rememberForget text here
           Expanded(
-            flex: 4,
+            flex: 5,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [

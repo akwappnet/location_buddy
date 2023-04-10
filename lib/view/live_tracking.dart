@@ -59,13 +59,14 @@ class _LiveTrackingState extends State<LiveTracking> {
   @override
   void initState() {
     super.initState();
-    setState(() {
-      _loadRewardedAd();
-    });
+
     _destination = Provider.of<LiveTrackingViewProvider>(context, listen: false)
         .locationData;
     setCustomMarkerIcon();
     updateUI();
+    setState(() {
+      _loadRewardedAd();
+    });
   }
 
   _loadRewardedAd() {
