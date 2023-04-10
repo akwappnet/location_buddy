@@ -11,6 +11,7 @@ import 'dart:ui' as ui;
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:location/location.dart';
 import 'package:location_buddy/provider/live_traking_view_provider.dart';
 import 'package:location_buddy/utils/colors/colors.dart';
@@ -50,13 +51,62 @@ class _LiveTrackingState extends State<LiveTracking> {
   PolylineId? _polylineId;
   double totalDistance = 0;
 
+  //ad
+  late final RewardedAd rewardedAd;
+  var rewardedUnitId = 'ca-app-pub-3940256099942544/5224354917';
+
   @override
   void initState() {
     super.initState();
+    setState(() {
+      _loadRewardedAd();
+    });
     _destination = Provider.of<LiveTrackingViewProvider>(context, listen: false)
         .locationData;
     setCustomMarkerIcon();
     updateUI();
+  }
+
+  _loadRewardedAd() {
+    RewardedAd.load(
+        adUnitId: rewardedUnitId,
+        request: const AdRequest(),
+        rewardedAdLoadCallback: RewardedAdLoadCallback(onAdLoaded: ((ad) {
+          rewardedAd = ad;
+
+          _setFullScreenContentCallback();
+        }), onAdFailedToLoad: ((error) {
+          print(error);
+        })));
+  }
+
+  //method to show content call back
+  void _setFullScreenContentCallback() {
+    if (rewardedAd == null) return;
+    rewardedAd.fullScreenContentCallback = FullScreenContentCallback(
+      onAdShowedFullScreenContent: (RewardedAd ad) =>
+          print('$ad onAdShowedFullScreenContent'),
+      onAdDismissedFullScreenContent: (RewardedAd ad) {
+        print("$ad onAdDismissedFullScreenContent ");
+        Navigator.popAndPushNamed(context, RoutesName.bottomBar);
+
+        ad.dispose();
+      },
+      onAdFailedToShowFullScreenContent: (RewardedAd ad, AdError error) {
+        print("$ad onAdFailedToShowFullScreenContent $error");
+        Navigator.popAndPushNamed(context, RoutesName.bottomBar);
+      },
+      onAdImpression: (RewardedAd ad) => print("$ad Impression occured"),
+    );
+  }
+
+  //show an method
+  void _showRewardedAd() {
+    rewardedAd.show(
+        onUserEarnedReward: (AdWithoutView ad, RewardItem rewardItem) {
+      num amount = rewardItem.amount;
+      print("You earned : $amount");
+    });
   }
 
   @override
@@ -150,13 +200,7 @@ class _LiveTrackingState extends State<LiveTracking> {
         LatLng(_destination!.latitude, _destination!.longitude),
       );
       if (distance <= 0.10) {
-        // ignore: use_build_context_synchronously
-
-        // show pop-up when distance is less than or equal to 10 meters
-
-        // ignore: use_build_context_synchronously
-
-        // ignore: use_build_context_synchronously
+        locationSubscription.cancel();
         showDialog(
             barrierDismissible: false,
             context: context,
@@ -171,8 +215,8 @@ class _LiveTrackingState extends State<LiveTracking> {
                 btn2Text: "",
 
                 onClicked: () {
-                  locationSubscription.cancel();
-                  Navigator.popAndPushNamed(context, RoutesName.bottomBar);
+                  Navigator.pop(context);
+                  _showRewardedAd();
                 },
               );
             });
