@@ -354,7 +354,7 @@ class SignInProvider with ChangeNotifier {
             duration: const Duration(seconds: 5),
           ),
         );
-        print('You need reauthenticate before deleting your account.');
+        log('You need reauthenticate before deleting your account.');
       }
     }
   }

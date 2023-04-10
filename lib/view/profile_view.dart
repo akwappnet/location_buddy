@@ -27,6 +27,7 @@ class ProfileView extends StatefulWidget {
 }
 
 class _ProfileViewState extends State<ProfileView> {
+  // ignore: unused_field
   Availability _availability = Availability.loading;
   bool? isAvailable;
   final InAppReview _inAppReview = InAppReview.instance;
@@ -36,7 +37,7 @@ class _ProfileViewState extends State<ProfileView> {
     (<T>(T? o) => o!)(WidgetsBinding.instance).addPostFrameCallback((_) async {
       try {
         isAvailable = await _inAppReview.isAvailable();
-        print("----->$isAvailable");
+        log("----->$isAvailable");
 
         setState(() {
           // This plugin cannot be tested on Android by installing your app
@@ -63,7 +64,7 @@ class _ProfileViewState extends State<ProfileView> {
   Future<void> showReviewPrompt(BuildContext context) async {
     if (await _inAppReview.isAvailable()) {
       // Show the prompt
-      await _inAppReview.requestReview();
+      _requestReview();
       // Check if the app was backgrounded
       // ignore: use_build_context_synchronously
       if (ModalRoute.of(context)?.isCurrent == false) {

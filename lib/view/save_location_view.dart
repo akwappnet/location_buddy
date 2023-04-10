@@ -5,6 +5,7 @@ import 'dart:isolate';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:google_places_flutter/google_places_flutter.dart';
 import 'package:google_places_flutter/model/prediction.dart';
 import 'package:location_buddy/localization/app_localization.dart';
@@ -29,12 +30,33 @@ class SaveLocationView extends StatefulWidget {
 
 class _SaveLocationViewState extends State<SaveLocationView> {
   ReceivePort port = ReceivePort();
+
   @override
   void initState() {
     super.initState();
+    initBannerAd();
     final saveLocationViewProvider =
         Provider.of<SaveLocationViewProvider>(context, listen: false);
     saveLocationViewProvider.getCurrentLocation(context);
+  }
+
+  late BannerAd bannerAd;
+  bool isAdLoaded = false;
+  var adUnit = 'ca-app-pub-1728501734185497/4359904413'; //production ad unit
+
+  initBannerAd() {
+    bannerAd = BannerAd(
+        size: AdSize.banner,
+        adUnitId: adUnit,
+        listener: BannerAdListener(onAdLoaded: ((ad) {
+          isAdLoaded = true;
+          setState(() {});
+        }), onAdFailedToLoad: ((ad, error) {
+          ad.dispose();
+          log(error.toString());
+        })),
+        request: const AdRequest());
+    bannerAd.load();
   }
 
   @override
@@ -127,21 +149,6 @@ class _SaveLocationViewState extends State<SaveLocationView> {
                                       SizedBox(
                                         width: 10.w,
                                       ),
-
-                                      /*  SizedBox(
-                                        width: 250.w,
-                                        child: BuildTextFormField(
-                                          leftIcon: const Icon(
-                                              Icons.location_searching_outlined,
-                                              color: CustomColor.primaryColor),
-                                          readOnly: true,
-                                          controller: saveLocationViewProvider
-                                              .sourceController,
-                                          isObserve: false,
-                                          txtHint: AppLocalization.of(context)!
-                                              .translate('hint-source'),
-                                        ),
-                                      ) */
                                       SizedBox(
                                         width: 250.w,
                                         child: BuildTextFormField(
@@ -230,7 +237,16 @@ class _SaveLocationViewState extends State<SaveLocationView> {
                                           .translate('save-button'),
                                     ),
                                   ),
-                            //Expanded(child: ListViewWidget())
+                            SizedBox(
+                              height: 100.h,
+                            ),
+                            isAdLoaded
+                                ? SizedBox(
+                                    height: bannerAd.size.height.toDouble(),
+                                    width: bannerAd.size.width.toDouble(),
+                                    child: AdWidget(ad: bannerAd),
+                                  )
+                                : const SizedBox(),
                           ],
                         ),
                       ),

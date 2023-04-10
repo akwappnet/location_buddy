@@ -30,7 +30,7 @@ class Routes {
 
       case RoutesName.bottomBar:
         return MaterialPageRoute(
-            builder: (BuildContext context) => BottomNavBar());
+            builder: (BuildContext context) => const BottomNavBar());
       case RoutesName.saveLocationView:
         return MaterialPageRoute(
             builder: (BuildContext context) => const SaveLocationView());
