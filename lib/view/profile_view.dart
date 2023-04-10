@@ -1,9 +1,11 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:babstrap_settings_screen/babstrap_settings_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:in_app_review/in_app_review.dart';
 import 'package:location_buddy/data/default_data.dart';
 import 'package:location_buddy/localization/app_localization.dart';
 import 'package:location_buddy/utils/colors/colors.dart';
@@ -15,6 +17,8 @@ import '../provider/sign_in_provider.dart';
 import '../utils/routes/routes_name.dart';
 import '../widgets/custom_dialog_box.dart';
 
+enum Availability { loading, available, unavailable }
+
 class ProfileView extends StatefulWidget {
   const ProfileView({super.key});
 
@@ -23,9 +27,59 @@ class ProfileView extends StatefulWidget {
 }
 
 class _ProfileViewState extends State<ProfileView> {
+  Availability _availability = Availability.loading;
+  bool? isAvailable;
+  final InAppReview _inAppReview = InAppReview.instance;
   @override
   void initState() {
     super.initState();
+    (<T>(T? o) => o!)(WidgetsBinding.instance).addPostFrameCallback((_) async {
+      try {
+        isAvailable = await _inAppReview.isAvailable();
+        print("----->$isAvailable");
+
+        setState(() {
+          // This plugin cannot be tested on Android by installing your app
+          // locally. See https://github.com/britannio/in_app_review#testing for
+          // more information.
+          _availability = isAvailable! && !Platform.isAndroid
+              ? Availability.available
+              : Availability.unavailable;
+        });
+      } catch (_) {
+        setState(() => _availability = Availability.unavailable);
+      }
+    });
+  }
+
+  Future<void> _requestReview() async {
+    await _inAppReview.requestReview();
+  }
+
+  Future<void> _openStoreListing() async {
+    _inAppReview.openStoreListing(appStoreId: "com.wappnet.location_buddy");
+  }
+
+  Future<void> showReviewPrompt(BuildContext context) async {
+    if (await _inAppReview.isAvailable()) {
+      // Show the prompt
+      await _inAppReview.requestReview();
+      // Check if the app was backgrounded
+      // ignore: use_build_context_synchronously
+      if (ModalRoute.of(context)?.isCurrent == false) {
+        // App was backgrounded, which could mean the prompt was opened
+        log('Prompt may have been opened');
+      } else {
+        // App was not backgrounded, which could mean the prompt was not opened so go to playstore
+        _openStoreListing();
+        log('Prompt was not opened');
+      }
+    } else {
+      // Prompt is not available
+      // Redirect the user to the app's store listing
+      _openStoreListing();
+      log("open url");
+    }
   }
 
   final DefaultData defaultData = DefaultData();
@@ -178,6 +232,27 @@ class _ProfileViewState extends State<ProfileView> {
                 fontWeight: FontWeight.w600),
             subtitle:
                 AppLocalization.of(context)!.translate('privacy-subtitle'),
+          ),
+          SettingsItem(
+            trailing: Icon(Icons.arrow_forward_ios_rounded,
+                color: SecondaryColor.greyIconColor),
+            onTap: () {
+              showReviewPrompt(context);
+              // Navigator.pushNamed(context, RoutesName.privacypolicy);
+            },
+            icons: Icons.star_border_outlined,
+            iconStyle: IconStyle(
+              iconsColor: SecondaryColor.greyIconColor,
+              backgroundColor: CustomColor.white,
+            ),
+            title: AppLocalization.of(context)!.translate('rate-us'),
+            titleStyle: TextStyle(
+                color: CustomColor.black,
+                fontSize: 20.sp,
+                fontFamily: FontFamliyM.ROBOTOBOLD,
+                fontWeight: FontWeight.w600),
+            subtitle:
+                AppLocalization.of(context)!.translate('rate-us-subtitle'),
           ),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 22.sp),

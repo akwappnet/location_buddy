@@ -48,6 +48,8 @@ class AppLocalization {
       'logout-title': 'I want to logout from app',
       'delete-account': 'Delete Account',
       'delete-account-title': 'I want to delete account,',
+      'rate-us': 'Rate us',
+      'rate-us-subtitle': 'i want to give rate',
       //splash page language translate
       'location': 'Location ',
       'buddy': 'Buddy',
@@ -134,6 +136,8 @@ class AppLocalization {
       'logout-title': 'أريد تسجيل الخروج من التطبيق',
       'delete-account': 'حذف الحساب',
       'delete-account-title': 'أريد حذف الحساب',
+      'rate-us': 'قيمنا',
+      'rate-us-subtitle': 'أريد أن أعطي معدل',
       //splash page language translate
       'location': 'الأصدقاء ',
       'buddy': 'الموقع',
