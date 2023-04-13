@@ -1,9 +1,12 @@
 String? nameValidator(String? value) {
-  String pattern = r'^[a-zA-Z_-]+$';
+  String pattern = r'^[a-z A-Z]+$';
+  //RegExp(r'^[a-z A-Z]+$');
   RegExp regex = RegExp(pattern);
 
   if (value!.isEmpty) {
     return 'This field must be filled';
+  } else if (value.length < 3) {
+    return 'Please enter proper name';
   } else if (!regex.hasMatch(value)) {
     return 'Please enter on alphabets only';
   }

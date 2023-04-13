@@ -144,6 +144,7 @@ class _SignInViewState extends State<SignInView> {
                   valueListenable: obsecurePassword,
                   builder: (context, value, child) {
                     return BuildTextFormFieldNew(
+                      textInputAction: TextInputAction.done,
                       controller: provider.signpassController,
                       validation: emptyFieldValidator,
                       isObserve: obsecurePassword.value,

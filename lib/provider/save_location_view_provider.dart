@@ -127,62 +127,76 @@ class SaveLocationViewProvider extends ChangeNotifier {
     if (savePointDestination.isNotEmpty &&
         sourceLocation.isNotEmpty &&
         destinationLocation.isNotEmpty) {
-      setSaving(true);
-      final locationInfo = LocationInfo(
-          savePointDestination: savePointDestination,
-          sourceLocation: sourceLocation,
-          destinationLocation: destinationLocation);
-      addLocationInfo(locationInfo);
+      if (destinationLocationLatitude != null &&
+          destinationLocationLatitude!.isNotEmpty &&
+          destinationLocationlongitude != null &&
+          destinationLocationlongitude!.isNotEmpty) {
+        setSaving(true);
+        final locationInfo = LocationInfo(
+            savePointDestination: savePointDestination,
+            sourceLocation: sourceLocation,
+            destinationLocation: destinationLocation);
+        addLocationInfo(locationInfo);
 
-      final docRef = firestore
-          .collection('location')
-          .doc(_auth.currentUser?.uid)
-          .collection('locationInfo')
-          .doc();
-      await docRef.set({
-        'savePointDestination': savePointDestination,
-        'sourceLocation': sourceLocation,
-        'destinationLocation': destinationLocation,
-        'createdAt': DateTime.now().toString(),
-        'sourceLocationLatitude': _currentLocation!.latitude.toString(),
-        'sourceLocationlongitude': _currentLocation!.longitude.toString(),
-        'destinationLocationLatitude': destinationLocationLatitude ??
-            _currentLocation!.latitude.toString(),
-        'destinationLocationlongitude': destinationLocationlongitude ??
-            _currentLocation!.longitude.toString(),
-        'id': docRef.id,
-        'userId': _auth.currentUser?.uid ?? "",
-        'userName': _auth.currentUser?.displayName ?? "",
-        'userEmail': _auth.currentUser?.email ?? "",
-      }).then(
-        (value) {
-          showDialog(
-            context: context,
-            barrierDismissible: false,
-            barrierColor: Colors.black38,
-            builder: (BuildContext context) {
-              return CustomDialogBox(
-                heading: AppLocalization.of(context)!.translate('success'),
-                icon: const Icon(Icons.done),
-                backgroundColor: CustomColor.primaryColor,
-                title:
-                    AppLocalization.of(context)!.translate('save-successfull'),
-                descriptions: "", //
-                btn1Text: "",
-                btn2Text: "",
-              );
-            },
-          );
-          Future.delayed(const Duration(milliseconds: 2000)).then((value) =>
-              Navigator.popAndPushNamed(context, RoutesName.bottomBar));
-        },
-      );
+        final docRef = firestore
+            .collection('location')
+            .doc(_auth.currentUser?.uid)
+            .collection('locationInfo')
+            .doc();
+        await docRef.set({
+          'savePointDestination': savePointDestination,
+          'sourceLocation': sourceLocation,
+          'destinationLocation': destinationLocation,
+          'createdAt': DateTime.now().toString(),
+          'sourceLocationLatitude': _currentLocation!.latitude.toString(),
+          'sourceLocationlongitude': _currentLocation!.longitude.toString(),
+          'destinationLocationLatitude': destinationLocationLatitude ??
+              _currentLocation!.latitude.toString(),
+          'destinationLocationlongitude': destinationLocationlongitude ??
+              _currentLocation!.longitude.toString(),
+          'id': docRef.id,
+          'userId': _auth.currentUser?.uid ?? "",
+          'userName': _auth.currentUser?.displayName ?? "",
+          'userEmail': _auth.currentUser?.email ?? "",
+        }).then(
+          (value) {
+            showDialog(
+              context: context,
+              barrierDismissible: false,
+              barrierColor: Colors.black38,
+              builder: (BuildContext context) {
+                return CustomDialogBox(
+                  heading: AppLocalization.of(context)!.translate('success'),
+                  icon: const Icon(Icons.done),
+                  backgroundColor: CustomColor.primaryColor,
+                  title: AppLocalization.of(context)!
+                      .translate('save-successfull'),
+                  descriptions: "", //
+                  btn1Text: "",
+                  btn2Text: "",
+                );
+              },
+            );
+            Future.delayed(const Duration(milliseconds: 2000)).then((value) =>
+                Navigator.popAndPushNamed(context, RoutesName.bottomBar));
+          },
+        );
 
-      savePointDestinationController.clear();
-      sourceController.clear();
-      destinationController.clear();
-      await fetchLocationInformation();
-      setSaving(false);
+        savePointDestinationController.clear();
+        sourceController.clear();
+        destinationController.clear();
+        await fetchLocationInformation();
+        setSaving(false);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            backgroundColor: CustomColor.redColor,
+            content:
+                Text("Destination location must me selected from drop drown"),
+            duration: Duration(seconds: 3),
+          ),
+        );
+      }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

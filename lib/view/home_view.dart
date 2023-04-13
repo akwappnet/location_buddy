@@ -188,21 +188,27 @@ class _HomeViewState extends State<HomeView> {
                                                   MainAxisAlignment
                                                       .spaceBetween,
                                               children: [
-                                                Text(
-                                                  locationInfo
-                                                      .savePointDestination!,
-                                                  style: TextStyle(
-                                                      color: CustomColor
-                                                          .primaryColor,
-                                                      fontSize: 20.sp,
-                                                      fontFamily:
-                                                          FontFamliyM.SEMIBOLD,
-                                                      fontWeight:
-                                                          FontWeight.w600),
-                                                  softWrap: false,
-                                                  maxLines: 1,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
+                                                SizedBox(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.6,
+                                                  child: Text(
+                                                    locationInfo
+                                                        .savePointDestination!,
+                                                    style: TextStyle(
+                                                        color: CustomColor
+                                                            .primaryColor,
+                                                        fontSize: 20.sp,
+                                                        fontFamily: FontFamliyM
+                                                            .SEMIBOLD,
+                                                        fontWeight:
+                                                            FontWeight.w600),
+                                                    softWrap: false,
+                                                    maxLines: 1,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
                                                 ),
                                                 GestureDetector(
                                                     onTap: () {

@@ -302,15 +302,16 @@ class _SaveLocationViewState extends State<SaveLocationView> {
         countries: const ["in", "fr"],
         isLatLngRequired: true,
         getPlaceDetailWithLatLng: (Prediction prediction) {
-          log("Latitude${prediction.lng}");
+          log("Latitude-----${prediction.lat}");
+          log("Longitude-----${prediction.lng}");
           Provider.of<SaveLocationViewProvider>(context, listen: false)
               .setDestinationLocationLatitude(prediction.lat.toString());
           Provider.of<SaveLocationViewProvider>(context, listen: false)
               .setDestinationLocationlongitude(prediction.lng.toString());
         },
         itmClick: (Prediction prediction) {
-          log("Latitude-->${prediction.description!.toLowerCase()}");
-          log("Longitude--->${prediction.lat}");
+          log("Latitude-->${prediction.lat}");
+          log("Longitude--->${prediction.lng}");
           controller.text = prediction.description!;
 
           controller.selection = TextSelection.fromPosition(

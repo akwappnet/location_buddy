@@ -18,7 +18,8 @@ class BuildTextFormFieldNew extends StatefulWidget {
   TextInputType? textType;
   dynamic validation;
   GestureDetector? suffixIcon;
-
+  TextCapitalization? textCapitalization;
+  TextInputAction? textInputAction;
   //Text Form Widget
   BuildTextFormFieldNew({
     Key? key,
@@ -33,6 +34,8 @@ class BuildTextFormFieldNew extends StatefulWidget {
     this.textType,
     this.validation,
     this.suffixIcon,
+    this.textCapitalization,
+    this.textInputAction,
   }) : super(key: key);
 
   @override
@@ -53,6 +56,9 @@ class _BuildTextFormFieldNewState extends State<BuildTextFormFieldNew> {
               fontFamily: FontFamliyM.ROBOTOREGULAR,
               color: const Color(0xFF151624),
             ),
+            textInputAction: widget.textInputAction ?? TextInputAction.next,
+            textCapitalization:
+                widget.textCapitalization ?? TextCapitalization.none,
             obscureText: widget.isObserve,
             keyboardType: widget.textType ?? TextInputType.name,
             cursorColor: const Color(0xFF151624),

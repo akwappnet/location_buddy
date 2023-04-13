@@ -106,6 +106,7 @@ class _SignUpViewState extends State<SignUpView> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 BuildTextFormFieldNew(
+                  textCapitalization: TextCapitalization.sentences,
                   controller: nameController,
                   isObserve: false,
                   validation: nameValidator,
@@ -162,6 +163,7 @@ class _SignUpViewState extends State<SignUpView> {
                               : const Color.fromRGBO(44, 185, 176, 1),
                         ),
                       ),
+                      textInputAction: TextInputAction.done,
                       txtHint: AppLocalization.of(context)!
                           .translate('txt-password-hint'),
                       leftIcon: Icon(

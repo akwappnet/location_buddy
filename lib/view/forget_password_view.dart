@@ -85,6 +85,7 @@ class ForgetPasswordView extends StatelessWidget {
                 Form(
                   key: _formKey,
                   child: BuildTextFormFieldNew(
+                    textInputAction: TextInputAction.done,
                     controller: emailController,
                     validation: emailValidator,
                     isObserve: false,
@@ -108,19 +109,27 @@ class ForgetPasswordView extends StatelessWidget {
                   },
                   child: GestureDetector(
                     onTap: () {
+                      FocusManager.instance.primaryFocus?.unfocus();
                       if (_formKey.currentState!.validate()) {
                         provider
                             .resetPassword(emailController.text, context)
                             .then((_) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                                content: Text(AppLocalization.of(context)!
-                                    .translate('email-sent'))),
+                              backgroundColor: CustomColor.primaryColor,
+                              content: Text(AppLocalization.of(context)!
+                                  .translate('email-sent')),
+                              duration: const Duration(seconds: 3),
+                            ),
                           );
                           Navigator.pop(context);
                         }).catchError((e) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text(e.toString())),
+                            SnackBar(
+                              backgroundColor: CustomColor.redColor,
+                              content: Text(e.toString()),
+                              duration: const Duration(seconds: 3),
+                            ),
                           );
                         });
                       }
