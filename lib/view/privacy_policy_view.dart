@@ -30,9 +30,8 @@ class _PrivacyPolicyState extends State<PrivacyPolicy> {
           children: [
             InAppWebView(
                 initialUrlRequest: URLRequest(
-                  url: Uri.parse(
-                      "https://docs.google.com/document/d/e/2PACX-1vRGxNESmzUMyXKQ8yAslDIR-qLbxNeLWvqyyWF89hZ7BM2Z0xim0tAJZiYCTlUwF9ryzTBuT-2QUQIv/pub"),
-                ),
+                    url: WebUri(
+                        "https://docs.google.com/document/d/e/2PACX-1vRGxNESmzUMyXKQ8yAslDIR-qLbxNeLWvqyyWF89hZ7BM2Z0xim0tAJZiYCTlUwF9ryzTBuT-2QUQIv/pub")),
                 onWebViewCreated: (InAppWebViewController controller) {
                   webView = controller;
                 },

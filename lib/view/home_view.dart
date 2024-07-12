@@ -55,7 +55,7 @@ class _HomeViewState extends State<HomeView> {
           Row(
             children: [
               AvatarGlow(
-                endRadius: 30,
+                // glowBorderRadius: BorderRadius.all(Radius.circular(30)),
                 glowColor: Colors.red,
                 duration: const Duration(seconds: 5),
                 child: Icon(

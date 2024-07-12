@@ -182,11 +182,14 @@ class LiveTrackingPageExtraState extends State<LiveTrackingPageExtra> {
     if (currentLocation != null) {
       PolylinePoints polylinePoints = PolylinePoints();
       PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-          google_api_key,
-          PointLatLng(currentLocation!.latitude!, currentLocation!.longitude!),
-          PointLatLng(destination!.latitude, destination!.longitude),
-          optimizeWaypoints: true,
-          travelMode: TravelMode.driving);
+          googleApiKey: google_api_key,
+          request: PolylineRequest(
+              optimizeWaypoints: true,
+              origin: PointLatLng(
+                  currentLocation!.latitude!, currentLocation!.longitude!),
+              destination:
+                  PointLatLng(destination!.latitude, destination!.longitude),
+              mode: TravelMode.driving));
 
       if (result.points.isNotEmpty) {
         _polylineCoordinates.clear();

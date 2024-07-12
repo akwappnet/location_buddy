@@ -192,11 +192,14 @@ class _LiveTrackingState extends State<LiveTracking> {
     if (currentLocation != null) {
       PolylinePoints polylinePoints = PolylinePoints();
       PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-          google_api_key,
-          PointLatLng(currentLocation!.latitude!, currentLocation!.longitude!),
-          PointLatLng(_destination!.latitude, _destination!.longitude),
-          optimizeWaypoints: true,
-          travelMode: TravelMode.driving);
+          googleApiKey: google_api_key,
+          request: PolylineRequest(
+              optimizeWaypoints: true,
+              origin: PointLatLng(
+                  currentLocation!.latitude!, currentLocation!.longitude!),
+              destination:
+                  PointLatLng(_destination!.latitude, _destination!.longitude),
+              mode: TravelMode.driving));
 
       double distance = calculateDistance(
         LatLng(currentLocation!.latitude!, currentLocation!.longitude!),
