@@ -1,4 +1,5 @@
 # location_buddy
+# Flutter version 3.19.2
 
 Location Buddy is an app designed to help users find their way around by allowing them to store locations and use satellite view maps for easy navigation. With Location Buddy, you can easily enter the name or address of the location you need to visit and save it for future reference.
 

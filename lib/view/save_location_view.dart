@@ -309,7 +309,7 @@ class _SaveLocationViewState extends State<SaveLocationView> {
           Provider.of<SaveLocationViewProvider>(context, listen: false)
               .setDestinationLocationlongitude(prediction.lng.toString());
         },
-        itmClick: (Prediction prediction) {
+        itemClick: (Prediction prediction) {
           log("Latitude-->${prediction.lat}");
           log("Longitude--->${prediction.lng}");
           controller.text = prediction.description!;

@@ -56,12 +56,12 @@ dependencies:
   google_sign_in: ^6.0.2
   firebase_auth: ^5.1.2
   simple_fontellico_progress_dialog: ^0.3.0
-  babstrap_settings_screen: ^0.1.6
+  # babstrap_settings_screen: ^0.1.7
   shared_preferences: ^2.0.20
   flutter_inappwebview: ^6.0.0
   location: ^6.0.2
   in_app_review: ^2.0.6
-  google_mobile_ads: ^5.1.0
+  google_mobile_ads: ^5.2.0
 
 dev_dependencies:
   flutter_test:
@@ -72,7 +72,7 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^4.0.0
+  flutter_lints:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

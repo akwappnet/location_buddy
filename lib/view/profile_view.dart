@@ -1,7 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:babstrap_settings_screen/babstrap_settings_screen.dart';
+// import 'package:babstrap_settings_screen/babstrap_settings_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -171,7 +171,7 @@ class _ProfileViewState extends State<ProfileView> {
                     fontFamily: FontFamliyM.ROBOTOREGULAR,
                     fontWeight: FontWeight.w700)),
           ),
-          SettingsItem(
+          ListTile(
             trailing:
                 Consumer<CurrentData>(builder: (context, currentData, child) {
               return DropdownButton<String>(
@@ -205,59 +205,54 @@ class _ProfileViewState extends State<ProfileView> {
                 ).toList(),
               );
             }),
-            icons: Icons.language,
-            iconStyle: IconStyle(
-              iconsColor: SecondaryColor.greyIconColor,
-              backgroundColor: CustomColor.white,
-            ),
-            title: AppLocalization.of(context)!.translate('language'),
-            titleStyle: TextStyle(
-                color: CustomColor.black,
-                fontSize: 20.sp,
-                fontFamily: FontFamliyM.ROBOTOBOLD,
-                fontWeight: FontWeight.w600),
-            subtitle: AppLocalization.of(context)!.translate('select-language'),
-          ),
-          SettingsItem(
-            trailing: Icon(Icons.arrow_forward_ios_rounded,
-                color: SecondaryColor.greyIconColor),
-            onTap: () {
-              Navigator.pushNamed(context, RoutesName.privacypolicy);
-            },
-            icons: Icons.lock_open_sharp,
-            iconStyle: IconStyle(
-              iconsColor: SecondaryColor.greyIconColor,
-              backgroundColor: CustomColor.white,
-            ),
-            title: AppLocalization.of(context)!.translate('privacy'),
-            titleStyle: TextStyle(
+            leading: Icon(Icons.language, color: SecondaryColor.greyIconColor),
+            title: Text(AppLocalization.of(context)!.translate('language')),
+            titleTextStyle: TextStyle(
                 color: CustomColor.black,
                 fontSize: 20.sp,
                 fontFamily: FontFamliyM.ROBOTOBOLD,
                 fontWeight: FontWeight.w600),
             subtitle:
-                AppLocalization.of(context)!.translate('privacy-subtitle'),
+                Text(AppLocalization.of(context)!.translate('select-language')),
           ),
-          SettingsItem(
+          ListTile(
+            trailing: Icon(Icons.arrow_forward_ios_rounded,
+                color: SecondaryColor.greyIconColor),
+            onTap: () {
+              Navigator.pushNamed(context, RoutesName.privacypolicy);
+            },
+            leading: Icon(
+              Icons.lock_open_sharp,
+              color: SecondaryColor.greyIconColor,
+            ),
+            title: Text(AppLocalization.of(context)!.translate('privacy')),
+            titleTextStyle: TextStyle(
+                color: CustomColor.black,
+                fontSize: 20.sp,
+                fontFamily: FontFamliyM.ROBOTOBOLD,
+                fontWeight: FontWeight.w600),
+            subtitle: Text(
+                AppLocalization.of(context)!.translate('privacy-subtitle')),
+          ),
+          ListTile(
             trailing: Icon(Icons.arrow_forward_ios_rounded,
                 color: SecondaryColor.greyIconColor),
             onTap: () {
               showReviewPrompt(context);
               // Navigator.pushNamed(context, RoutesName.privacypolicy);
             },
-            icons: Icons.star_border_outlined,
-            iconStyle: IconStyle(
-              iconsColor: SecondaryColor.greyIconColor,
-              backgroundColor: CustomColor.white,
+            leading: Icon(
+              Icons.star_border_outlined,
+              color: SecondaryColor.greyIconColor,
             ),
-            title: AppLocalization.of(context)!.translate('rate-us'),
-            titleStyle: TextStyle(
+            title: Text(AppLocalization.of(context)!.translate('rate-us')),
+            titleTextStyle: TextStyle(
                 color: CustomColor.black,
                 fontSize: 20.sp,
                 fontFamily: FontFamliyM.ROBOTOBOLD,
                 fontWeight: FontWeight.w600),
-            subtitle:
-                AppLocalization.of(context)!.translate('rate-us-subtitle'),
+            subtitle: Text(
+                AppLocalization.of(context)!.translate('rate-us-subtitle')),
           ),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 22.sp),
@@ -268,7 +263,7 @@ class _ProfileViewState extends State<ProfileView> {
                     fontFamily: FontFamliyM.ROBOTOREGULAR,
                     fontWeight: FontWeight.w700)),
           ),
-          SettingsItem(
+          ListTile(
             onTap: () {
               showDialog(
                   context: context,
@@ -292,22 +287,25 @@ class _ProfileViewState extends State<ProfileView> {
                         });
                   });
             },
-            icons: Icons.logout,
-            title: AppLocalization.of(context)!.translate('logout'),
-            subtitle: AppLocalization.of(context)!.translate('logout-title'),
+            leading: Icon(
+              Icons.logout,
+              color: CustomColor.primaryColor,
+            ),
+            title: Text(AppLocalization.of(context)!.translate('logout')),
+            subtitle:
+                Text(AppLocalization.of(context)!.translate('logout-title')),
             trailing: const Icon(Icons.arrow_forward_ios_rounded,
                 color: CustomColor.primaryColor),
-            titleStyle: TextStyle(
+            titleTextStyle: TextStyle(
                 color: CustomColor.primaryColor,
                 fontSize: 20.sp,
                 fontFamily: FontFamliyM.ROBOTOBOLD,
                 fontWeight: FontWeight.w600),
-            iconStyle: IconStyle(
-              iconsColor: CustomColor.primaryColor,
-              backgroundColor: CustomColor.white,
-            ),
+            // : IconStyle(
+            //   iconsColor: CustomColor.primaryColor,
+            //   backgroundColor: CustomColor.white,
           ),
-          SettingsItem(
+          ListTile(
             onTap: () {
               showDialog(
                   context: context,
@@ -331,21 +329,21 @@ class _ProfileViewState extends State<ProfileView> {
                         });
                   });
             },
-            icons: Icons.delete_outline_outlined,
-            title: AppLocalization.of(context)!.translate('delete-account'),
-            subtitle:
-                AppLocalization.of(context)!.translate('delete-account-title'),
+            leading: Icon(
+              Icons.delete_outline_outlined,
+              color: CustomColor.secondaryColor,
+            ),
+            title:
+                Text(AppLocalization.of(context)!.translate('delete-account')),
+            subtitle: Text(
+                AppLocalization.of(context)!.translate('delete-account-title')),
             trailing: const Icon(Icons.arrow_forward_ios_rounded,
                 color: CustomColor.secondaryColor),
-            titleStyle: TextStyle(
+            titleTextStyle: TextStyle(
                 color: CustomColor.secondaryColor,
                 fontSize: 20.sp,
                 fontFamily: FontFamliyM.ROBOTOBOLD,
                 fontWeight: FontWeight.w600),
-            iconStyle: IconStyle(
-              iconsColor: CustomColor.secondaryColor,
-              backgroundColor: CustomColor.white,
-            ),
           ),
         ],
       ),
